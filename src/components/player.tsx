@@ -1,95 +1,123 @@
-import { ChangeEventHandler, MouseEventHandler, PointerEventHandler, useRef, useState } from 'react';
-import ReactHowler, { HowlCallback } from 'react-howler'
+import React, { useRef, useState } from 'react';
+import { PlayButton, ProgressBar } from './transportControls';
+import { VolumeSlider, MuteButton, VolumeControls } from './volumeControls';
+import './player.css'
 
-import { Button } from "@/components/ui/button"
 
-import { PlayIcon } from '@heroicons/react/24/solid'
-import { PauseIcon } from '@heroicons/react/24/solid'
-import { Slider } from './ui/slider';
+interface AudioPlayerProps {
+    currentSong?: { title: string; artist: string; src: string; },
+}
 
-export default function Player() {
-    const player = useRef<ReactHowler>(null);
-    const soundSource = "/sound.m4a"
+export default function AudioPlayer(props: AudioPlayerProps) {
+    const { currentSong } = props
+
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    // States
+    const [isReady, setIsReady] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMuted, setIsMuted] = useState(false)
     const [volume, setVolume] = useState(0.7)
-    const [seek, setSeek] = useState(0)
-    const [playing, setPlaying] = useState(false)
+    const [duration, setDuration] = useState(0)
+    const [currrentProgress, setCurrrentProgress] = useState(0);
 
-    function togglePlay() {
-        setPlaying(!playing)
+    function togglePlayPause() {
+        if (isPlaying) {
+            audioRef.current?.pause()
+            setIsPlaying(false)
+        } else {
+            audioRef.current?.play()
+            setIsPlaying(true)
+        }
     }
+    const toggleMuteUnmute = () => {
+        if (!audioRef.current) return;
+        setIsMuted(!audioRef.current.muted)
+        audioRef.current.muted = !audioRef.current.muted
+    };
+
+    function handleVolumeChange(volumeValue: number) {
+        if (!audioRef.current) return;
+        audioRef.current.volume = volumeValue
+        setVolume(volumeValue)
+    }
+
 
     return (
         <>
-            <ReactHowler
-                src={soundSource}
-                playing={playing}
-                volume={volume}
-                ref={player}
-            />
-            <PlayButton
-                onClick={togglePlay}
-                playing={playing}
-            />
-            <VolumeSlider
-                onVolumeChange={setVolume}
-                volume={volume}
-            />
-            <SeekSlider
-                seek={seek}
-                onSeekChange={setSeek}
-                onPointerUp={() => player.current?.seek(seek)}
-            />
+            <div className=' bg-slate-900 text-slate-400 p-3 relative'>
+                <audio
+                    ref={audioRef}
+                    preload='metadata'
+                    onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+                    onCanPlay={(e) => {
+                        e.currentTarget.volume = volume
+                        setIsReady(true)
+                    }}
+                    onPlaying={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                    onTimeUpdate={(e) => {
+                        setCurrrentProgress(e.currentTarget.currentTime)
+                    }}
+                >
+                    <source type='audio/mpeg' src={currentSong?.src} />
+                </audio>
+
+                <SongTitle title={currentSong?.title} artist={currentSong?.artist} />
+                <div className="grid grid-cols-2 items-center mt-4">
+                    {/* Transport controls */}
+                    <div>
+                        <PlayButton
+                            onClick={togglePlayPause}
+                            isPlaying={isPlaying}
+                            isDisabled={!isReady}
+                        />
+                        <ProgressBar
+                            className='[&>span]:rounded-b-none'
+                            duration={duration}
+                            currentProgress={currrentProgress}
+                            onValueChange={setCurrrentProgress}
+                            onPointerUp={(val: number) => {
+                                if (!audioRef.current) return;
+                                audioRef.current.currentTime = val;
+                            }}
+                        />
+                    </div>
+                    {/* Volume controls */}
+                    <div className='flex  gap-2 items-center xxl:justify-self-end'>
+                        <MuteButton
+                            isMuted={isMuted}
+                            onClick={toggleMuteUnmute}
+                            volume={volume}
+                        />
+                        <VolumeSlider
+                            volume={volume}
+                            onChange={handleVolumeChange}
+                        />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
 
-type PlayButtonProps = {
-    onClick: MouseEventHandler,
-    playing: boolean
+
+interface SongTitleProps {
+    title?: string
+    artist?: string
 }
 
-function PlayButton({ onClick, playing }: PlayButtonProps) {
-    if (playing) {
-        var icon = <PauseIcon className='h-6 w-6' />
-    } else {
-        var icon = <PlayIcon className='h-6 w-6' />
-    }
+function SongTitle({ title, artist }: SongTitleProps) {
     return (
-        <Button onClick={onClick}>
-            {icon}
-        </Button>
-    )
-}
-
-
-type VolumeSliderProps = {
-    onVolumeChange: (value: number) => void,
-    volume: number,
-}
-
-function VolumeSlider({ onVolumeChange, volume }: VolumeSliderProps) {
-    return (
-        <Slider
-            onValueChange={(val) => onVolumeChange(val[0])}
-            value={[volume]}
-            max={1}
-            min={0}
-            step={0.001} />
-    )
-}
-type SeekSliderProps = {
-    seek: number,
-    onSeekChange: (value: number) => void,
-    onPointerUp: PointerEventHandler,
-}
-
-function SeekSlider({ seek, onSeekChange, onPointerUp, }: SeekSliderProps) {
-    return (
-        <Slider
-            onValueChange={(val) => onSeekChange(val[0])}
-            onPointerUp={onPointerUp}
-            value={[seek]}
-            min={0}
-            step={0.01} />
+        <div className='text-center mb-1'>
+            <div className='text-slate-300 font-bold text-base'>
+                {title ?? "No Song playing"}
+            </div>
+            {artist && (
+                <div className='text-slate-400 font-bold text-sm'>
+                    {artist}
+                </div>
+            )}
+        </div >
     )
 }

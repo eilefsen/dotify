@@ -1,11 +1,11 @@
 import './App.css'
-import Player from './components/player'
+import AudioPlayer from './components/player'
 
 function App() {
 
     return (
         <>
-            <Player></Player>
+            <AudioPlayer currentSong={{ title: "test", artist: "testArtist", src: "/sound.m4a" }}></AudioPlayer>
         </>
     )
 }
