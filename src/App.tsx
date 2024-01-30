@@ -5,7 +5,7 @@ import {
 
 import { createContext } from 'react'
 import './App.css'
-import AudioPlayer, { SongList } from './components/player'
+import { AudioPlayer, SongList, PlayerStore } from './components/player'
 
 const iconSize = 32;
 export const iconsContext = createContext({
@@ -50,26 +50,19 @@ const songs = [
 	},
 ]
 
+export const playerStoreContext = createContext(new PlayerStore(songs))
+
 function App() {
+	const store = new PlayerStore(songs)
 
 	return (
 		<div className="max-w-2xl mx-auto">
-			<span className="flex">
-				<SongList songs={songs} />
-				<AudioPlayer
-					currentSong={{
-						title: "test",
-						artist: "testArtist",
-						album: {
-							title: "TestAlbum",
-							imgSrc: "/cover.png",
-						},
-						src: "/sound.m4a",
-					}}
-					onNext={() => { }}
-					onPrev={() => { }}
-				/>
-			</span>
+			<playerStoreContext.Provider value={store}>
+				<span className="flex">
+					<SongList songs={songs} />
+					<AudioPlayer />
+				</span>
+			</playerStoreContext.Provider>
 		</div >
 	)
 }

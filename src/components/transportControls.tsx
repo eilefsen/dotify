@@ -1,84 +1,84 @@
 import ToggleButton from "./toggleButton"
 import './transportControls.css'
-import { iconsContext } from "@/App";
+import { iconsContext, playerStoreContext } from "@/App";
 import { Slider } from "./ui/slider";
 import { useContext, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { runInAction } from "mobx";
 
-interface NextSongButtonProps {
-	onClick: React.MouseEventHandler;
-	isDisabled?: boolean;
-}
-interface PrevSongButtonProps extends NextSongButtonProps { }
-
-export function NextSongButton({ onClick, isDisabled }: NextSongButtonProps) {
+export const NextSongButton = observer(() => {
 	const icons = useContext(iconsContext)
+	const store = useContext(playerStoreContext)
 	return (
 		<button
-			onClick={onClick}
-			disabled={isDisabled}
-			role="next song"
+			onClick={() => {
+				store.skip(1)
+			}}
+			disabled={store.songIndex === store.songCount - 1}
+			aria-label="next song"
 		>
 			{icons.next}
-		</button>
+		</button >
 	)
-}
-export function PrevSongButton({ onClick, isDisabled }: PrevSongButtonProps) {
+})
+export const PrevSongButton = observer(() => {
 	const icons = useContext(iconsContext)
+	const store = useContext(playerStoreContext)
 	return (
 		<button
-			onClick={onClick}
-			disabled={isDisabled}
-			role="previous song"
+			onClick={() => {
+				store.skip(-1)
+			}}
+			disabled={store.songIndex <= 0}
+			aria-label="previous song"
 		>
 			{icons.prev}
 		</button>
 	)
-}
+})
 
-interface PlayButtonProps {
-	onClick: React.MouseEventHandler;
-	isPlaying: boolean;
-	isDisabled?: boolean;
-}
-export function PlayButton({ onClick, isPlaying, isDisabled }: PlayButtonProps) {
+export const PlayButton = observer(() => {
 	const icons = useContext(iconsContext)
+	const store = useContext(playerStoreContext)
 	return (
 		<div className='flex items-center gap-3 justify-self-center'>
 			<ToggleButton
-				onClick={onClick}
-				toggleState={!isPlaying}
-				isDisabled={isDisabled}
+				onClick={() => store.togglePlay()}
+				toggleState={!store.isPlaying}
+				isDisabled={!store.isReady}
 				iconOn={icons.play}
 				iconOff={icons.pause}
 			/>
 		</div>
 	)
-}
+})
 
 interface ProgressBarProps {
 	className?: string
-	duration: number;
-	currentProgress: number;
-	onPointerUp: (val: number) => void;
-	onValueChange: (val: number) => void;
 }
-export function ProgressBar({ duration, currentProgress, onValueChange, onPointerUp, className }: ProgressBarProps) {
-	const [seekValue, setSeekValue] = useState(0)
+
+export const ProgressBar = observer(({ className }: ProgressBarProps) => {
+	const store = useContext(playerStoreContext)
 
 	return (
 		<div className="absolute h-1 -top-[6px] left-0 right-0">
 			<Slider
 				className={className}
 				min={0}
-				max={duration}
+				max={store.duration}
 				step={0.01}
-				value={[currentProgress]}
+				value={[store.seek]}
 				onValueChange={(val: number[]) => {
-					setSeekValue(val[0])
-					onValueChange(val[0])
+					runInAction(() => {
+						store.seek = val[0]
+					})
 				}}
-				onPointerUp={() => onPointerUp(seekValue)}
+				onPointerUp={() => {
+					runInAction(() => {
+						store.audio.currentTime = store.seek
+					})
+				}}
 			/>
 		</div>
 	)
-} 
+})

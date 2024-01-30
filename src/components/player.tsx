@@ -1,59 +1,10 @@
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { PlayButton, NextSongButton, PrevSongButton, ProgressBar } from './transportControls';
 import { VolumeSlider, MuteButton } from './volumeControls';
 import './player.css'
-import { createContext } from 'react';
-import { makeAutoObservable } from "mobx";
-
-export const audioIsPlayingContext = createContext([false, () => { }]);
-export const audioIsMutedContext = createContext(null);
-export const audioVolumeContext = createContext(0.7);
-export const audioDurationContext = createContext(0);
-export const AudioPogressContext = createContext(0);
-
-class PlayerStore {
-	isPlaying = false;
-	isMuted = false;
-	volume = 0.7;
-	duration = 0;
-	progress = 0;
-	audioRef;
-
-	constructor(audioRef?: React.MutableRefObject<HTMLAudioElement>) {
-		makeAutoObservable(this, {
-			audioRef: false,
-		});
-		if (audioRef) {
-			this.audioRef = audioRef;
-		}
-	}
-	togglePlayPause() {
-		if (this.audioRef?.current) {
-			if (this.isPlaying) {
-				this.audioRef.current.pause();
-			} else {
-				this.audioRef.current.play();
-			}
-		}
-		this.isPlaying = !this.isPlaying;
-	}
-
-	toggleMuteUnmute() {
-		if (this.audioRef?.current) {
-			this.audioRef.current.muted = !this.audioRef.current.muted;
-		}
-		this.isMuted = !this.isMuted;
-	};
-
-	handleVolumeChange(volumeValue: number) {
-		if (this.audioRef?.current) {
-			this.audioRef.current.volume = volumeValue
-		}
-		this.volume = volumeValue
-	}
-}
-
-const playerStore = new PlayerStore()
+import { makeAutoObservable, computed, runInAction } from "mobx";
+import { iconsContext, playerStoreContext } from '@/App';
+import { observer } from 'mobx-react-lite';
 
 interface Song {
 	title: string;
@@ -65,18 +16,135 @@ interface Song {
 	src: string;
 }
 
+export class PlayerStore {
+	audio = new Audio();
+	isReady = false;
+	isPlaying = false;
+	isMuted = false;
+	volume = 0.7;
+	duration = 0;
+	seek = 0;
+	songIndex = 0;
+	songList: Song[] = []
+
+	constructor(songs: Song[]) {
+		this.songList = songs;
+		this.audio.preload = "metadata";
+		this.audio.src = this.currentSong.src;
+		makeAutoObservable(this, {
+			audio: false,
+			songCount: computed,
+			currentSong: computed,
+		});
+		this.audio.addEventListener('durationchange', (ev) => {
+			const target = (ev.currentTarget as HTMLAudioElement)
+			runInAction(() => {
+				this.duration = target.duration;
+			});
+		});
+		this.audio.addEventListener('canplay', (ev) => {
+			const target = (ev.currentTarget as HTMLAudioElement)
+			runInAction(() => {
+				target.volume = this.volume;
+				this.isReady = true;
+			});
+		});
+		this.audio.addEventListener('playing', (ev) => {
+			runInAction(() => {
+				this.isPlaying = true;
+			});
+		});
+		this.audio.addEventListener('pause', (ev) => {
+			runInAction(() => {
+				this.isPlaying = false;
+			});
+		});
+		this.audio.addEventListener('timeupdate', (ev) => {
+			const target = (ev.currentTarget as HTMLAudioElement)
+			runInAction(() => {
+				this.seek = target.currentTime;
+			});
+		});
+	}
+
+	togglePlay() {
+		if (this.isPlaying) {
+			this.audio.pause();
+		} else {
+			this.audio.play();
+		}
+		this.isPlaying = !this.isPlaying;
+	}
+
+	toggleMute() {
+		this.audio.muted = !this.audio.muted;
+		this.isMuted = !this.isMuted;
+	};
+
+	setVolume(vol: number) {
+		this.audio.volume = vol
+		this.volume = vol
+	}
+	setProgress(time: number) {
+		this.audio.currentTime = time
+		this.seek = time
+	}
+
+	skip(increment: number) {
+		this.skipToIndex(this.songIndex + increment)
+	}
+	skipToIndex(index: number) {
+		this.songIndex = index;
+		this.audio.src = this.currentSong.src;
+		this.audio.load();
+	}
+	playAtIndex(index: number) {
+		this.skipToIndex(index);
+		this.delayedPlay();
+	}
+	delayedPlay(ms: number = 500) {
+		setTimeout(() => {
+			this.audio.play()
+		}, ms)
+	}
+
+	get songCount() {
+		return this.songList.length;
+	}
+
+	get currentSong() {
+		return this.songList[this.songIndex];
+	}
+}
+
 interface SongListProps {
 	songs: Array<Song>;
 }
 
 interface SongEntryProps {
 	song: Song;
+	index: number;
 }
 
-function SongEntry({ song }: SongEntryProps) {
+const SongEntry = observer(({ song, index }: SongEntryProps) => {
+	const icons = useContext(iconsContext)
+	const store = useContext(playerStoreContext)
+
 	return (
-		<div className='bg-slate-900 border-slate-500 border-b-2 px-4 py-1 text-left'>
-			<span>
+		<div className='flex bg-slate-900 border-slate-700 border-b-2 px-4 py-1 text-left '>
+			<button
+				onClick={() => {
+					if (store.songIndex != index) {
+						store.skipToIndex(index);
+						store.audio.play()
+					} else {
+						store.togglePlay();
+					}
+				}}
+			>
+				{(store.songIndex == index && store.isPlaying) ? icons.pause : icons.play}
+			</button>
+			<span className=' pl-2 pt-1'>
 				<span className='text-slate-300 font-bold text-base'>
 					{song.title}
 				</span>
@@ -85,135 +153,58 @@ function SongEntry({ song }: SongEntryProps) {
 					{song.artist}
 				</span>
 			</span>
-		</div>
+		</div >
 	)
-}
+})
 
-export function SongList({ songs }: SongListProps) {
+export const SongList = observer(({ songs }: SongListProps) => {
 
 	const songElements: Array<ReactNode> = []
-	songs.forEach((song) => {
-		const songElement = <SongEntry song={song} />
+	songs.forEach((song, i) => {
+		const songElement = <SongEntry key={i} song={song} index={i} />
 		songElements.push(songElement)
 	})
 
 	return (
-		<div className=' min-w-fit p-2'>
+		<div className=' bg-slate-950 min-w-fit'>
 			{songElements}
 		</div>
 	)
-}
+})
 
-interface AudioPlayerProps {
-	currentSong?: Song;
-	onPrev: () => void;
-	onNext: () => void;
-}
-
-export default function AudioPlayer(props: AudioPlayerProps) {
-	const { currentSong, onPrev, onNext } = props
-
-	const audioRef = useRef<HTMLAudioElement | null>(null);
-
-	// States
-	const [isReady, setIsReady] = useState(false);
-	const [isPlaying, setIsPlaying] = useState(false)
-	const [isMuted, setIsMuted] = useState(false)
-	const [volume, setVolume] = useState(0.7)
-	const [duration, setDuration] = useState(0)
-	const [currrentProgress, setCurrrentProgress] = useState(0);
-
-
-	function togglePlayPause() {
-		if (isPlaying) {
-			audioRef.current?.pause()
-			setIsPlaying(false)
-		} else {
-			audioRef.current?.play()
-			setIsPlaying(true)
-		}
-	}
-	const toggleMuteUnmute = () => {
-		if (!audioRef.current) return;
-		setIsMuted(!audioRef.current.muted)
-		audioRef.current.muted = !audioRef.current.muted
-	};
-
-	function handleVolumeChange(volumeValue: number) {
-		if (!audioRef.current) return;
-		audioRef.current.volume = volumeValue
-		setVolume(volumeValue)
-	}
-
+export const AudioPlayer = observer(() => {
+	const store = useContext(playerStoreContext)
 
 	return (
 		<div>
 			<img
 				className='object-cover'
-				src={currentSong?.album.imgSrc}
-				alt={currentSong?.album.title}
+				src={store.currentSong.album.imgSrc}
+				alt={store.currentSong.album.title}
 			/>
 			<div className='bg-slate-900 text-slate-400 p-3 relative'>
-				<audio
-					ref={audioRef}
-					preload='metadata'
-					onDurationChange={(e) => setDuration(e.currentTarget.duration)}
-					onCanPlay={(e) => {
-						e.currentTarget.volume = volume
-						setIsReady(true)
-					}}
-					onPlaying={() => setIsPlaying(true)}
-					onPause={() => setIsPlaying(false)}
-					onTimeUpdate={(e) => {
-						setCurrrentProgress(e.currentTarget.currentTime)
-					}}
-				>
-					<source type='audio/mpeg' src={currentSong?.src} />
-				</audio>
 
 				<ProgressBar
 					className='[&_.slider-track]:rounded-none'
-					duration={duration}
-					currentProgress={currrentProgress}
-					onValueChange={setCurrrentProgress}
-					onPointerUp={(val: number) => {
-						if (!audioRef.current) return;
-						audioRef.current.currentTime = val;
-					}}
 				/>
-				<SongTitle title={currentSong?.title} artist={currentSong?.artist} />
+				<SongTitle title={store.currentSong.title} artist={store.currentSong.artist} />
 				<div className="grid grid-cols-2 items-center mt-4">
 					{/* Transport controls */}
 					<span className='flex'>
-						<PrevSongButton
-							onClick={onPrev}
-						/>
-						<PlayButton
-							onClick={togglePlayPause}
-							isPlaying={isPlaying}
-							isDisabled={!isReady}
-						/>
-						<NextSongButton
-							onClick={onNext}
-						/>
+						<PrevSongButton />
+						<PlayButton />
+						<NextSongButton />
 					</span>
 					{/* Volume controls */}
 					<span className='flex gap-2 items-center xxl:justify-self-end'>
-						<MuteButton
-							isMuted={isMuted}
-							onClick={toggleMuteUnmute}
-							volume={volume}
-						/>
-						<VolumeSlider
-							volume={volume}
-							onChange={handleVolumeChange}
-						/>
+						<MuteButton />
+						<VolumeSlider />
 					</span>
 				</div >
 			</div>
-		</div>
+		</div >
 	)
-}
+})
 
 
 interface SongTitleProps {
@@ -221,7 +212,7 @@ interface SongTitleProps {
 	artist?: string
 }
 
-function SongTitle({ title, artist }: SongTitleProps) {
+const SongTitle = observer(function ({ title, artist }: SongTitleProps) {
 	return (
 		<div className='text-center mb-1'>
 			<div className='text-slate-300 font-bold text-base'>
@@ -234,4 +225,4 @@ function SongTitle({ title, artist }: SongTitleProps) {
 			)}
 		</div >
 	)
-}
+})
