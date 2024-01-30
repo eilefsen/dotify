@@ -99,10 +99,6 @@ export class PlayerStore {
 		this.audio.src = this.currentSong.src;
 		this.audio.load();
 	}
-	playAtIndex(index: number) {
-		this.skipToIndex(index);
-		this.delayedPlay();
-	}
 	delayedPlay(ms: number = 500) {
 		setTimeout(() => {
 			this.audio.play()
