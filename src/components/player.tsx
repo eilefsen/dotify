@@ -67,7 +67,6 @@ export class PlayerStore {
 		} else {
 			this.play();
 		}
-		this.isPlaying = !this.isPlaying;
 	}
 	play() {
 		this.audio.play();
@@ -84,16 +83,16 @@ export class PlayerStore {
 	};
 
 	setVolume(vol: number) {
-		this.audio.volume = vol
-		this.volume = vol
+		this.audio.volume = vol;
+		this.volume = vol;
 	}
 	setProgress(time: number) {
-		this.audio.currentTime = time
-		this.seek = time
+		this.audio.currentTime = time;
+		this.seek = time;
 	}
 
 	skip(increment: number) {
-		this.skipToIndex(this.songIndex + increment)
+		this.skipToIndex(this.songIndex + increment);
 	}
 	skipToIndex(index: number) {
 		this.songIndex = index;
@@ -125,13 +124,13 @@ interface SongEntryProps {
 }
 
 const SongEntry = observer(({ song, index }: SongEntryProps) => {
-	const icons = useContext(iconsContext)
-	const store = useContext(playerStoreContext)
+	const icons = useContext(iconsContext);
+	const store = useContext(playerStoreContext);
 	function toggleIcon() {
 		if (store.songIndex == index && store.isPlaying) {
-			return icons.pause
+			return icons.pause;
 		} else {
-			return icons.play
+			return icons.play;
 		}
 	}
 	function hoverIcon(isHovering: boolean) {
@@ -143,12 +142,12 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		} else if (store.songIndex == index) {
 			return icons.equalizer;
 		}
-		return <VscBlank size={icons.iconSize} />
+		return <VscBlank size={icons.iconSize} />;
 	}
 
 
-	const hoverRef = useRef(null)
-	const isHovering = useHoverDirty(hoverRef)
+	const hoverRef = useRef(null);
+	const isHovering = useHoverDirty(hoverRef);
 	const btnIcon = hoverIcon(isHovering);
 
 
