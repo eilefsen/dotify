@@ -101,8 +101,8 @@ export class PlayerStore {
 	}
 	delayedPlay(ms: number = 500) {
 		setTimeout(() => {
-			this.audio.play()
-		}, ms)
+			this.play();
+		}, ms);
 	}
 
 	get songCount() {
@@ -152,33 +152,33 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 
 
 	return (
-		<div className='flex bg-slate-900 border-slate-700 border-b-2 px-4 py-1 text-left' >
-			<button
-				ref={hoverRef}
-				className={`size-[${icons.iconSize}px]`}
-				onClick={() => {
-					if (store.songIndex != index) {
-						store.skipToIndex(index);
-						store.audio.play()
-					} else {
-						store.togglePlay();
-					}
-				}}
-			>
+		<button
+			ref={hoverRef}
+			className={`w-full block`}
+			onClick={() => {
+				if (store.songIndex != index) {
+					store.skipToIndex(index);
+					store.play();
+				} else {
+					store.togglePlay();
+				}
+			}}
+		>
+			<div className='flex bg-slate-900 border-slate-700 border-b-2 px-4 py-1 text-left'>
 				<IconContext.Provider value={isHovering ? { className: "text-slate-500" } : { className: "text-slate-600" }}>
 					{btnIcon}
 				</IconContext.Provider>
-			</button>
-			<span className=' pl-2 pt-1'>
-				<span className='text-slate-300 font-bold text-base'>
-					{song.title}
+				<span className=' pl-2 pt-1'>
+					<span className='text-slate-300 font-bold text-base'>
+						{song.title}
+					</span>
+					<span> - </span>
+					<span className='text-slate-400 font-bold text-sm'>
+						{song.artist}
+					</span>
 				</span>
-				<span> - </span>
-				<span className='text-slate-400 font-bold text-sm'>
-					{song.artist}
-				</span>
-			</span>
-		</div >
+			</div >
+		</button>
 	)
 })
 
