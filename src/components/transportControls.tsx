@@ -2,7 +2,7 @@ import ToggleButton from "./toggleButton"
 import './transportControls.css'
 import { iconsContext, playerStoreContext } from "@/App";
 import { Slider } from "./ui/slider";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { runInAction } from "mobx";
 
