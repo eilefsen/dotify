@@ -1,10 +1,13 @@
-import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import { ReactNode, useContext, useRef } from 'react';
 import { PlayButton, NextSongButton, PrevSongButton, ProgressBar } from './transportControls';
 import { VolumeSlider, MuteButton } from './volumeControls';
 import './player.css'
 import { makeAutoObservable, computed, runInAction } from "mobx";
 import { iconsContext, playerStoreContext } from '@/App';
 import { observer } from 'mobx-react-lite';
+import { useHoverDirty } from 'react-use';
+import { VscBlank } from 'react-icons/vsc';
+import { IconContext } from 'react-icons';
 
 interface Song {
 	title: string;
@@ -49,12 +52,12 @@ export class PlayerStore {
 				this.isReady = true;
 			});
 		});
-		this.audio.addEventListener('playing', (ev) => {
+		this.audio.addEventListener('playing', () => {
 			runInAction(() => {
 				this.isPlaying = true;
 			});
 		});
-		this.audio.addEventListener('pause', (ev) => {
+		this.audio.addEventListener('pause', () => {
 			runInAction(() => {
 				this.isPlaying = false;
 			});
@@ -129,10 +132,36 @@ interface SongEntryProps {
 const SongEntry = observer(({ song, index }: SongEntryProps) => {
 	const icons = useContext(iconsContext)
 	const store = useContext(playerStoreContext)
+	function toggleIcon() {
+		if (store.songIndex == index && store.isPlaying) {
+			return icons.pause
+		} else {
+			return icons.play
+		}
+	}
+	function hoverIcon(isHovering: boolean) {
+		if (isHovering) {
+			if (store.songIndex == index) {
+				return toggleIcon();
+			}
+			return icons.play;
+		} else if (store.songIndex == index) {
+			return icons.equalizer;
+		}
+		return <VscBlank size={icons.iconSize} />
+	}
+
+
+	const hoverRef = useRef(null)
+	const isHovering = useHoverDirty(hoverRef)
+	const btnIcon = hoverIcon(isHovering);
+
 
 	return (
-		<div className='flex bg-slate-900 border-slate-700 border-b-2 px-4 py-1 text-left '>
+		<div className='flex bg-slate-900 border-slate-700 border-b-2 px-4 py-1 text-left' >
 			<button
+				ref={hoverRef}
+				className={`size-[${icons.iconSize}px]`}
 				onClick={() => {
 					if (store.songIndex != index) {
 						store.skipToIndex(index);
@@ -142,7 +171,9 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 					}
 				}}
 			>
-				{(store.songIndex == index && store.isPlaying) ? icons.pause : icons.play}
+				<IconContext.Provider value={isHovering ? { className: "text-slate-500" } : { className: "text-slate-600" }}>
+					{btnIcon}
+				</IconContext.Provider>
 			</button>
 			<span className=' pl-2 pt-1'>
 				<span className='text-slate-300 font-bold text-base'>
