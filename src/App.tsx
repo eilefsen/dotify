@@ -6,6 +6,7 @@ import {
 import { createContext } from 'react'
 import './App.css'
 import { AudioPlayer, SongList, PlayerStore } from './components/player'
+import { MdEqualizer } from "react-icons/md";
 
 const iconSize = 32;
 export const iconsContext = createContext({
@@ -18,6 +19,7 @@ export const iconsContext = createContext({
 	volumeMedium: <IoVolumeMedium size={iconSize} />,
 	volumeLow: <IoVolumeLow size={iconSize} />,
 	volumeMute: <IoVolumeMute size={iconSize} />,
+	equalizer: <MdEqualizer size={iconSize} />,
 })
 
 const songs = [
