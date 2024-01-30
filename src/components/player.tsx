@@ -52,16 +52,6 @@ export class PlayerStore {
 				this.isReady = true;
 			});
 		});
-		this.audio.addEventListener('playing', () => {
-			runInAction(() => {
-				this.isPlaying = true;
-			});
-		});
-		this.audio.addEventListener('pause', () => {
-			runInAction(() => {
-				this.isPlaying = false;
-			});
-		});
 		this.audio.addEventListener('timeupdate', (ev) => {
 			const target = (ev.currentTarget as HTMLAudioElement)
 			runInAction(() => {
@@ -72,11 +62,19 @@ export class PlayerStore {
 
 	togglePlay() {
 		if (this.isPlaying) {
-			this.audio.pause();
+			this.pause();
 		} else {
-			this.audio.play();
+			this.play();
 		}
 		this.isPlaying = !this.isPlaying;
+	}
+	play() {
+		this.audio.play();
+		this.isPlaying = true;
+	}
+	pause() {
+		this.audio.pause();
+		this.isPlaying = false;
 	}
 
 	toggleMute() {
