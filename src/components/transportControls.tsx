@@ -2,7 +2,7 @@ import ToggleButton from "./toggleButton"
 import './transportControls.css'
 import { iconsContext, playerStoreContext } from "@/App";
 import { Slider } from "./ui/slider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { runInAction } from "mobx";
 
@@ -58,7 +58,9 @@ interface ProgressBarProps {
 }
 
 export const ProgressBar = observer(({ className }: ProgressBarProps) => {
-	const store = useContext(playerStoreContext)
+	const store = useContext(playerStoreContext);
+	const [localVal, setLocalVal] = useState(0);
+	const [mouseDown, setMouseDown] = useState(false);
 
 	return (
 		<div className="absolute h-1 -top-[6px] left-0 right-0">
@@ -67,15 +69,15 @@ export const ProgressBar = observer(({ className }: ProgressBarProps) => {
 				min={0}
 				max={store.duration}
 				step={0.01}
-				value={[store.seek]}
-				onValueChange={(val: number[]) => {
-					runInAction(() => {
-						store.seek = val[0]
-					})
+				value={mouseDown ? [localVal] : [store.seek]}
+				onPointerDown={() => setMouseDown(true)}
+				onPointerUp={() => setMouseDown(false)}
+				onValueChange={(val) => {
+					setLocalVal(val[0])
 				}}
-				onPointerUp={() => {
+				onValueCommit={(val) => {
 					runInAction(() => {
-						store.audio.currentTime = store.seek
+						store.setProgress(val[0])
 					})
 				}}
 			/>
