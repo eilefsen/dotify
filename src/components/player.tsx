@@ -17,6 +17,7 @@ interface Song {
 		imgSrc: string;
 	};
 	src: string;
+	length?: number;
 }
 
 export class PlayerStore {
