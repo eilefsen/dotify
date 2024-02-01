@@ -64,6 +64,15 @@ export class PlayerStore {
 		});
 	}
 
+	addSong(song: Song) {
+		this.songList.push(song)
+	}
+	addSongs(songs: Song[]) {
+		songs.forEach(song => {
+			this.addSong(song)
+		});
+	}
+
 	togglePlay() {
 		if (this.isPlaying) {
 			this.pause();
