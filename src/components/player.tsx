@@ -1,9 +1,9 @@
-import { ReactNode, useContext, useRef } from 'react';
+import { ReactNode, createContext, useContext, useRef } from 'react';
 import { PlayButton, NextSongButton, PrevSongButton, ProgressBar } from './transportControls';
 import { VolumeSlider, MuteButton } from './volumeControls';
 import './player.css'
 import { makeAutoObservable, computed, runInAction } from "mobx";
-import { iconsContext, playerStoreContext } from '@/App';
+import { iconsContext } from '@/App';
 import { observer } from 'mobx-react-lite';
 import { useHoverDirty } from 'react-use';
 import { VscBlank } from 'react-icons/vsc';
@@ -34,12 +34,15 @@ export class PlayerStore {
 	constructor(songs: Song[]) {
 		this.songList = songs;
 		this.audio.preload = "metadata";
-		this.audio.src = this.currentSong.src;
+		if (this.songCount != 0) {
+			this.audio.src = this.currentSong.src;
+		}
 		makeAutoObservable(this, {
 			audio: false,
 			songCount: computed,
 			currentSong: computed,
 		});
+
 		this.audio.addEventListener('durationchange', (ev) => {
 			const target = (ev.currentTarget as HTMLAudioElement)
 			runInAction(() => {
@@ -113,6 +116,8 @@ export class PlayerStore {
 		return this.songList[this.songIndex];
 	}
 }
+
+export const playerStoreContext = createContext(new PlayerStore([]))
 
 interface SongListProps {
 	songs: Array<Song>;

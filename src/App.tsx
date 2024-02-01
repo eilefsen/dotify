@@ -5,8 +5,8 @@ import {
 import { MdEqualizer } from "react-icons/md";
 
 import './App.css'
-import { AudioPlayer, SongList, PlayerStore } from './components/player'
 import { createContext } from 'react'
+import { AudioPlayer, SongList, PlayerStore, playerStoreContext } from './components/player'
 
 const iconSize = 32;
 export const iconsContext = createContext({
@@ -51,8 +51,6 @@ const songs = [
 		src: "/sound.m4a",
 	},
 ]
-
-export const playerStoreContext = createContext(new PlayerStore(songs))
 
 function App() {
 	const player = new PlayerStore(songs)
