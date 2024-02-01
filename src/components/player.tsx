@@ -198,7 +198,7 @@ export const SongList = observer(({ songs }: SongListProps) => {
 })
 
 export const AudioPlayer = observer(() => {
-	const store = useContext(playerStoreContext)
+	const player = useContext(playerStoreContext)
 
 	return (
 		<div>
@@ -207,7 +207,7 @@ export const AudioPlayer = observer(() => {
 				<ProgressBar
 					className='[&_.slider-track]:rounded-none'
 				/>
-				<SongTitle title={store.currentSong.title} artist={store.currentSong.artist} />
+				<SongTitle title={player.currentSong.title} artist={player.currentSong.artist} />
 				<div className="grid grid-cols-2 items-center mt-4">
 					{/* Transport controls */}
 					<span className='flex'>

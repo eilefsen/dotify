@@ -55,11 +55,11 @@ const songs = [
 export const playerStoreContext = createContext(new PlayerStore(songs))
 
 function App() {
-	const store = new PlayerStore(songs)
+	const player = new PlayerStore(songs)
 
 	return (
 		<div className="max-w-2xl mx-auto">
-			<playerStoreContext.Provider value={store}>
+			<playerStoreContext.Provider value={player}>
 				<span className="flex">
 					<SongList songs={songs} />
 					<div className="block">

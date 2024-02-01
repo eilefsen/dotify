@@ -8,13 +8,13 @@ import { runInAction } from "mobx";
 
 export const NextSongButton = observer(() => {
 	const icons = useContext(iconsContext)
-	const store = useContext(playerStoreContext)
+	const player = useContext(playerStoreContext)
 	return (
 		<button
 			onClick={() => {
-				store.skip(1)
+				player.skip(1)
 			}}
-			disabled={store.songIndex === store.songCount - 1}
+			disabled={player.songIndex === player.songCount - 1}
 			aria-label="next song"
 		>
 			{icons.next}
@@ -23,13 +23,13 @@ export const NextSongButton = observer(() => {
 })
 export const PrevSongButton = observer(() => {
 	const icons = useContext(iconsContext)
-	const store = useContext(playerStoreContext)
+	const player = useContext(playerStoreContext)
 	return (
 		<button
 			onClick={() => {
-				store.skip(-1)
+				player.skip(-1)
 			}}
-			disabled={store.songIndex <= 0}
+			disabled={player.songIndex <= 0}
 			aria-label="previous song"
 		>
 			{icons.prev}
@@ -39,13 +39,13 @@ export const PrevSongButton = observer(() => {
 
 export const PlayButton = observer(() => {
 	const icons = useContext(iconsContext)
-	const store = useContext(playerStoreContext)
+	const player = useContext(playerStoreContext)
 	return (
 		<div className='flex items-center gap-3 justify-self-center'>
 			<ToggleButton
-				onClick={() => store.togglePlay()}
-				toggleState={!store.isPlaying}
-				isDisabled={!store.isReady}
+				onClick={() => player.togglePlay()}
+				toggleState={!player.isPlaying}
+				isDisabled={!player.isReady}
 				iconOn={icons.play}
 				iconOff={icons.pause}
 			/>
@@ -58,7 +58,7 @@ interface ProgressBarProps {
 }
 
 export const ProgressBar = observer(({ className }: ProgressBarProps) => {
-	const store = useContext(playerStoreContext);
+	const player = useContext(playerStoreContext);
 	const [localVal, setLocalVal] = useState(0);
 	const [mouseDown, setMouseDown] = useState(false);
 
@@ -67,9 +67,9 @@ export const ProgressBar = observer(({ className }: ProgressBarProps) => {
 			<Slider
 				className={className}
 				min={0}
-				max={store.duration}
+				max={player.duration}
 				step={0.01}
-				value={mouseDown ? [localVal] : [store.seek]}
+				value={mouseDown ? [localVal] : [player.seek]}
 				onPointerDown={() => setMouseDown(true)}
 				onPointerUp={() => setMouseDown(false)}
 				onValueChange={(val) => {
@@ -77,7 +77,7 @@ export const ProgressBar = observer(({ className }: ProgressBarProps) => {
 				}}
 				onValueCommit={(val) => {
 					runInAction(() => {
-						store.setProgress(val[0])
+						player.setProgress(val[0])
 					})
 				}}
 			/>
