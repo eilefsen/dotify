@@ -178,7 +178,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 				}
 			}}
 		>
-			<div className='flex bg-slate-900 border-slate-700 border-b-2 px-4 py-1 text-left'>
+			<div className='flex bg-slate-900 hover:bg-slate-800 border-slate-700 border-b-2 px-4 py-1 text-left'>
 				<IconContext.Provider value={isHovering ? { className: "text-slate-500" } : { className: "text-slate-600" }}>
 					{btnIcon}
 				</IconContext.Provider>

@@ -11,14 +11,14 @@ import { AudioPlayer, SongList, PlayerStore, playerStoreContext } from './compon
 const iconSize = 32;
 export const iconsContext = createContext({
 	iconSize: iconSize,
-	play: <IoPlay size={iconSize} />,
-	pause: <IoPause size={iconSize} />,
-	prev: <IoPlaySkipBack size={iconSize} />,
-	next: <IoPlaySkipForward size={iconSize} />,
-	volumeHigh: <IoVolumeHigh size={iconSize} />,
-	volumeMedium: <IoVolumeMedium size={iconSize} />,
-	volumeLow: <IoVolumeLow size={iconSize} />,
-	volumeMute: <IoVolumeMute size={iconSize} />,
+	play: <IoPlay size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	pause: <IoPause size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	prev: <IoPlaySkipBack size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	next: <IoPlaySkipForward size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	volumeHigh: <IoVolumeHigh size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	volumeMedium: <IoVolumeMedium size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	volumeLow: <IoVolumeLow size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
+	volumeMute: <IoVolumeMute size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
 	equalizer: <MdEqualizer size={iconSize} />,
 })
 
