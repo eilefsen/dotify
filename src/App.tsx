@@ -2,11 +2,11 @@ import {
 	IoPlay, IoPause, IoPlaySkipForward, IoPlaySkipBack,
 	IoVolumeHigh, IoVolumeMedium, IoVolumeLow, IoVolumeMute
 } from "react-icons/io5";
+import { MdEqualizer } from "react-icons/md";
 
-import { createContext } from 'react'
 import './App.css'
 import { AudioPlayer, SongList, PlayerStore } from './components/player'
-import { MdEqualizer } from "react-icons/md";
+import { createContext } from 'react'
 
 const iconSize = 32;
 export const iconsContext = createContext({
