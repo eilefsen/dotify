@@ -46,7 +46,7 @@ const songs = [
 		artist: "Artist",
 		album: {
 			title: "cool",
-			imgSrc: "/cover.png",
+			imgSrc: "/album.jpg",
 		},
 		src: "/sound.m4a",
 	},
@@ -62,7 +62,14 @@ function App() {
 			<playerStoreContext.Provider value={store}>
 				<span className="flex">
 					<SongList songs={songs} />
-					<AudioPlayer />
+					<div className="block">
+						<img
+							className='object-cover'
+							src={player.currentSong.album.imgSrc}
+							alt={player.currentSong.album.title}
+						/>
+						<AudioPlayer />
+					</div>
 				</span>
 			</playerStoreContext.Provider>
 		</div >

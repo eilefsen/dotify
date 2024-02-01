@@ -202,11 +202,6 @@ export const AudioPlayer = observer(() => {
 
 	return (
 		<div>
-			<img
-				className='object-cover'
-				src={store.currentSong.album.imgSrc}
-				alt={store.currentSong.album.title}
-			/>
 			<div className='bg-slate-900 text-slate-400 p-3 relative'>
 
 				<ProgressBar
