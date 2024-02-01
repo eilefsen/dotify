@@ -1,7 +1,8 @@
 import { Slider } from "@/components/ui/slider"
 import { useContext } from "react";
-import { iconsContext, playerStoreContext } from "@/App";
+import { iconsContext } from "@/App";
 import { observer } from "mobx-react-lite";
+import { playerStoreContext } from "./player";
 
 export const VolumeSlider = observer(() => {
 	const player = useContext(playerStoreContext);

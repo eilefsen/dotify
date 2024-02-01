@@ -1,10 +1,11 @@
 import ToggleButton from "./toggleButton"
 import './transportControls.css'
-import { iconsContext, playerStoreContext } from "@/App";
+import { iconsContext } from "@/App";
 import { Slider } from "./ui/slider";
 import { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { runInAction } from "mobx";
+import { playerStoreContext } from "./player";
 
 export const NextSongButton = observer(() => {
 	const icons = useContext(iconsContext)
