@@ -2,7 +2,7 @@ import {computed, makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
 import {MdEqualizer} from "react-icons/md";
 
-import {PiPauseCircleFill, PiPlayCircleFill, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiVinylRecord} from "react-icons/pi";
+import {PiMusicNoteSimple, PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiVinylRecord} from "react-icons/pi";
 import {Song} from "./types";
 
 const iconSize = 32;
@@ -20,7 +20,9 @@ export const iconsContext = createContext({
     volumeLow: <PiSpeakerNone size={iconSize} className={iconClassName} />,
     volumeMute: <PiSpeakerSlash size={iconSize} className={iconClassName} />,
     equalizer: <MdEqualizer size={iconSize} />,
-    album: <PiVinylRecord size={iconSize} className={iconClassName} />
+    album: <PiVinylRecord size={iconSize} className={iconClassName} />,
+    song: <PiMusicNotesSimple size={iconSize} className={iconClassName} />,
+    playlist: <PiPlaylist size={iconSize} className={iconClassName} />,
 });
 
 export class PlayerStore {
