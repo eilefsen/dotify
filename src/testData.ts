@@ -27,3 +27,7 @@ export const songs = [
         src: "/sound.m4a",
     },
 ];
+
+export const albums = [
+    songs,
+];
