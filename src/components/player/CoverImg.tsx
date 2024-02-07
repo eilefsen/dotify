@@ -6,7 +6,7 @@ interface coverImgProps {
 export default function CoverImg({src, alt}: coverImgProps) {
     return (
         <img
-            className='object-cover'
+            className='object-cover aspect-square'
             src={src}
             alt={alt}
         />
