@@ -4,13 +4,13 @@
 
 @layer base {
     :root {
-        @apply bg-slate-800 text-slate-100;
+        @apply bg-neutral-950 text-neutral-100;
     }
 }
 
 @layer base {
     * {
-        @apply border-border;
+        @apply border-border box-border;
     }
 
     body {

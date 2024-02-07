@@ -1,49 +1,46 @@
+import './App.css';
+import {PlayerStore, iconsContext, playerStoreContext} from './components/player';
 import {
-	IoPlay, IoPause, IoPlaySkipForward, IoPlaySkipBack,
-	IoVolumeHigh, IoVolumeMedium, IoVolumeLow, IoVolumeMute
-} from "react-icons/io5";
-import { MdEqualizer } from "react-icons/md";
-import {songs} from './testData';
+    createBrowserRouter,
+    RouterProvider,
+} from 'react-router-dom';
 
-import './App.css'
-import { createContext } from 'react'
-import { AudioPlayer, SongList, PlayerStore, playerStoreContext } from './components/player'
+import {MdEqualizer} from "react-icons/md";
+import {PiPauseCircleFill, PiPlayCircleFill, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiVinylRecord} from 'react-icons/pi';
+
+import {songs} from './testData';
+import Layout from './components/layout/Sidebar';
+
 
 const iconSize = 32;
-export const iconsContext = createContext({
-	iconSize: iconSize,
-	play: <IoPlay size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	pause: <IoPause size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	prev: <IoPlaySkipBack size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	next: <IoPlaySkipForward size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	volumeHigh: <IoVolumeHigh size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	volumeMedium: <IoVolumeMedium size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	volumeLow: <IoVolumeLow size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	volumeMute: <IoVolumeMute size={iconSize} className="hover:text-slate-300 transition-colors duration-75" />,
-	equalizer: <MdEqualizer size={iconSize} />,
-})
+const playIconSize = 56;
+const skipIconSize = 24;
+const iconClassName = "hover:text-neutral-300 transition-colors duration-75";
+const icons = {
+    iconSize: iconSize,
+    play: <PiPlayCircleFill size={playIconSize} className={iconClassName} />,
+    pause: <PiPauseCircleFill size={playIconSize} className={iconClassName} />,
+    prev: <PiSkipBackFill size={skipIconSize} className={iconClassName} />,
+    next: <PiSkipForwardFill size={skipIconSize} className={iconClassName} />,
+    volumeHigh: <PiSpeakerHigh size={iconSize} className={iconClassName} />,
+    volumeMedium: <PiSpeakerLow size={iconSize} className={iconClassName} />,
+    volumeLow: <PiSpeakerNone size={iconSize} className={iconClassName} />,
+    volumeMute: <PiSpeakerSlash size={iconSize} className={iconClassName} />,
+    equalizer: <MdEqualizer size={iconSize} />,
+    album: <PiVinylRecord size={iconSize} className={iconClassName} />
+};
 
 
 function App() {
-	const player = new PlayerStore(songs)
+    const player = new PlayerStore(songs);
 
-	return (
-		<div className="max-w-2xl mx-auto">
-			<playerStoreContext.Provider value={player}>
-				<span className="flex">
-					<SongList songs={songs} />
-					<div className="block">
-						<img
-							className='object-cover'
-							src={player.currentSong.album.imgSrc}
-							alt={player.currentSong.album.title}
-						/>
-						<AudioPlayer />
-					</div>
-				</span>
-			</playerStoreContext.Provider>
-		</div >
-	)
+    return (
+        <iconsContext.Provider value={icons}>
+            <playerStoreContext.Provider value={player}>
+                <Layout />
+            </playerStoreContext.Provider>
+        </iconsContext.Provider>
+    );
 }
 
-export default App
+export default App;
