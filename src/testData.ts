@@ -1,33 +1,47 @@
 export const songs = [
     {
-        title: "test1",
-        artist: "testArtisteeee",
+        title: "Dogs",
+        artist: "City Jeans",
         album: {
-            title: "ALBUM",
-            imgSrc: "/cover.png",
+            id: 1,
+            title: "Grasshopper",
+            imgSrc: "/City_Jeans-Grasshopper/cover.png",
         },
-        src: "/sound.m4a",
+        src: "/City_Jeans-Grasshopper/01-Dogs.m4a",
     },
     {
-        title: "test2",
-        artist: "ARTIST3",
+        title: "Gas Station",
+        artist: "City Jeans",
         album: {
-            title: "alb",
-            imgSrc: "/cover.png",
+            id: 1,
+            title: "Grasshopper",
+            imgSrc: "/City_Jeans-Grasshopper/cover.png",
         },
-        src: "/sound.m4a",
+        src: "/City_Jeans-Grasshopper/02-Gas_Station.m4a",
     },
     {
-        title: "test3",
-        artist: "Artist",
+        title: "Dogs",
+        artist: "City Jeans",
         album: {
-            title: "cool",
-            imgSrc: "/album.jpg",
+            id: 1,
+            title: "Grasshopper",
+            imgSrc: "/City_Jeans-Grasshopper/cover.png",
         },
-        src: "/sound.m4a",
+        src: "/City_Jeans-Grasshopper/03-Grasshopper.m4a",
     },
 ];
 
 export const albums = [
-    songs,
+    {
+        title: "Grasshopper",
+        artist: "City Jeans",
+        imgSrc: "/cover.png",
+        songs: songs,
+    },
+    {
+        title: "Cat",
+        artist: "Kittens for satan",
+        imgSrc: "/album.jpg",
+        songs: songs,
+    },
 ];
