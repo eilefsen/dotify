@@ -1,4 +1,6 @@
 import {useContext} from "react";
+import {NavLink} from "react-router-dom";
+
 import {CoverImg, iconsContext, playerStoreContext} from "@/components/player";
 import {SongTitle} from "../player/status";
 
@@ -9,7 +11,12 @@ export default function Sidebar() {
 
     return (
         <div className={`fixed left-0 bottom-0 h-screen w-52 bg-black border-r border-neutral-50`}>
-            <SidebarButton text="Albums" icon={icons.album} onClick={() => {}} />
+            <div className="brand flex justify-center items-center h-20 border-b border-white">
+                <h1 className="text-5xl">Dotify</h1>
+            </div>
+            <SidebarButton text="Albums" icon={icons.album} to="/albums/" />
+            <SidebarButton text="Songs" icon={icons.song} to="/songs/" />
+            <SidebarButton text="Playlists" icon={icons.playlist} to="/playlists/" />
             <div className="absolute bottom-0">
                 <SongInfo />
             </div>
@@ -21,20 +28,17 @@ export default function Sidebar() {
 interface sidebarButtonProps {
     text: string;
     icon: React.ReactNode;
-    onClick: React.MouseEventHandler;
+    to: string;
 }
 
-function SidebarButton({text, icon, onClick}: sidebarButtonProps) {
-    return (
-        <button
-            onClick={onClick}
-            className="w-full flex items-center gap-2 h-9 px-3 py-5 bg-neutral-950 hover:bg-neutral-900 border-neutral-800 border-b"
-        >
-            {icon}
-            {text}
-        </button>
-    );
+function SidebarButton({text, icon, to}: sidebarButtonProps) {
+    const btnCn = "w-full flex items-center gap-2 h-9 px-3 py-5 bg-neutral-950 hover:bg-neutral-900 border-neutral-800 border-b";
 
+    return (
+        <NavLink to={to} className={btnCn}>
+            {icon}{text}
+        </NavLink>
+    );
 }
 
 function SongInfo() {
