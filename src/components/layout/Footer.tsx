@@ -2,7 +2,7 @@ import {MuteButton, NextSongButton, PlayButton, PrevSongButton, ProgressBar, Vol
 
 export default function Footer() {
     return (
-        <div className="h-20 fixed bottom-0 left-52 right-0 bg-black flex" >
+        <div className="z-20 h-20 fixed bottom-0 left-52 right-0 bg-black flex" >
             <div className="absolute top-0 left-0 right-0 h-1">
                 <ProgressBar
                     className='[&_.slider-track]:rounded-none [&_.slider-thumb]:hidden'

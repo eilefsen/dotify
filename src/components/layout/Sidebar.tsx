@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 
 import {CoverImg, iconsContext, playerStoreContext} from "@/components/player";
 import {SongTitle} from "../player/status";
+import {observer} from "mobx-react-lite";
 
 
 export default function Sidebar() {
@@ -10,14 +11,14 @@ export default function Sidebar() {
     const icons = useContext(iconsContext);
 
     return (
-        <div className={`fixed left-0 bottom-0 h-screen w-52 bg-black border-r border-neutral-50`}>
+        <div className={`z-30 fixed left-0 bottom-0 h-screen w-52 bg-black border-r border-neutral-50`}>
             <div className="brand flex justify-center items-center h-20 border-b border-white">
                 <h1 className="text-5xl">Dotify</h1>
             </div>
             <SidebarButton text="Albums" icon={icons.album} to="/albums/" />
             <SidebarButton text="Songs" icon={icons.song} to="/songs/" />
             <SidebarButton text="Playlists" icon={icons.playlist} to="/playlists/" />
-            <div className="absolute bottom-0">
+            <div className="absolute bottom-0 bg-black">
                 <SongInfo />
             </div>
 
@@ -41,7 +42,7 @@ function SidebarButton({text, icon, to}: sidebarButtonProps) {
     );
 }
 
-function SongInfo() {
+const SongInfo = observer(function () {
     const player = useContext(playerStoreContext);
     return (
         <div className="song-info w-full h-auto">
@@ -57,4 +58,4 @@ function SongInfo() {
             </div>
         </div>
     );
-}
+});
