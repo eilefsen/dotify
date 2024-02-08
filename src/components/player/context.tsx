@@ -1,8 +1,7 @@
 import {computed, makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
-import {MdEqualizer} from "react-icons/md";
 
-import {PiMusicNoteSimple, PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
+import {PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
 import {Song} from "./types";
 
 const iconSize = 32;
@@ -35,13 +34,14 @@ export class PlayerStore {
     volume = 0.7;
     duration = 0;
     seek = 0;
-    songIndex = 0;
+    songIndex = -1;
     songList: Song[] = [];
 
     constructor(songs: Song[]) {
         this.songList = songs;
         this.audio.preload = "metadata";
         if (this.songCount != 0) {
+            this.songIndex = 0;
             this.audio.src = this.currentSong.src;
         }
         makeAutoObservable(this, {
@@ -69,6 +69,12 @@ export class PlayerStore {
                 this.seek = target.currentTime;
             });
         });
+    }
+
+    loadSong(song: Song) {
+        //TODO: optimize song list somehow
+        this.addSong(song);
+        this.skipToIndex(this.songCount - 1);
     }
 
     addSong(song: Song) {

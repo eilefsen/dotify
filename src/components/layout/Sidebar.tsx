@@ -46,16 +46,19 @@ const SongInfo = observer(function () {
     const player = useContext(playerStoreContext);
     return (
         <div className="song-info w-full h-auto">
-            <CoverImg
-                src={player.currentSong.album.imgSrc}
-                alt={player.currentSong.album.title}
-            />
-            <div className="px-5 pb-1 w-full h-20 flex items-center">
-                <SongTitle
-                    title={player.currentSong.title}
-                    artist={player.currentSong.artist}
+            {player.currentSong && <>
+                < CoverImg
+                    src={player.currentSong.album.imgSrc}
+                    alt={player.currentSong.album.title}
                 />
-            </div>
+                <div className="px-5 pb-1 w-full h-20 flex items-center">
+                    <SongTitle
+                        title={player.currentSong.title}
+                        artist={player.currentSong.artist}
+                    />
+                </div>
+            </>
+            }
         </div>
     );
 });

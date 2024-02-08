@@ -18,7 +18,7 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
     const icons = useContext(iconsContext);
     const store = useContext(playerStoreContext);
     function toggleIcon() {
-        if (store.songIndex == index && store.isPlaying) {
+        if (store.currentSong == song && store.isPlaying) {
             return icons.pauseSmall;
         } else {
             return icons.playSmall;
@@ -26,7 +26,7 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
     }
     function hoverIcon(isHovering: boolean) {
         if (isHovering) {
-            if (store.songIndex == index) {
+            if (store.currentSong == song) {
                 return toggleIcon();
             }
             return icons.playSmall;
@@ -46,8 +46,8 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
                 <button
                     className={"w-3 hover:text-white text-neutral-400"}
                     onClick={() => {
-                        if (store.songIndex != index) {
-                            store.skipToIndex(index);
+                        if (store.currentSong != song) {
+                            store.loadSong(song);
                             store.play();
                         } else {
                             store.togglePlay();

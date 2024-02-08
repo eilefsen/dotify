@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    const player = new PlayerStore(grasshopper_songs);
+    const player = new PlayerStore([]);
 
     return (
         <iconsContext.Provider value={icons}>
