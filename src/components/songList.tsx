@@ -1,7 +1,6 @@
 import {observer} from "mobx-react-lite";
 import {useContext, useRef, ReactNode} from "react";
 import {useHoverDirty} from "react-use";
-import {IconContext} from "react-icons";
 import {VscBlank} from "react-icons/vsc";
 
 import {Song, iconsContext, playerStoreContext} from "./player";
@@ -20,9 +19,9 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
     const store = useContext(playerStoreContext);
     function toggleIcon() {
         if (store.songIndex == index && store.isPlaying) {
-            return icons.pause;
+            return icons.pauseSmall;
         } else {
-            return icons.play;
+            return icons.playSmall;
         }
     }
     function hoverIcon(isHovering: boolean) {
@@ -30,9 +29,7 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
             if (store.songIndex == index) {
                 return toggleIcon();
             }
-            return icons.play;
-        } else if (store.songIndex == index) {
-            return icons.equalizer;
+            return icons.playSmall;
         }
         return <VscBlank size={icons.iconSize} />;
     }
@@ -44,33 +41,34 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
 
 
     return (
-        <button
-            ref={hoverRef}
-            className={`w-full block`}
-            onClick={() => {
-                if (store.songIndex != index) {
-                    store.skipToIndex(index);
-                    store.play();
-                } else {
-                    store.togglePlay();
-                }
-            }}
-        >
-            <div className='flex bg-slate-900 hover:bg-slate-800 border-slate-700 border-b-2 px-4 py-1 text-left'>
-                <IconContext.Provider value={isHovering ? {className: "text-slate-500"} : {className: "text-slate-600"}}>
-                    {btnIcon}
-                </IconContext.Provider>
-                <span className=' pl-2 pt-1'>
-                    <span className='text-slate-300 font-bold text-base'>
-                        {song.title}
-                    </span>
-                    <span> - </span>
-                    <span className='text-slate-400 font-bold text-sm'>
-                        {song.artist}
-                    </span>
-                </span>
-            </div >
-        </button>
+        <tr ref={hoverRef} className='w-full h-14 bg-neutral-950 hover:bg-neutral-900 border-neutral-800 border-b'>
+            <td className="pl-5">
+                <button
+                    className={"w-3 hover:text-white text-neutral-400"}
+                    onClick={() => {
+                        if (store.songIndex != index) {
+                            store.skipToIndex(index);
+                            store.play();
+                        } else {
+                            store.togglePlay();
+                        }
+                    }}
+                >
+                    {isHovering ? btnIcon : index + 1}
+                </button>
+            </td>
+            <td className='pl-2'>
+                <div className='text-neutral-300 font-bold text-base'>
+                    {song.title}
+                </div>
+                <div className='text-neutral-400 font-bold text-sm'>
+                    {song.artist}
+                </div>
+            </td>
+            <td className='pr-5 text-neutral-400 font-bold text-sm text-right'>
+                {song.duration}
+            </td>
+        </tr >
     );
 });
 
