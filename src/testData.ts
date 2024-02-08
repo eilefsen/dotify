@@ -20,7 +20,7 @@ export const songs = [
         src: "/City_Jeans-Grasshopper/02-Gas_Station.m4a",
     },
     {
-        title: "Dogs",
+        title: "Grasshopper",
         artist: "City Jeans",
         album: {
             id: 1,
@@ -33,15 +33,17 @@ export const songs = [
 
 export const albums = [
     {
+        id: 1,
         title: "Grasshopper",
         artist: "City Jeans",
         imgSrc: "/cover.png",
         songs: songs,
     },
     {
-        title: "Cat",
-        artist: "Kittens for satan",
-        imgSrc: "/album.jpg",
+        id: 2,
+        title: "Blue Album",
+        artist: "Weezer",
+        imgSrc: "/Weezer-Blue_Album/Folder.jpg",
         songs: songs,
     },
 ];
