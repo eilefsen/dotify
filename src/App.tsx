@@ -3,13 +3,13 @@ import {PlayerStore, iconsContext, playerStoreContext} from './components/player
 import Layout from './components/layout';
 import {
     createBrowserRouter,
-    Router,
     RouterProvider,
 } from 'react-router-dom';
 
 import {songs} from './testData';
 import {icons} from './icons';
 import Albums from './components/pages/Albums';
+import AlbumContent from './components/pages/Album';
 import Songs from './components/pages/Songs';
 
 const router = createBrowserRouter([
@@ -20,6 +20,10 @@ const router = createBrowserRouter([
             {
                 path: "/albums/",
                 element: <Albums />,
+            },
+            {
+                path: "/album/:albumId",
+                element: <AlbumContent />,
             },
             {
                 path: "/songs/",

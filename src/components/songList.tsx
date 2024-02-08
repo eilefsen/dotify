@@ -75,7 +75,6 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
 });
 
 export const SongList = observer(({songs}: SongListProps) => {
-
     const songElements: Array<ReactNode> = [];
     songs.forEach((song, i) => {
         const songElement = <SongEntry key={i} song={song} index={i} />;
@@ -83,8 +82,8 @@ export const SongList = observer(({songs}: SongListProps) => {
     });
 
     return (
-        <div className=' bg-slate-950 min-w-fit'>
+        <>
             {songElements}
-        </div>
+        </>
     );
 });
