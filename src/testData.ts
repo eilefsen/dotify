@@ -1,4 +1,6 @@
-export const songs = [
+import {Album, Song} from '@/components/player/types';
+
+export const grasshopper_songs: Song[] = [
     {
         title: "Dogs",
         artist: "City Jeans",
@@ -7,6 +9,7 @@ export const songs = [
             title: "Grasshopper",
             imgSrc: "/City_Jeans-Grasshopper/cover.png",
         },
+        duration: "0:49",
         src: "/City_Jeans-Grasshopper/01-Dogs.m4a",
     },
     {
@@ -17,6 +20,7 @@ export const songs = [
             title: "Grasshopper",
             imgSrc: "/City_Jeans-Grasshopper/cover.png",
         },
+        duration: "1:28",
         src: "/City_Jeans-Grasshopper/02-Gas_Station.m4a",
     },
     {
@@ -27,23 +31,159 @@ export const songs = [
             title: "Grasshopper",
             imgSrc: "/City_Jeans-Grasshopper/cover.png",
         },
+        duration: "1:34",
         src: "/City_Jeans-Grasshopper/03-Grasshopper.m4a",
     },
 ];
 
-export const albums = [
+export const blue_album_songs: Song[] = [
+    {
+        title: "My Name Is Jonas",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "3:25",
+        src: "/City_Jeans-Grasshopper/01-My_Name_Is_Jonas.mp3",
+    },
+    {
+        title: "No One Else",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "3:05",
+        src: "/City_Jeans-Grasshopper/02-No_One_Else.mp3",
+    },
+    {
+        title: "The World Has Turned And Left Me Here",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "2:39",
+        src: "/City_Jeans-Grasshopper/03-The_World_Has_Turned_And_Left_Me_Here.mp3",
+    },
+    {
+        title: "Buddy Holly",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "2:39",
+        src: "/City_Jeans-Grasshopper/05-Buddy_Holly.mp3",
+    },
+    {
+        title: "Buddy Holly",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "2:39",
+        src: "/City_Jeans-Grasshopper/05-Buddy_Holly.mp3",
+    },
+    {
+        title: "Buddy Holly",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "2:39",
+        src: "/City_Jeans-Grasshopper/05-Buddy_Holly.mp3",
+    },
+    {
+        title: "Undone - The Sweater Song",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "5:05",
+        src: "/City_Jeans-Grasshopper/05-Undone-The_Sweater_Song.mp3",
+    },
+    {
+        title: "Surf Wax America",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "3:07",
+        src: "/City_Jeans-Grasshopper/06-Surf_Wax_America.mp3",
+    },
+    {
+        title: "Say It Ain't So",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "4:19",
+        src: "/City_Jeans-Grasshopper/07-Say_It_Ain't_So.mp3",
+    },
+    {
+        title: "In The Garage",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "3:56",
+        src: "/City_Jeans-Grasshopper/08-In_The_Garage.mp3",
+    },
+    {
+        title: "Holiday",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "3:25",
+        src: "/City_Jeans-Grasshopper/09-Holiday.mp3",
+    },
+    {
+        title: "Only In Dreams",
+        artist: "Weezer",
+        album: {
+            id: 2,
+            title: "Blue Album",
+            imgSrc: "/Weezer-Blue_Album/Folder.jpg",
+        },
+        duration: "7:59",
+        src: "/City_Jeans-Grasshopper/10-Only_In_Dreams.mp3",
+    },
+];
+
+export const albums: Album[] = [
     {
         id: 1,
         title: "Grasshopper",
         artist: "City Jeans",
         imgSrc: "/cover.png",
-        songs: songs,
+        songs: grasshopper_songs,
     },
     {
         id: 2,
         title: "Blue Album",
         artist: "Weezer",
         imgSrc: "/Weezer-Blue_Album/Folder.jpg",
-        songs: songs,
+        songs: blue_album_songs,
     },
 ];
