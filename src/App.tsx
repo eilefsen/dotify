@@ -6,7 +6,7 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
-import {songs} from './testData';
+import {grasshopper_songs} from './testData';
 import {icons} from './icons';
 import Albums from './components/pages/Albums';
 import AlbumContent from './components/pages/Album';
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    const player = new PlayerStore(songs);
+    const player = new PlayerStore(grasshopper_songs);
 
     return (
         <iconsContext.Provider value={icons}>
