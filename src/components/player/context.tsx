@@ -2,7 +2,7 @@ import {computed, makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
 import {MdEqualizer} from "react-icons/md";
 
-import {PiMusicNoteSimple, PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiVinylRecord} from "react-icons/pi";
+import {PiMusicNoteSimple, PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
 import {Song} from "./types";
 
 const iconSize = 32;
@@ -12,6 +12,8 @@ const iconClassName = "hover:text-neutral-300 transition-colors duration-75";
 export const iconsContext = createContext({
     iconSize: iconSize,
     play: <PiPlayCircleFill size={playIconSize} className={iconClassName} />,
+    playSmall: <PiPlayCircleFill size={iconSize} className={iconClassName} />,
+    pauseSmall: <PiPauseCircleFill size={iconSize} className={iconClassName} />,
     pause: <PiPauseCircleFill size={playIconSize} className={iconClassName} />,
     prev: <PiSkipBackFill size={skipIconSize} className={iconClassName} />,
     next: <PiSkipForwardFill size={skipIconSize} className={iconClassName} />,
@@ -19,10 +21,10 @@ export const iconsContext = createContext({
     volumeMedium: <PiSpeakerLow size={iconSize} className={iconClassName} />,
     volumeLow: <PiSpeakerNone size={iconSize} className={iconClassName} />,
     volumeMute: <PiSpeakerSlash size={iconSize} className={iconClassName} />,
-    equalizer: <MdEqualizer size={iconSize} />,
     album: <PiVinylRecord size={iconSize} className={iconClassName} />,
     song: <PiMusicNotesSimple size={iconSize} className={iconClassName} />,
     playlist: <PiPlaylist size={iconSize} className={iconClassName} />,
+    timer: <PiTimer size={iconSize} className={iconClassName} />
 });
 
 export class PlayerStore {
