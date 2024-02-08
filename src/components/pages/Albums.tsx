@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 export default function Albums() {
     const albumCards: ReactNode[] = [];
     albums.forEach((album) => {
-        albumCards.push(<AlbumCard title={album.title} artist={album.artist} imgSrc={album.imgSrc} to={`/album/${album.id}`} />);
+        albumCards.push(<AlbumCard key={album.id} title={album.title} artist={album.artist} imgSrc={album.imgSrc} to={`/album/${album.id}`} />);
     });
 
     return (
