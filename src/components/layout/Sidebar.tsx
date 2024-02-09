@@ -51,7 +51,7 @@ const SongInfo = observer(function () {
                     src={player.currentSong.album.imgSrc}
                     alt={player.currentSong.album.title}
                 />
-                <div className="px-5 pb-1 w-full h-20 flex items-center">
+                <div className="px-5 py-3 w-full min-h-20 flex items-center">
                     <SongTitle
                         title={player.currentSong.title}
                         artist={player.currentSong.artist}
