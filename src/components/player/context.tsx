@@ -73,17 +73,31 @@ export class PlayerStore {
 
     loadSong(song: Song) {
         //TODO: optimize song list somehow
+        //TODO: also preload the next song in collection, so that the forward skip button works
         this.addSong(song);
+        this.skipToIndex(this.songCount - 1);
+    }
+    loadSongs(songs: Song[]) {
+        //TODO: optimize song list somehow
+        //TODO: also preload the next song in collection, so that the forward skip button works
+        this.addSongs(songs);
         this.skipToIndex(this.songCount - 1);
     }
 
     addSong(song: Song) {
+        if (this.songIndex < 0) {
+            this.songIndex = 0;
+        }
         this.songList.push(song);
     }
     addSongs(songs: Song[]) {
         songs.forEach(song => {
             this.addSong(song);
         });
+    }
+    clearSongs() {
+        this.songList = [];
+        this.songIndex = -1;
     }
 
     togglePlay() {
