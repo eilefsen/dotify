@@ -4,6 +4,7 @@ export const grasshopper_songs: Song[] = [
     {
         title: "Dogs",
         artist: "City Jeans",
+        id: 1,
         album: {
             id: 1,
             title: "Grasshopper",
@@ -15,6 +16,7 @@ export const grasshopper_songs: Song[] = [
     {
         title: "Gas Station",
         artist: "City Jeans",
+        id: 2,
         album: {
             id: 1,
             title: "Grasshopper",
@@ -26,6 +28,7 @@ export const grasshopper_songs: Song[] = [
     {
         title: "Grasshopper",
         artist: "City Jeans",
+        id: 3,
         album: {
             id: 1,
             title: "Grasshopper",
@@ -40,6 +43,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "My Name Is Jonas",
         artist: "Weezer",
+        id: 4,
         album: {
             id: 2,
             title: "Blue Album",
@@ -51,6 +55,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "No One Else",
         artist: "Weezer",
+        id: 5,
         album: {
             id: 2,
             title: "Blue Album",
@@ -62,6 +67,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "The World Has Turned And Left Me Here",
         artist: "Weezer",
+        id: 6,
         album: {
             id: 2,
             title: "Blue Album",
@@ -73,6 +79,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "Buddy Holly",
         artist: "Weezer",
+        id: 7,
         album: {
             id: 2,
             title: "Blue Album",
@@ -84,6 +91,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "Undone - The Sweater Song",
         artist: "Weezer",
+        id: 8,
         album: {
             id: 2,
             title: "Blue Album",
@@ -95,6 +103,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "Surf Wax America",
         artist: "Weezer",
+        id: 9,
         album: {
             id: 2,
             title: "Blue Album",
@@ -106,8 +115,9 @@ export const blue_album_songs: Song[] = [
     {
         title: "Say It Ain't So",
         artist: "Weezer",
+        id: 10,
         album: {
-            id: 2,
+            id: 1,
             title: "Blue Album",
             imgSrc: "/Weezer-Blue_Album/Folder.jpg",
         },
@@ -117,6 +127,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "In The Garage",
         artist: "Weezer",
+        id: 11,
         album: {
             id: 2,
             title: "Blue Album",
@@ -128,6 +139,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "Holiday",
         artist: "Weezer",
+        id: 12,
         album: {
             id: 2,
             title: "Blue Album",
@@ -139,6 +151,7 @@ export const blue_album_songs: Song[] = [
     {
         title: "Only In Dreams",
         artist: "Weezer",
+        id: 13,
         album: {
             id: 2,
             title: "Blue Album",
@@ -165,3 +178,5 @@ export const albums: Album[] = [
         songs: blue_album_songs,
     },
 ];
+
+export const allSongs = grasshopper_songs.concat(blue_album_songs);

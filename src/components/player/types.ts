@@ -1,6 +1,7 @@
 export interface Song {
     title: string;
     artist: string;
+    id: number;
     album: {
         id: number;
         title: string;
