@@ -1,14 +1,13 @@
 import {useParams} from "react-router-dom";
-import {SongList} from "../songList";
+import {SongTable} from "../songList";
 import {albums} from "@/testData";
-import {CoverImg, Song, iconsContext} from "../player";
+import {CoverImg, PlayButton, Song, iconsContext, playerStoreContext} from "../player";
 import {useContext} from "react";
-import {IconContext} from "react-icons";
 import {Album} from "../player/types";
+import {observer} from "mobx-react-lite";
 
 
 export default function AlbumContent() {
-    const icons = useContext(iconsContext);
     const params = useParams();
     var album: Album = {
         id: 0,
@@ -22,44 +21,66 @@ export default function AlbumContent() {
             album = a;
         }
     });
+
     return (
-        <div className="w-full rounded-2xl border-white border overflow-hidden py-2">
-            <div className="w-64 p-8 flex items-center">
-                <CoverImg src={album.imgSrc} alt={album.title} />
-                <div className="pl-6 h-full">
-                    <div className="text-6xl font-bold">
-                        {album.title}
-                    </div>
-                    <div className="pl-1 text-neutral-400 text-2xl font-medium">
-                        {album.artist}
+        <>
+            <h2 className="text-5xl py-3">Album</h2>
+            <div className="w-full rounded-2xl border-white border overflow-hidden py-2">
+                <div className="w-64 px-8 py-4 flex items-center">
+                    <CoverImg src={album.imgSrc} alt={album.title} />
+                    <div className="pl-6 h-full">
+                        <div className="text-6xl font-bold">
+                            {album.title}
+                        </div>
+                        <div className="pl-1 text-neutral-400 text-2xl font-medium">
+                            {album.artist}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <table className="w-full table-fixed">
-                <colgroup>
-                    <col className="w-12" />
-                    <col />
-                    <col className="w-16" />
-                </colgroup>
-                <thead>
-                    <tr className="text-left text-lg h-11 text-neutral-300 border-b border-neutral-600">
-                        <th className="pl-5">
-                            #
-                        </th>
-                        <th>
-                            Title
-                        </th>
-                        <th className="pr-5">
-                            <IconContext.Provider value={{className: "ml-auto"}}>
-                                {icons.timer}
-                            </IconContext.Provider>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <SongList songs={album.songs} />
-                </tbody>
-            </table>
-        </div >
+                <div className="pl-8">
+                    <AlbumPlayButton album={album} />
+                </div>
+                <SongTable songs={album.songs} />
+            </div >
+        </>
     );
 }
+
+interface albumPlayButtonProps {
+    album: Album;
+}
+
+const AlbumPlayButton = observer(({album}: albumPlayButtonProps) => {
+    const player = useContext(playerStoreContext);
+    const icons = useContext(iconsContext);
+
+    function toggleIcon() {
+        if (player.currentSong == undefined) {
+            return icons.play;
+        }
+        if (player.currentSong.album.id == album.id && player.isPlaying) {
+            return icons.pause;
+        } else {
+            return icons.play;
+        }
+    }
+    const btnIcon = toggleIcon();
+
+    return (
+        <button
+            className={"w-3 hover:text-white text-neutral-400"}
+            onClick={() => {
+                if (player.currentSong == undefined || (player.currentSong.album.id != album.id)) {
+                    player.clearSongs();
+                    player.loadSongs(album.songs);
+                    player.skipToIndex(0);
+                    player.play();
+                } else {
+                    player.togglePlay();
+                }
+            }}
+        >
+            {btnIcon}
+        </button>
+    );
+});
