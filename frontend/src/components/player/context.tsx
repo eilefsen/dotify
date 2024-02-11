@@ -2,7 +2,7 @@ import {computed, makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
 
 import {PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
-import {Song} from "./types";
+import {Album, Song} from "./types";
 
 const iconSize = 32;
 const playIconSize = 56;

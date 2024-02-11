@@ -1,21 +1,17 @@
 export interface Song {
     title: string;
     artist: string;
-    id: number;
-    album: {
-        id: number;
-        title: string;
-        imgSrc: string;
-    };
-    src: string;
+    id: string;
+    albumId: string;
     duration: string;
+    src: string;
+    imgSrc: string;
 }
 
 export interface Album {
-    id: number,
+    id: string,
     title: string,
     artist: string;
     imgSrc: string,
     songs: Song[],
-
 }

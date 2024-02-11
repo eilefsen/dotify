@@ -48,8 +48,8 @@ const SongInfo = observer(function () {
         <div className="song-info w-full h-auto">
             {player.currentSong && <>
                 < CoverImg
-                    src={player.currentSong.album.imgSrc}
-                    alt={player.currentSong.album.title}
+                    src={player.currentSong.imgSrc}
+                    alt={player.currentSong.title}
                 />
                 <div className="px-5 py-3 w-full min-h-20 flex items-center">
                     <SongTitle

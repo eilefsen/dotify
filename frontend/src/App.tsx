@@ -20,14 +20,23 @@ const router = createBrowserRouter([
             {
                 path: "/albums/",
                 element: <Albums />,
+                loader: async () => {
+                    return fetch(`/api/albums`);
+                }
             },
             {
-                path: "/album/:albumId",
+                path: "/album/:id",
                 element: <AlbumContent />,
+                loader: async ({params}) => {
+                    return fetch(`/api/album/${params.id}`);
+                }
             },
             {
                 path: "/songs/",
                 element: <Songs />,
+                loader: async () => {
+                    return fetch(`/api/songs`);
+                }
             },
         ],
     },
