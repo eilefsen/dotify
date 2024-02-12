@@ -68,6 +68,31 @@ func AllAlbums() ([]Album, error) {
 	return albums, nil
 }
 
+func AlbumJSONByID(id uint32) (AlbumJSON, error) {
+	var albumJson AlbumJSON
+	alb, err := AlbumById(id)
+	if err != nil {
+		return albumJson, fmt.Errorf("albumJSONByID: %v", err)
+	}
+	songs, err := SongsByAlbum(id)
+	if err != nil {
+		return albumJson, fmt.Errorf("albumJSONByID: %v", err)
+	}
+	var songsJson []SongJSON
+	for _, v := range songs {
+		s := SongJSON{
+			Song:   v,
+			ImgSrc: alb.ImgSrc,
+		}
+		songsJson = append(songsJson, s)
+	}
+	albumJson = AlbumJSON{
+		Album: alb,
+		Songs: songsJson,
+	}
+	return albumJson, nil
+}
+
 func AllSongs() ([]SongJSON, error) {
 	var songs []SongJSON
 
@@ -130,7 +155,12 @@ func AlbumById(id uint32) (Album, error) {
 	defer rows.Close()
 
 	rows.Next()
-	if err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.ImgSrc); err != nil {
+	if err := rows.Scan(
+		&alb.ID,
+		&alb.Title,
+		&alb.Artist,
+		&alb.ImgSrc,
+	); err != nil {
 		return alb, fmt.Errorf("albumById %q: %v", id, err)
 	}
 	if err := rows.Err(); err != nil {

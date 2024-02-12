@@ -39,25 +39,9 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		songs, err := models.SongsByAlbum(albumId)
+		album, err := models.AlbumJSONByID(albumId)
 		if err != nil {
 			log.Fatal(err)
-		}
-		alb, err := models.AlbumById(albumId)
-		if err != nil {
-			log.Fatal(err)
-		}
-		var songsJson []models.SongJSON
-		for _, v := range songs {
-			s := models.SongJSON{
-				Song:   v,
-				ImgSrc: alb.ImgSrc,
-			}
-			songsJson = append(songsJson, s)
-		}
-		album := models.AlbumJSON{
-			Album: alb,
-			Songs: songsJson,
 		}
 		c.IndentedJSON(http.StatusOK, album)
 	})
