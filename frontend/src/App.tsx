@@ -6,7 +6,6 @@ import {
     RouterProvider,
 } from 'react-router-dom';
 
-import {grasshopper_songs} from './testData';
 import {icons} from './icons';
 import Albums from './components/pages/Albums';
 import AlbumContent from './components/pages/Album';
@@ -29,6 +28,13 @@ const router = createBrowserRouter([
                 element: <AlbumContent />,
                 loader: async ({params}) => {
                     return fetch(`/api/album/${params.id}`);
+                }
+            },
+            {
+                path: "/artist/:artistName",
+                element: <Albums />,
+                loader: async ({params}) => {
+                    return fetch(`/api/artist/${params.artistName}`);
                 }
             },
             {
