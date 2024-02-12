@@ -1,0 +1,22 @@
+DROP TABLE IF EXISTS song;
+
+DROP TABLE IF EXISTS album;
+
+CREATE TABLE
+  `album` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `artist` VARCHAR(255) NOT NULL,
+    `img_src` VARCHAR(511) NOT NULL
+  );
+
+CREATE TABLE
+  `song` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `artist` VARCHAR(255) NOT NULL,
+    `src` VARCHAR(511) NOT NULL,
+    `duration` INT UNSIGNED NOT NULL,
+    `album_id` INT UNSIGNED NOT NULL,
+    FOREIGN KEY (`album_id`) REFERENCES `album` (`id`)
+  );
