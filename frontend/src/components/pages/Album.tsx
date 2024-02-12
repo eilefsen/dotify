@@ -1,6 +1,5 @@
 import {useLoaderData, useParams} from "react-router-dom";
 import {SongTable} from "../songList";
-import {albums} from "@/testData";
 import {CoverImg, PlayButton, Song, iconsContext, playerStoreContext} from "../player";
 import {useContext} from "react";
 import {Album} from "../player/types";
