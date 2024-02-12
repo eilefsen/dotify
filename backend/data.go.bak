@@ -1,23 +1,5 @@
 package main
 
-type song struct {
-	Title    string `json:"title"`
-	Artist   string `json:"artist"`
-	ID       string `json:"id"`
-	AlbumID  string `json:"albumId"`
-	Duration string `json:"duration"`
-	Src      string `json:"src"`
-	ImgSrc   string `json:"imgSrc"`
-}
-
-type album struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	Artist string `json:"artist"`
-	ImgSrc string `json:"imgSrc"`
-	Songs  []song `json:"songs"`
-}
-
 var albums = []album{
 	{
 		ID:     "1",
