@@ -26,6 +26,7 @@ const router = createBrowserRouter([
             {
                 path: "/album/:id",
                 element: <AlbumContent />,
+                errorElement: <></>,
                 loader: async ({params}) => {
                     return fetch(`/api/album/${params.id}`);
                 }
