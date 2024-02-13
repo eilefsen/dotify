@@ -59,5 +59,5 @@ func main() {
 		}
 		c.IndentedJSON(http.StatusOK, songs)
 	})
-	router.Run("localhost:3000")
+	router.Run("localhost:" + os.Getenv("BACKEND_PORT"))
 }
