@@ -37,11 +37,11 @@ func main() {
 	router.GET("/api/album/:albumId", func(c *gin.Context) {
 		albumId, err := models.GetPathInt(c, "albumId")
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		album, err := models.AlbumJSONByID(albumId)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		c.IndentedJSON(http.StatusOK, album)
 	})
@@ -53,7 +53,7 @@ func main() {
 		c.IndentedJSON(http.StatusOK, albums)
 	})
 	router.GET("/api/songs", func(c *gin.Context) {
-		songs, err := models.AllSongs()
+		songs, err := models.AllSongsJSON()
 		if err != nil {
 			log.Fatal(err)
 		}
