@@ -1,6 +1,14 @@
 package models
 
-import "fmt"
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+)
+
+// Returned when no resources matching a query exist.
+// Similar to database/sql.ErrNoRows
+var ErrResourceNotFound = errors.New("models: could not find resources")
 
 func AllAlbums() ([]Album, error) {
 	var albums []Album
@@ -20,6 +28,9 @@ func AllAlbums() ([]Album, error) {
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("AllAlbums: %v", err)
+	}
+	if len(albums) == 0 {
+		return nil, ErrResourceNotFound
 	}
 	return albums, nil
 }
@@ -43,29 +54,28 @@ func AlbumsByArtist(name string) ([]Album, error) {
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("AlbumsByArtist %q: %v", name, err)
 	}
+	if len(albums) == 0 {
+		return nil, ErrResourceNotFound
+	}
 	return albums, nil
 }
 
 func AlbumById(id uint32) (Album, error) {
 	var alb Album
-
-	rows, err := db.Query("SELECT * FROM album WHERE id = ?", id)
+	row := db.QueryRow("SELECT * FROM album WHERE id = ?", id)
+	err := row.Scan(
+		&alb.ID,
+		&alb.Title,
+		&alb.Artist,
+		&alb.ImgSrc,
+	)
+	if err == sql.ErrNoRows {
+		return alb, ErrResourceNotFound
+	}
 	if err != nil {
-		return alb, fmt.Errorf("albumById %q: %v", id, err)
+		return alb, fmt.Errorf("AlbumById %q: %v", id, err)
 	}
-	defer rows.Close()
-
-	if rows.Next() {
-		if err := rows.Scan(
-			&alb.ID,
-			&alb.Title,
-			&alb.Artist,
-			&alb.ImgSrc,
-		); err != nil {
-			return alb, fmt.Errorf("AlbumById %q: %v", id, err)
-		}
-	}
-	if err := rows.Err(); err != nil {
+	if err := row.Err(); err != nil {
 		return alb, fmt.Errorf("AlbumById %q: %v", id, err)
 	}
 	return alb, nil
@@ -96,6 +106,9 @@ func SongsByAlbum(albumId uint32) ([]Song, error) {
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
+	}
+	if len(songs) == 0 {
+		return nil, ErrResourceNotFound
 	}
 	return songs, nil
 }

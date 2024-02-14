@@ -2,62 +2,42 @@ package main
 
 import (
 	"eilefsen/dotify-backend/models"
-	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/lmittmann/tint"
 )
 
 func main() {
-	cfg := mysql.Config{
+	slog.SetDefault(slog.New(
+		tint.NewHandler(os.Stdout, &tint.Options{
+			Level: slog.LevelDebug,
+		}),
+	))
+	dbcfg := mysql.Config{
 		User:   os.Getenv("DBUSER"),
 		Passwd: os.Getenv("DBPASS"),
 		Net:    "tcp",
 		Addr:   "127.0.0.1:3306",
 		DBName: "dotify",
 	}
-	err := models.InitDB(cfg.FormatDSN())
+	err := models.InitDB(dbcfg.FormatDSN())
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
-	fmt.Println("DB Connected.")
+	slog.Info("DB connected.", "Addr", dbcfg.Addr, "DBName", dbcfg.DBName)
 
-	router := gin.Default()
-	router.GET("/api/albums", func(c *gin.Context) {
-		albums, err := models.AllAlbums()
-		if err != nil {
-			log.Fatal(err)
-		}
-		c.IndentedJSON(http.StatusOK, albums)
-	})
-	router.GET("/api/album/:albumId", func(c *gin.Context) {
-		albumId, err := models.GetPathInt(c, "albumId")
-		if err != nil {
-			log.Println(err)
-		}
-		album, err := models.AlbumJSONByID(albumId)
-		if err != nil {
-			log.Println(err)
-		}
-		c.IndentedJSON(http.StatusOK, album)
-	})
-	router.GET("/api/artist/:artist", func(c *gin.Context) {
-		albums, err := models.AlbumsByArtist(c.Param("artist"))
-		if err != nil {
-			log.Fatal(err)
-		}
-		c.IndentedJSON(http.StatusOK, albums)
-	})
-	router.GET("/api/songs", func(c *gin.Context) {
-		songs, err := models.AllSongsJSON()
-		if err != nil {
-			log.Fatal(err)
-		}
-		c.IndentedJSON(http.StatusOK, songs)
-	})
-	router.Run("localhost:" + os.Getenv("BACKEND_PORT"))
+	rt := chi.NewRouter()
+	rt.Use(middleware.Logger)
+	rt.Get("/api/albums", FetchAllAlbums)
+	rt.Get("/api/album/{id}", FetchAlbumByID)
+	rt.Get("/api/artist/{name}", FetchAlbumsByArtist)
+	rt.Get("/api/songs", FetchAllSongs)
+	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }

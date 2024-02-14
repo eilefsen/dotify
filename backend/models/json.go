@@ -1,20 +1,27 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"log/slog"
+)
 
 func AlbumJSONByID(id uint32) (AlbumJSON, error) {
-	var albumJson AlbumJSON
+	albumJson := AlbumJSON{
+		Songs: []SongJSON{},
+	}
 
 	alb, err := AlbumById(id)
 	if err != nil {
 		return albumJson, fmt.Errorf("AlbumJSONByID: %v", err)
 	}
 	songs, err := SongsByAlbum(id)
-	if err != nil {
+	if err == ErrResourceNotFound {
+		slog.Info("AlbumJSONByID: no songs found", "album", alb)
+	} else if err != nil {
 		return albumJson, fmt.Errorf("AlbumJSONByID: %v", err)
 	}
 
-	var songsJson []SongJSON
+	songsJson := []SongJSON{}
 	for _, v := range songs {
 		s := SongJSON{
 			Song:   v,
@@ -27,6 +34,40 @@ func AlbumJSONByID(id uint32) (AlbumJSON, error) {
 		Songs: songsJson,
 	}
 	return albumJson, nil
+}
+func AlbumsJSONByArtist(artist string) ([]AlbumJSON, error) {
+	albumsJson := []AlbumJSON{
+		{
+			Songs: []SongJSON{},
+		},
+	}
+	slog.Debug("AlbumsJSONByArtist: ", "albumsJson", albumsJson)
+
+	albums, err := AlbumsByArtist(artist)
+	if err != nil {
+		return albumsJson, fmt.Errorf("AlbumJSONByID: %v", err)
+	}
+	for _, a := range albums {
+		songs, err := SongsByAlbum(a.ID)
+		if err != nil {
+			return albumsJson, fmt.Errorf("AlbumJSONByID: %v", err)
+		}
+
+		songsJson := []SongJSON{}
+		for _, v := range songs {
+			s := SongJSON{
+				Song:   v,
+				ImgSrc: a.ImgSrc,
+			}
+			songsJson = append(songsJson, s)
+		}
+		albumsJson = append(albumsJson, AlbumJSON{
+			Album: a,
+			Songs: songsJson,
+		})
+	}
+
+	return albumsJson, nil
 }
 
 func AllSongsJSON() ([]SongJSON, error) {
