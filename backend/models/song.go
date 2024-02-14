@@ -1,73 +1,51 @@
 package models
 
-import (
-	"fmt"
-	"log/slog"
-)
+import "fmt"
 
-func AlbumJSONByID(id uint32) (AlbumJSON, error) {
-	albumJson := AlbumJSON{
-		Songs: []SongJSON{},
-	}
-
-	alb, err := AlbumById(id)
-	if err != nil {
-		return albumJson, fmt.Errorf("AlbumJSONByID: %v", err)
-	}
-	songs, err := SongsByAlbum(id)
-	if err == ErrResourceNotFound {
-		slog.Info("AlbumJSONByID: no songs found", "album", alb)
-	} else if err != nil {
-		return albumJson, fmt.Errorf("AlbumJSONByID: %v", err)
-	}
-
-	songsJson := []SongJSON{}
-	for _, v := range songs {
-		s := SongJSON{
-			Song:   v,
-			ImgSrc: alb.ImgSrc,
-		}
-		songsJson = append(songsJson, s)
-	}
-	albumJson = AlbumJSON{
-		Album: alb,
-		Songs: songsJson,
-	}
-	return albumJson, nil
+type Song struct {
+	ID       uint32 `json:"id"`
+	Title    string `json:"title"`
+	Artist   string `json:"artist"`
+	Src      string `json:"src"`
+	Duration uint32 `json:"duration"`
+	AlbumID  uint32 `json:"albumId"`
 }
-func AlbumsJSONByArtist(artist string) ([]AlbumJSON, error) {
-	albumsJson := []AlbumJSON{
-		{
-			Songs: []SongJSON{},
-		},
-	}
-	slog.Debug("AlbumsJSONByArtist: ", "albumsJson", albumsJson)
 
-	albums, err := AlbumsByArtist(artist)
+type SongJSON struct {
+	Song
+	ImgSrc string `json:"imgSrc"`
+}
+
+func SongsByAlbum(albumId uint32) ([]Song, error) {
+	var songs []Song
+
+	rows, err := db.Query("SELECT * FROM song WHERE album_id = ?", albumId)
 	if err != nil {
-		return albumsJson, fmt.Errorf("AlbumJSONByID: %v", err)
+		return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
 	}
-	for _, a := range albums {
-		songs, err := SongsByAlbum(a.ID)
+	defer rows.Close()
+	for rows.Next() {
+		var song Song
+		err := rows.Scan(
+			&song.ID,
+			&song.Title,
+			&song.Artist,
+			&song.Src,
+			&song.Duration,
+			&song.AlbumID,
+		)
 		if err != nil {
-			return albumsJson, fmt.Errorf("AlbumJSONByID: %v", err)
+			return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
 		}
-
-		songsJson := []SongJSON{}
-		for _, v := range songs {
-			s := SongJSON{
-				Song:   v,
-				ImgSrc: a.ImgSrc,
-			}
-			songsJson = append(songsJson, s)
-		}
-		albumsJson = append(albumsJson, AlbumJSON{
-			Album: a,
-			Songs: songsJson,
-		})
+		songs = append(songs, song)
 	}
-
-	return albumsJson, nil
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
+	}
+	if len(songs) == 0 {
+		return nil, ErrResourceNotFound
+	}
+	return songs, nil
 }
 
 func AllSongsJSON() ([]SongJSON, error) {
