@@ -23,5 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-public/audio/
-!public/audio/City_Jeans-Grasshopper/
+Weezer-Blue_Album/
