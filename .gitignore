@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+public/audio/
+!public/audio/City_Jeans-Grasshopper/
