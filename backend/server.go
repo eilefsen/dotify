@@ -24,7 +24,7 @@ func main() {
 		Passwd: os.Getenv("DBPASS"),
 		Net:    "tcp",
 		Addr:   "127.0.0.1:3306",
-		DBName: "dotify",
+		DBName: os.Getenv("DBNAME"),
 	}
 	err := models.InitDB(dbcfg.FormatDSN())
 	if err != nil {
