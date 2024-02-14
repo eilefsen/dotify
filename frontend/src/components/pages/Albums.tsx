@@ -6,6 +6,7 @@ import {Album} from "../player/types";
 export default function Albums() {
     const albumCards: ReactNode[] = [];
     const albums = useLoaderData() as Album[];
+    console.debug(albums);
     albums.forEach((album) => {
         albumCards.push(<AlbumCard key={album.id} title={album.title} artist={album.artist} imgSrc={album.imgSrc} to={`/album/${album.id}`} />);
     });

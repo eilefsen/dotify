@@ -10,44 +10,8 @@ import {icons} from './icons';
 import Albums from './components/pages/Albums';
 import AlbumContent from './components/pages/Album';
 import Songs from './components/pages/Songs';
+import router from './router';
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout />,
-        children: [
-            {
-                path: "/albums/",
-                element: <Albums />,
-                loader: async () => {
-                    return fetch(`/api/albums`);
-                }
-            },
-            {
-                path: "/album/:id",
-                element: <AlbumContent />,
-                errorElement: <></>,
-                loader: async ({params}) => {
-                    return fetch(`/api/album/${params.id}`);
-                }
-            },
-            {
-                path: "/artist/:artistName",
-                element: <Albums />,
-                loader: async ({params}) => {
-                    return fetch(`/api/artist/${params.artistName}`);
-                }
-            },
-            {
-                path: "/songs/",
-                element: <Songs />,
-                loader: async () => {
-                    return fetch(`/api/songs`);
-                }
-            },
-        ],
-    },
-]);
 
 function App() {
     const player = new PlayerStore([]);

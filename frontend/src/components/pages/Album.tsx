@@ -9,6 +9,7 @@ import {observer} from "mobx-react-lite";
 export default function AlbumContent() {
     const params = useParams();
     const album = useLoaderData() as Album;
+    console.debug("Album:", album);
 
     return (
         <>

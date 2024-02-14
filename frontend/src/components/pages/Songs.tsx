@@ -4,6 +4,7 @@ import {Song} from "../player";
 
 export default function Songs() {
     const songs = useLoaderData() as Song[];
+    console.debug(songs);
     return (
         <>
             <h2 className="text-5xl py-3">Songs</h2>
