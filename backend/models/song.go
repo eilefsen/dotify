@@ -52,7 +52,6 @@ func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Songs.ByAlbum: %v", err)
 	}
-
 	return songs, nil
 }
 
@@ -65,7 +64,6 @@ func (songs Songs) All() (Songs, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Songs.All: %v", err)
 	}
-
 	return songs, nil
 }
 
@@ -89,6 +87,5 @@ func (songs Songs) absQuery(query string, args ...any) (Songs, error) {
 	if len(songs) == 0 {
 		return nil, ErrResourceNotFound
 	}
-
 	return songs, nil
 }
