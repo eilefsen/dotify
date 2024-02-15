@@ -87,7 +87,7 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
                     {song.title}
                 </div>
                 <div className='text-neutral-400 font-bold text-sm'>
-                    {song.artist}
+                    {song.artist.name}
                 </div>
             </td>
             <td className='pr-5 text-neutral-400 font-bold text-sm text-right'>

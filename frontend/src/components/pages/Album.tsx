@@ -7,7 +7,6 @@ import {observer} from "mobx-react-lite";
 
 
 export default function AlbumContent() {
-    const params = useParams();
     const album = useLoaderData() as Album;
     console.debug("Album:", album);
 
@@ -22,7 +21,7 @@ export default function AlbumContent() {
                             {album.title}
                         </div>
                         <div className="pl-1 text-neutral-400 text-2xl font-medium">
-                            {album.artist}
+                            {album.artist.name}
                         </div>
                     </div>
                 </div>
@@ -47,7 +46,7 @@ const AlbumPlayButton = observer(({album}: albumPlayButtonProps) => {
         if (player.currentSong == undefined) {
             return icons.play;
         }
-        if (player.currentSong.albumId == album.id && player.isPlaying) {
+        if (player.currentSong.album.id == album.id && player.isPlaying) {
             return icons.pause;
         } else {
             return icons.play;
@@ -59,7 +58,7 @@ const AlbumPlayButton = observer(({album}: albumPlayButtonProps) => {
         <button
             className={"w-3 hover:text-white text-neutral-400"}
             onClick={() => {
-                if (player.currentSong == undefined || (player.currentSong.albumId != album.id)) {
+                if (player.currentSong == undefined || (player.currentSong.album.id != album.id)) {
                     player.clearSongs();
                     player.loadSongs(album.songs);
                     player.skipToIndex(0);

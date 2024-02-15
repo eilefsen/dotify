@@ -7,7 +7,6 @@ import {observer} from "mobx-react-lite";
 
 
 export default function Sidebar() {
-    const player = useContext(playerStoreContext);
     const icons = useContext(iconsContext);
 
     return (
@@ -48,13 +47,13 @@ const SongInfo = observer(function () {
         <div className="song-info w-full h-auto">
             {player.currentSong && <>
                 < CoverImg
-                    src={player.currentSong.imgSrc}
-                    alt={player.currentSong.title}
+                    src={player.currentSong.album.imgSrc}
+                    alt={`${player.currentSong.album.artist} - ${player.currentSong.album.title}`}
                 />
                 <div className="px-5 py-3 w-full min-h-20 flex items-center">
                     <SongTitle
                         title={player.currentSong.title}
-                        artist={player.currentSong.artist}
+                        artist={player.currentSong.artist.name}
                     />
                 </div>
             </>
