@@ -9,12 +9,16 @@ type Artist struct {
 	ID   uint32 `json:"id"`
 	Name string `json:"name"`
 }
+type Artists []Artist
 
-func (Artist) query() string {
+func (Artist) selectQuery() string {
 	query := `
     SELECT artist.id, artist.name FROM artist
     `
 	return query
+}
+func (Artists) selectQuery() string {
+	return Artist{}.selectQuery()
 }
 
 func (artist *Artist) scan(r rowScanner) error {
@@ -24,10 +28,8 @@ func (artist *Artist) scan(r rowScanner) error {
 	)
 }
 
-func (Artist) All() ([]Artist, error) {
-	var artists []Artist
-
-	rows, err := db.Query(Artist{}.query())
+func (artists Artists) All() (Artists, error) {
+	rows, err := db.Query(Artist{}.selectQuery())
 	if err != nil {
 		return nil, fmt.Errorf("AllArtists: %v", err)
 	}
@@ -50,7 +52,7 @@ func (Artist) All() ([]Artist, error) {
 }
 
 func (artist Artist) ByID(id uint32) (Artist, error) {
-	row := db.QueryRow(artist.query()+"WHERE artist.id = ?", id)
+	row := db.QueryRow(artist.selectQuery()+"WHERE artist.id = ?", id)
 	err := artist.scan(row)
 	if err == sql.ErrNoRows {
 		return artist, ErrResourceNotFound
@@ -65,7 +67,7 @@ func (artist Artist) ByID(id uint32) (Artist, error) {
 }
 
 func (artist Artist) ByName(name string) (Artist, error) {
-	row := db.QueryRow(artist.query()+"WHERE artist.name = ?", name)
+	row := db.QueryRow(artist.selectQuery()+"WHERE artist.name = ?", name)
 	err := artist.scan(row)
 	if err == sql.ErrNoRows {
 		return artist, ErrResourceNotFound
