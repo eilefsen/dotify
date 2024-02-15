@@ -6,11 +6,12 @@
         2. 204 (No Content, used instead of empty response)
 2. /api/albums
     * status codes
-        1. 200 (potential empty response)
+        1. 200
         2. 204 (No Content, used instead of empty response)
 2. /api/artist/{name: string}
     * status codes
-        1. 200 (potential empty response)
+        1. 200
+        2. 204 (No Content, used instead of empty response)
         3. 404 (Not Found, caused by no albums with matching artist name in database)
 3. /api/album/{id: uint32}
     * status codes

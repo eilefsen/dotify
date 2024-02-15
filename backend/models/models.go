@@ -14,3 +14,9 @@ func InitDB(dataSourceName string) error {
 	}
 	return db.Ping()
 }
+
+// type which includes both *sql.Row and *sql.Rows
+type rowScanner interface {
+	Scan(dest ...any) error
+	Err() error
+}

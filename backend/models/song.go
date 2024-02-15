@@ -1,119 +1,91 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Song struct {
 	ID       uint32 `json:"id"`
 	Title    string `json:"title"`
-	Artist   string `json:"artist"`
 	Src      string `json:"src"`
 	Duration uint32 `json:"duration"`
-	AlbumID  uint32 `json:"albumId"`
+	Artist   Artist `json:"artist"`
+	Album    Album  `json:"album"`
 }
 
-type SongJSON struct {
-	Song
-	ImgSrc string `json:"imgSrc"`
+func (song *Song) scan(r rowScanner) error {
+	return r.Scan(
+		&song.ID,
+		&song.Title,
+		&song.Src,
+		&song.Duration,
+		&song.Album.ID,
+		&song.Album.Title,
+		&song.Album.ImgSrc,
+		&song.Artist.ID,
+		&song.Artist.Name,
+	)
 }
 
-func SongsByAlbum(albumId uint32) ([]Song, error) {
+func (Song) query() string {
+	query := `
+    SELECT
+    song.id, song.title, song.src, song.duration,
+    album.id, album.title, album.img_src, artist.*
+    FROM song
+    INNER JOIN album ON album.id=song.album_id
+    INNER JOIN artist ON artist.id=song.artist_id
+    `
+	return query
+}
+
+func (Song) All() ([]Song, error) {
 	var songs []Song
 
-	rows, err := db.Query("SELECT * FROM song WHERE album_id = ?", albumId)
+	rows, err := db.Query(Song{}.query())
 	if err != nil {
-		return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
+		return nil, fmt.Errorf("Song.All: %v", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var song Song
-		err := rows.Scan(
-			&song.ID,
-			&song.Title,
-			&song.Artist,
-			&song.Src,
-			&song.Duration,
-			&song.AlbumID,
-		)
+		var s Song
+		err := s.scan(rows)
 		if err != nil {
-			return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
+			return nil, fmt.Errorf("Song.All: %v", err)
 		}
-		songs = append(songs, song)
+		songs = append(songs, s)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("SongsByAlbum %q: %v", albumId, err)
+		return nil, fmt.Errorf("Song.All: %v", err)
 	}
 	if len(songs) == 0 {
 		return nil, ErrResourceNotFound
 	}
+
 	return songs, nil
 }
+func (Song) ByAlbum(id uint32) ([]Song, error) {
+	var songs []Song
 
-func AllSongsJSON() ([]SongJSON, error) {
-	var songs []SongJSON
-
-	query := `
-    SELECT song.*, album.img_src FROM song
-    INNER JOIN album ON album_id=album.id
-    `
-
-	rows, err := db.Query(query)
+	rows, err := db.Query(Song{}.query()+"WHERE song.album_id = ?", id)
 	if err != nil {
-		return nil, fmt.Errorf("AllSongs: %v", err)
+		return nil, fmt.Errorf("Song.ByAlbum: %v", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var song SongJSON
-		err := rows.Scan(
-			&song.ID,
-			&song.Title,
-			&song.Artist,
-			&song.Src,
-			&song.Duration,
-			&song.AlbumID,
-			&song.ImgSrc,
-		)
+		var s Song
+		err := s.scan(rows)
 		if err != nil {
-			return nil, fmt.Errorf("AllSongs: %v", err)
+			return nil, fmt.Errorf("Song.ByAlbum: %v", err)
 		}
-		songs = append(songs, song)
+		songs = append(songs, s)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("AllSongs: %v", err)
+		return nil, fmt.Errorf("Song.ByAlbum: %v", err)
 	}
-	return songs, nil
-}
+	if len(songs) == 0 {
+		return nil, ErrResourceNotFound
+	}
 
-func SongsJSONByAlbum(albumId uint32) ([]SongJSON, error) {
-	var songs []SongJSON
-
-	query := `
-    SELECT song.* album.img_src FROM song
-    WHERE album_id = ? INNER JOIN album ON album.id=song.album_id
-    `
-
-	rows, err := db.Query(query, albumId)
-	if err != nil {
-		return nil, fmt.Errorf("SongsJSONByAlbum %q: %v", albumId, err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var song SongJSON
-		err := rows.Scan(
-			&song.ID,
-			&song.Title,
-			&song.Artist,
-			&song.Src,
-			&song.Duration,
-			&song.AlbumID,
-			&song.ImgSrc,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("SongsJSONByAlbum %q: %v", albumId, err)
-		}
-		songs = append(songs, song)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("SongsJSONByAlbum %q: %v", albumId, err)
-	}
 	return songs, nil
 }
