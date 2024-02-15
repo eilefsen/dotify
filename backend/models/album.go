@@ -12,13 +12,11 @@ type Album struct {
 	ImgSrc string `json:"imgSrc"`
 	Artist Artist `json:"artist"`
 }
+type Albums []Album
 
 type AlbumJSON struct {
-	ID     uint32 `json:"id"`
-	Title  string `json:"title"`
-	ImgSrc string `json:"imgSrc"`
-	Artist Artist `json:"artist"`
-	Songs  []Song `json:"songs"`
+	Album
+	Songs Songs `json:"songs"`
 }
 
 func (album *Album) scan(r rowScanner) error {
@@ -31,7 +29,7 @@ func (album *Album) scan(r rowScanner) error {
 	)
 }
 
-func (Album) query() string {
+func (Album) selectQuery() string {
 	query := `
     SELECT
     album.id, album.title, album.img_src,
@@ -41,94 +39,99 @@ func (Album) query() string {
     `
 	return query
 }
+func (Albums) selectQuery() string {
+	return Album{}.selectQuery()
+}
 
-func (Album) All() ([]Album, error) {
-	var albums []Album
-	rows, err := db.Query(Album{}.query())
+func (AlbumJSON) ByID(id uint32) (AlbumJSON, error) {
+	albumJson := AlbumJSON{
+		Songs: Songs{},
+	}
+
+	alb, err := Album{}.ById(id)
 	if err != nil {
-		return nil, fmt.Errorf("Album.All: %v", err)
+		return albumJson, fmt.Errorf("AlbumJSON.ByID: %v", err)
 	}
-	defer rows.Close()
-	for rows.Next() {
-		var a Album
-		err := a.scan(rows)
-		if err != nil {
-			return nil, fmt.Errorf("Album.All: %v", err)
-		}
-		albums = append(albums, a)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("Album.All: %v", err)
-	}
-	if len(albums) == 0 {
-		return nil, ErrResourceNotFound
+	songs, err := Songs{}.ByAlbum(id)
+	if err == ErrResourceNotFound {
+		slog.Info("AlbumJSON.ByID: no songs found", "id", id)
+	} else if err != nil {
+		return albumJson, fmt.Errorf("AlbumJSON.ByID: %v", err)
 	}
 
-	return albums, nil
+	albumJson = AlbumJSON{
+		Album: Album{
+			ID:     alb.ID,
+			Title:  alb.Title,
+			ImgSrc: alb.ImgSrc,
+			Artist: alb.Artist,
+		},
+		Songs: songs,
+	}
+	return albumJson, nil
 }
 
 func (a Album) ById(id uint32) (Album, error) {
-	row := db.QueryRow(a.query()+"WHERE album.id = ?", id)
+	row := db.QueryRow(a.selectQuery()+"WHERE album.id = ?", id)
 	err := a.scan(row)
 	if err == sql.ErrNoRows {
 		return a, ErrResourceNotFound
 	}
 	if err != nil {
-		return a, fmt.Errorf("AlbumById %q: %v", id, err)
+		return a, fmt.Errorf("Album.ById %q: %v", id, err)
 	}
 	if err := row.Err(); err != nil {
-		return a, fmt.Errorf("AlbumById %q: %v", id, err)
+		return a, fmt.Errorf("Album.ById %q: %v", id, err)
 	}
 	return a, nil
 }
 
-func (Album) ByArtist(id uint32) ([]Album, error) {
-	var albums []Album
-	rows, err := db.Query(Album{}.query()+"WHERE album.artist_id = ?", id)
+func (albums Albums) All() (Albums, error) {
+	var err error
+	albums, err = albums.absQuery(albums.selectQuery())
+	if err == ErrResourceNotFound {
+		return nil, err
+	}
+	if err != nil {
+		return nil, fmt.Errorf("Album.All: %v", err)
+	}
+
+	return albums, nil
+}
+
+func (albums Albums) ByArtist(id uint32) (Albums, error) {
+	var err error
+	albums, err = albums.absQuery(albums.selectQuery()+"WHERE album.artist_id = ?", id)
+	if err == ErrResourceNotFound {
+		return nil, err
+	}
 	if err != nil {
 		return nil, fmt.Errorf("Album.ByArtist: %v", err)
+	}
+
+	return albums, nil
+}
+
+func (albums Albums) absQuery(query string, args ...any) (Albums, error) {
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var a Album
 		err := a.scan(rows)
 		if err != nil {
-			return nil, fmt.Errorf("Album.ByArtist: %v", err)
+			return nil, err
 		}
 		albums = append(albums, a)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("Album.ByArtist: %v", err)
+		return nil, err
 	}
 	if len(albums) == 0 {
 		return nil, ErrResourceNotFound
 	}
 
 	return albums, nil
-}
-
-func (Album) JSONByID(id uint32) (AlbumJSON, error) {
-	albumJson := AlbumJSON{
-		Songs: []Song{},
-	}
-
-	alb, err := Album{}.ById(id)
-	if err != nil {
-		return albumJson, fmt.Errorf("Album.JSONByID: %v", err)
-	}
-	songs, err := Song{}.ByAlbum(id)
-	if err == ErrResourceNotFound {
-		slog.Info("Album.JSONByID: no songs found", "id", id)
-	} else if err != nil {
-		return albumJson, fmt.Errorf("Album.JSONByID: %v", err)
-	}
-
-	albumJson = AlbumJSON{
-		ID:     alb.ID,
-		Title:  alb.Title,
-		ImgSrc: alb.ImgSrc,
-		Artist: alb.Artist,
-		Songs:  songs,
-	}
-	return albumJson, nil
 }

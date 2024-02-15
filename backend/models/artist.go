@@ -17,6 +17,13 @@ func (Artist) query() string {
 	return query
 }
 
+func (artist *Artist) scan(r rowScanner) error {
+	return r.Scan(
+		&artist.ID,
+		&artist.Name,
+	)
+}
+
 func (Artist) All() ([]Artist, error) {
 	var artists []Artist
 
@@ -27,10 +34,7 @@ func (Artist) All() ([]Artist, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var artist Artist
-		err := rows.Scan(
-			&artist.ID,
-			&artist.Name,
-		)
+		err := artist.scan(rows)
 		if err != nil {
 			return nil, fmt.Errorf("AllArtists: %v", err)
 		}
@@ -47,10 +51,7 @@ func (Artist) All() ([]Artist, error) {
 
 func (artist Artist) ByID(id uint32) (Artist, error) {
 	row := db.QueryRow(artist.query()+"WHERE artist.id = ?", id)
-	err := row.Scan(
-		&artist.ID,
-		&artist.Name,
-	)
+	err := artist.scan(row)
 	if err == sql.ErrNoRows {
 		return artist, ErrResourceNotFound
 	}
@@ -65,10 +66,7 @@ func (artist Artist) ByID(id uint32) (Artist, error) {
 
 func (artist Artist) ByName(name string) (Artist, error) {
 	row := db.QueryRow(artist.query()+"WHERE artist.name = ?", name)
-	err := row.Scan(
-		&artist.ID,
-		&artist.Name,
-	)
+	err := artist.scan(row)
 	if err == sql.ErrNoRows {
 		return artist, ErrResourceNotFound
 	}

@@ -12,6 +12,7 @@ type Song struct {
 	Artist   Artist `json:"artist"`
 	Album    Album  `json:"album"`
 }
+type Songs []Song
 
 func (song *Song) scan(r rowScanner) error {
 	return r.Scan(
@@ -27,7 +28,7 @@ func (song *Song) scan(r rowScanner) error {
 	)
 }
 
-func (Song) query() string {
+func (Song) selectQuery() string {
 	query := `
     SELECT
     song.id, song.title, song.src, song.duration,
@@ -38,50 +39,52 @@ func (Song) query() string {
     `
 	return query
 }
+func (Songs) selectQuery() string {
+	return Song{}.selectQuery()
+}
 
-func (Song) All() ([]Song, error) {
-	var songs []Song
-
-	rows, err := db.Query(Song{}.query())
+func (songs Songs) ByAlbum(id uint32) (Songs, error) {
+	var err error
+	songs, err = songs.absQuery(songs.selectQuery()+"WHERE song.album_id = ?", id)
+	if err == ErrResourceNotFound {
+		return nil, err
+	}
 	if err != nil {
-		return nil, fmt.Errorf("Song.All: %v", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var s Song
-		err := s.scan(rows)
-		if err != nil {
-			return nil, fmt.Errorf("Song.All: %v", err)
-		}
-		songs = append(songs, s)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("Song.All: %v", err)
-	}
-	if len(songs) == 0 {
-		return nil, ErrResourceNotFound
+		return nil, fmt.Errorf("Songs.ByAlbum: %v", err)
 	}
 
 	return songs, nil
 }
-func (Song) ByAlbum(id uint32) ([]Song, error) {
-	var songs []Song
 
-	rows, err := db.Query(Song{}.query()+"WHERE song.album_id = ?", id)
+func (songs Songs) All() (Songs, error) {
+	var err error
+	songs, err = songs.absQuery(songs.selectQuery())
+	if err == ErrResourceNotFound {
+		return nil, err
+	}
 	if err != nil {
-		return nil, fmt.Errorf("Song.ByAlbum: %v", err)
+		return nil, fmt.Errorf("Songs.All: %v", err)
+	}
+
+	return songs, nil
+}
+
+func (songs Songs) absQuery(query string, args ...any) (Songs, error) {
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var s Song
 		err := s.scan(rows)
 		if err != nil {
-			return nil, fmt.Errorf("Song.ByAlbum: %v", err)
+			return nil, err
 		}
 		songs = append(songs, s)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("Song.ByAlbum: %v", err)
+		return nil, err
 	}
 	if len(songs) == 0 {
 		return nil, ErrResourceNotFound

@@ -11,7 +11,7 @@ import (
 )
 
 func FetchAllAlbums(w http.ResponseWriter, r *http.Request) {
-	albums, err := models.Album{}.All()
+	albums, err := models.Albums{}.All()
 	if err != nil {
 		slog.Error(err.Error())
 	}
@@ -36,7 +36,7 @@ func FetchAlbumByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	album, err := models.Album{}.JSONByID(uint32(id))
+	album, err := models.AlbumJSON{}.ByID(uint32(id))
 	if err != nil {
 		slog.Error("FetchAlbumByID: No album found", "id", id, "error", err)
 		w.WriteHeader(http.StatusNotFound)
@@ -63,7 +63,7 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	album, err := models.Album{}.ByArtist(artist.ID)
+	albums, err := models.Albums{}.ByArtist(artist.ID)
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchAlbumsByArtist: No album found", "artist", name, "error", err)
 		w.WriteHeader(http.StatusNoContent)
@@ -74,9 +74,9 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	slog.Debug("FetchAlbumByArtist:", "album", album, "artist", name)
+	slog.Debug("FetchAlbumByArtist:", "album", albums, "artist", name)
 
-	responseJSON, err := json.Marshal(album)
+	responseJSON, err := json.Marshal(albums)
 	if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -88,7 +88,7 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
-	songs, err := models.Song{}.All()
+	songs, err := models.Songs{}.All()
 	if err != nil {
 		slog.Error(err.Error())
 	}
