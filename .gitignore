@@ -23,4 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-Weezer-Blue_Album/
+audio/
+!audio/City_Jeans*
+
+generated.sql
