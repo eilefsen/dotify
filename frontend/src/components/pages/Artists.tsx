@@ -8,7 +8,7 @@ export default function Artists() {
     const artists = useLoaderData() as ArtistWithImg[];
     console.debug(artists);
     artists.forEach((artist) => {
-        albumCards.push(<ArtistCard key={artist.id} name={artist.name} imgSrc={artist.imgSrc} to={`/artist/${artist.id}`} />);
+        albumCards.push(<ArtistCard key={artist.id} name={artist.name} imgSrc={artist.imgSrc} to={`/albums/artist/${artist.id}`} />);
     });
 
     return (
