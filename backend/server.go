@@ -38,7 +38,7 @@ func main() {
 	rt.Get("/api/albums", FetchAllAlbums)
 	rt.Get("/api/album/{id}", FetchAlbumByID)
 	rt.Get("/api/artists", FetchAllArtists)
-	rt.Get("/api/album/artist/{id}", FetchAlbumsByArtist)
+	rt.Get("/api/albums/artist/{id}", FetchAlbumsByArtist)
 	rt.Get("/api/songs", FetchAllSongs)
 	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }
