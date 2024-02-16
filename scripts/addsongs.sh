@@ -1,7 +1,14 @@
 #!/bin/bash
 
+addalbums () {
+	echo "" > "$DOTIFY_SCRIPT_DIR/generated.sql"
+	for d in $1/*/ ; do
+		echo $(addsongs $d) >> "$DOTIFY_SCRIPT_DIR/generated.sql"
+	done
+}
+
 addsongs () {
-    json=$(exiftool $1 -j -q -title -artist -album -duration | jq '.')
+    json=$(exiftool $1 -j -q -track -title -artist -album -duration# | jq '.')
 
     songs=$(echo $json | jq -r '[.[] | select(.SourceFile | endswith("mp3") or endswith("m4a") or endswith("flac"))]')
     artist_name=$(echo $songs | jq '[.[].Artist | select(. != null)].[0]')
@@ -17,10 +24,10 @@ addsongs () {
         (
         SELECT name
         FROM artist
-        WHERE name = ${artist_name}
+	WHERE UPPER(name) LIKE UPPER(${artist_name})
         );
     "
-    echo $query_artist > "$DOTIFY_SCRIPT_DIR/generated.sql"
+    echo $query_artist
 
     query_album="
     INSERT INTO
@@ -33,7 +40,7 @@ addsongs () {
         FROM
           artist
         WHERE
-          name = $artist_name
+	  UPPER(name) LIKE UPPER($artist_name)
       ),
       $album_img_src
     WHERE
@@ -46,13 +53,14 @@ addsongs () {
           album
           INNER JOIN artist ON artist.id = artist_id
         WHERE
-          title = $album_title
+	UPPER(title) LIKE UPPER($album_title)
           AND artist_id = artist.id
       );
     "
-    echo $query_album >> "$SCRIPT_DIR/generated.sql"
+    echo $query_album
 
     echo $songs | jq -c '.[]' | while read song; do
+    song_track=$(echo $song | jq '.Track' | cut -f1 -d'/' | cut -f2 -d'"')
         song_title=$(echo $song | jq '.Title')
         song_src="\"/$(echo $song | jq -r '.SourceFile')\""
         song_duration=$(echo $song | jq '.Duration')
@@ -60,8 +68,9 @@ addsongs () {
 
         query_song="
         INSERT INTO
-          song (song.title, song.artist_id, song.src, song.duration, song.album_id)
+          song (song.track, song.title, song.artist_id, song.src, song.duration, song.album_id)
         SELECT
+          $song_track,
           $song_title,
           (
             SELECT
@@ -69,7 +78,7 @@ addsongs () {
             FROM
               artist
             WHERE
-              artist.name = $artist_name
+              UPPER(name) LIKE UPPER($artist_name)
           ),
           $song_src,
           $song_duration,
@@ -93,11 +102,11 @@ addsongs () {
               INNER JOIN artist ON artist.id = song.artist_id
               INNER JOIN album ON album.id = song.artist_id
             WHERE
-              song.title = $song_title
+	      UPPER(song.title) LIKE UPPER($song_title)
               AND song.artist_id = artist.id
               AND song.album_id = album.id
           );
         "
-        echo $query_song >> "$SCRIPT_DIR/generated.sql"
+        echo $query_song
     done
 }
