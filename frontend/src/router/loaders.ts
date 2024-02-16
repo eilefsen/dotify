@@ -1,9 +1,12 @@
-import {Album, AlbumWithSongs, Song} from "@/components/player/types";
+import {Album, AlbumWithSongs, ArtistWithImg, Song} from "@/components/player/types";
 
 export async function fetchAllAlbums(): Promise<Album[]> {
     const res = await fetch(`/api/albums`);
     if (res.status == 204) {
         throw new Response("No Content", {status: 204});
+    }
+    if (res.status == 429) {
+        throw new Response("You've been rate limited", {status: 429});
     }
     return res.json();
 }
@@ -13,13 +16,19 @@ export async function fetchAllSongs(): Promise<Song[]> {
     if (res.status == 204) {
         throw new Response("No Content", {status: 204});
     }
+    if (res.status == 429) {
+        throw new Response("You've been rate limited", {status: 429});
+    }
     return res.json();
 }
 
-export async function fetchAllArtists(): Promise<Album[]> {
+export async function fetchAllArtists(): Promise<ArtistWithImg> {
     const res = await fetch(`/api/artists`);
     if (res.status == 204) {
         throw new Response("No Content", {status: 204});
+    }
+    if (res.status == 429) {
+        throw new Response("You've been rate limited", {status: 429});
     }
     return res.json();
 }
@@ -31,6 +40,9 @@ export async function fetchAlbumByID(id: number): Promise<AlbumWithSongs> {
     }
     if (res.status == 400) {
         throw new Response("Bad Request", {status: 400});
+    }
+    if (res.status == 429) {
+        throw new Response("You've been rate limited", {status: 429});
     }
     return res.json();
 };
@@ -45,6 +57,9 @@ export async function fetchAlbumsByArtist(id: number): Promise<Album[]> {
     }
     if (res.status == 400) {
         throw new Response("Bad Request", {status: 400});
+    }
+    if (res.status == 429) {
+        throw new Response("You've been rate limited", {status: 429});
     }
     return res.json();
 };
