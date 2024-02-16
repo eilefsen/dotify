@@ -28,3 +28,4 @@ audio/
 
 generated.sql
 dotify-backend
+deploy.sh
