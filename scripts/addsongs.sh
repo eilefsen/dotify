@@ -3,7 +3,7 @@
 addsongs () {
     json=$(exiftool $1 -j -q -title -artist -album -duration | jq '.')
 
-    songs=$(echo $json | jq -r '[.[] | select(.SourceFile | endswith("mp3") or endswith("m4a"))]')
+    songs=$(echo $json | jq -r '[.[] | select(.SourceFile | endswith("mp3") or endswith("m4a") or endswith("flac"))]')
     artist_name=$(echo $songs | jq '[.[].Artist | select(. != null)].[0]')
     album_title=$(echo $songs | jq '[.[].Album | select(. != null)].[0]')
     album_img_src="\"/$(echo $json | jq -r '[.[].SourceFile | select(. | endswith("png") or endswith("jpg"))].[0]')\""
