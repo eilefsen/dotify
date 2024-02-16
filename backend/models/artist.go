@@ -9,7 +9,14 @@ type Artist struct {
 	ID   uint32 `json:"id"`
 	Name string `json:"name"`
 }
+
 type Artists []Artist
+
+type ArtistJSON struct {
+	Artist
+	ImgSrc string
+}
+type ArtistsJSON []ArtistJSON
 
 func (Artist) selectQuery() string {
 	query := `
@@ -17,8 +24,21 @@ func (Artist) selectQuery() string {
     `
 	return query
 }
+
 func (Artists) selectQuery() string {
 	return Artist{}.selectQuery()
+}
+
+func (ArtistJSON) selectQuery() string {
+	query := `
+    SELECT artist.id, artist.name album.img_src FROM artist
+    WHERE album.id = 1
+    INNER JOIN album ON artist.id = album.artist_id
+    `
+	return query
+}
+func (ArtistsJSON) selectQuery() string {
+	return ArtistJSON{}.selectQuery()
 }
 
 func (artist *Artist) scan(r rowScanner) error {
@@ -28,25 +48,45 @@ func (artist *Artist) scan(r rowScanner) error {
 	)
 }
 
-func (artists Artists) All() (Artists, error) {
-	rows, err := db.Query(Artist{}.selectQuery())
+func (artist *ArtistJSON) scan(r rowScanner) error {
+	return r.Scan(
+		&artist.ID,
+		&artist.Name,
+		&artist.ImgSrc,
+	)
+}
+
+func (artistsJson ArtistsJSON) All() (ArtistsJSON, error) {
+	rows, err := db.Query(artistsJson.selectQuery())
 	if err != nil {
-		return nil, fmt.Errorf("AllArtists: %v", err)
+		return nil, fmt.Errorf("ArtistsJSON.All: %v", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var artist Artist
-		err := artist.scan(rows)
+		var a ArtistJSON
+		err := a.scan(rows)
 		if err != nil {
-			return nil, fmt.Errorf("AllArtists: %v", err)
+			return nil, fmt.Errorf("ArtistsJSON.All: %v", err)
 		}
-		artists = append(artists, artist)
+		artistsJson = append(artistsJson, a)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("AllArtists: %v", err)
+		return nil, fmt.Errorf("ArtistsJSON.All: %v", err)
 	}
-	if len(artists) == 0 {
+	if len(artistsJson) == 0 {
 		return nil, ErrResourceNotFound
+	}
+	return artistsJson, nil
+}
+
+func (artists Artists) All() (Artists, error) {
+	var err error
+	artists, err = Artists{}.absSelect(Artist{}.selectQuery())
+	if err == ErrResourceNotFound {
+		return nil, err
+	}
+	if err != nil {
+		return nil, fmt.Errorf("Artists.All: %v", err)
 	}
 	return artists, nil
 }
@@ -58,10 +98,10 @@ func (artist Artist) ByID(id uint32) (Artist, error) {
 		return artist, ErrResourceNotFound
 	}
 	if err != nil {
-		return artist, fmt.Errorf("ArtistById %q: %v", id, err)
+		return artist, fmt.Errorf("Artist.ByID %q: %v", id, err)
 	}
 	if err := row.Err(); err != nil {
-		return artist, fmt.Errorf("ArtistById %q: %v", id, err)
+		return artist, fmt.Errorf("Artist.ByID %q: %v", id, err)
 	}
 	return artist, nil
 }
@@ -73,10 +113,33 @@ func (artist Artist) ByName(name string) (Artist, error) {
 		return artist, ErrResourceNotFound
 	}
 	if err != nil {
-		return artist, fmt.Errorf("ArtistByName %q: %v", name, err)
+		return artist, fmt.Errorf("Artist.ByName %q: %v", name, err)
 	}
 	if err := row.Err(); err != nil {
-		return artist, fmt.Errorf("ArtistByName %q: %v", name, err)
+		return artist, fmt.Errorf("Artist.ByName %q: %v", name, err)
 	}
 	return artist, nil
+}
+
+func (artists Artists) absSelect(query string, args ...any) (Artists, error) {
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var a Artist
+		err := a.scan(rows)
+		if err != nil {
+			return nil, err
+		}
+		artists = append(artists, a)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	if len(artists) == 0 {
+		return nil, ErrResourceNotFound
+	}
+	return artists, err
 }

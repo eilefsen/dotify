@@ -45,7 +45,7 @@ func (Songs) selectQuery() string {
 
 func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 	var err error
-	songs, err = songs.absQuery(songs.selectQuery()+"WHERE song.album_id = ?", id)
+	songs, err = songs.absSelect(songs.selectQuery()+"WHERE song.album_id = ?", id)
 	if err == ErrResourceNotFound {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 
 func (songs Songs) All() (Songs, error) {
 	var err error
-	songs, err = songs.absQuery(songs.selectQuery())
+	songs, err = songs.absSelect(songs.selectQuery())
 	if err == ErrResourceNotFound {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (songs Songs) All() (Songs, error) {
 	return songs, nil
 }
 
-func (songs Songs) absQuery(query string, args ...any) (Songs, error) {
+func (songs Songs) absSelect(query string, args ...any) (Songs, error) {
 	rows, err := db.Query(query, args...)
 	if err != nil {
 		return nil, err
@@ -87,5 +87,5 @@ func (songs Songs) absQuery(query string, args ...any) (Songs, error) {
 	if len(songs) == 0 {
 		return nil, ErrResourceNotFound
 	}
-	return songs, nil
+	return songs, err
 }
