@@ -14,9 +14,9 @@ export default function Sidebar() {
             <div className="brand flex justify-center items-center h-20 border-b border-white">
                 <h1 className="text-5xl">Dotify</h1>
             </div>
+            <SidebarButton text="Artists" icon={icons.artist} to="/artists/" />
             <SidebarButton text="Albums" icon={icons.album} to="/albums/" />
             <SidebarButton text="Songs" icon={icons.song} to="/songs/" />
-            <SidebarButton text="Playlists" icon={icons.playlist} to="/playlists/" />
             <div className="absolute bottom-0 bg-black">
                 <SongInfo />
             </div>

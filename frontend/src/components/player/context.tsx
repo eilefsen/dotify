@@ -1,8 +1,8 @@
 import {computed, makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
 
-import {PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
-import {Album, Song} from "./types";
+import {PiGuitar, PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
+import {Song} from "./types";
 
 const iconSize = 32;
 const playIconSize = 56;
@@ -23,7 +23,8 @@ export const iconsContext = createContext({
     album: <PiVinylRecord size={iconSize} className={iconClassName} />,
     song: <PiMusicNotesSimple size={iconSize} className={iconClassName} />,
     playlist: <PiPlaylist size={iconSize} className={iconClassName} />,
-    timer: <PiTimer size={iconSize} className={iconClassName} />
+    artist: <PiGuitar size={iconSize} className={iconClassName} />,
+    timer: <PiTimer size={iconSize} className={iconClassName} />,
 });
 
 export class PlayerStore {

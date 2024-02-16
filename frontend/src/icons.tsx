@@ -1,4 +1,4 @@
-import {PiMusicNotesSimple, PiPauseCircleFill, PiPauseFill, PiPlay, PiPlayCircleFill, PiPlayFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from 'react-icons/pi';
+import {PiGuitar, PiMusicNotesSimple, PiPauseCircleFill, PiPauseFill, PiPlay, PiPlayCircleFill, PiPlayFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from 'react-icons/pi';
 
 const iconSize = 32;
 const playIconSize = 56;
@@ -19,5 +19,6 @@ export const icons = {
     album: <PiVinylRecord size={iconSize} className={iconClassName} />,
     song: <PiMusicNotesSimple size={iconSize} className={iconClassName} />,
     playlist: <PiPlaylist size={iconSize} className={iconClassName} />,
-    timer: <PiTimer size={24} className={iconClassName} />
+    artist: <PiGuitar size={iconSize} className={iconClassName} />,
+    timer: <PiTimer size={24} className={iconClassName} />,
 };
