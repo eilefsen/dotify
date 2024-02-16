@@ -27,3 +27,7 @@
     * status codes
         1. 200
         2. 204 (No Content, used instead of empty response)
+
+## Rate limit
+
+20 requests per 5 seconds
