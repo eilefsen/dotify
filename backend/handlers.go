@@ -125,7 +125,7 @@ func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
-	artists, err := models.Artists{}.All()
+	artists, err := models.ArtistsJSON{}.All()
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchAllArtists: No artists found", "error", err)
 		w.WriteHeader(http.StatusNoContent)

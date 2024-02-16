@@ -14,7 +14,7 @@ type Artists []Artist
 
 type ArtistJSON struct {
 	Artist
-	ImgSrc string
+	ImgSrc string `json:"imgSrc"`
 }
 type ArtistsJSON []ArtistJSON
 
@@ -31,9 +31,9 @@ func (Artists) selectQuery() string {
 
 func (ArtistJSON) selectQuery() string {
 	query := `
-    SELECT artist.id, artist.name album.img_src FROM artist
-    WHERE album.id = 1
-    INNER JOIN album ON artist.id = album.artist_id
+    SELECT artist.id, artist.name, album.img_src
+    FROM artist
+    INNER JOIN album ON album.artist_id=artist.id
     `
 	return query
 }
