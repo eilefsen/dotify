@@ -1,4 +1,4 @@
-import {Album, Song} from "@/components/player/types";
+import {Album, AlbumWithSongs, Song} from "@/components/player/types";
 
 export async function fetchAllAlbums(): Promise<Album[]> {
     const res = await fetch(`/api/albums`);
@@ -16,7 +16,15 @@ export async function fetchAllSongs(): Promise<Song[]> {
     return res.json();
 }
 
-export async function fetchAlbumByID(id: number): Promise<Album> {
+export async function fetchAllArtists(): Promise<Album[]> {
+    const res = await fetch(`/api/artists`);
+    if (res.status == 204) {
+        throw new Response("No Content", {status: 204});
+    }
+    return res.json();
+}
+
+export async function fetchAlbumByID(id: number): Promise<AlbumWithSongs> {
     const res = await fetch(`/api/album/${id}`);
     if (res.status == 404) {
         throw new Response("Not Found", {status: 404});
@@ -27,13 +35,16 @@ export async function fetchAlbumByID(id: number): Promise<Album> {
     return res.json();
 };
 
-export async function fetchAlbumsByArtist(name: string): Promise<Album[]> {
-    const res = await fetch(`/api/artist/${name}`);
+export async function fetchAlbumsByArtist(id: number): Promise<Album[]> {
+    const res = await fetch(`/api/albums/artist/${id}`);
+    if (res.status == 204) {
+        throw new Response("No Content", {status: 204});
+    }
     if (res.status == 404) {
         throw new Response("Not Found", {status: 404});
     }
-    if (res.status == 204) {
-        throw new Response("No Content", {status: 204});
+    if (res.status == 400) {
+        throw new Response("Bad Request", {status: 400});
     }
     return res.json();
 };

@@ -18,10 +18,16 @@ export interface Album {
     title: string,
     artist: Artist;
     imgSrc: string,
+}
+export interface AlbumWithSongs extends Album {
     songs: Song[],
 }
 
 export interface Artist {
     id: string,
     name: string,
+}
+
+export interface ArtistWithImg extends Artist {
+    imgSrc: string,
 }

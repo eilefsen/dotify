@@ -1,13 +1,13 @@
-import {useLoaderData, useParams} from "react-router-dom";
+import {useLoaderData} from "react-router-dom";
 import {SongTable} from "../songList";
-import {CoverImg, PlayButton, Song, iconsContext, playerStoreContext} from "../player";
+import {CoverImg, iconsContext, playerStoreContext} from "../player";
 import {useContext} from "react";
-import {Album} from "../player/types";
+import {AlbumWithSongs} from "../player/types";
 import {observer} from "mobx-react-lite";
 
 
 export default function AlbumContent() {
-    const album = useLoaderData() as Album;
+    const album = useLoaderData() as AlbumWithSongs;
     console.debug("Album:", album);
 
     return (
@@ -35,7 +35,7 @@ export default function AlbumContent() {
 }
 
 interface albumPlayButtonProps {
-    album: Album;
+    album: AlbumWithSongs;
 }
 
 const AlbumPlayButton = observer(({album}: albumPlayButtonProps) => {

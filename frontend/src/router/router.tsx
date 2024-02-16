@@ -1,9 +1,10 @@
 import {createBrowserRouter} from "react-router-dom";
-import {fetchAlbumByID, fetchAlbumsByArtist, fetchAllAlbums, fetchAllSongs} from "./loaders";
+import {fetchAlbumByID, fetchAlbumsByArtist, fetchAllAlbums, fetchAllArtists, fetchAllSongs} from "./loaders";
 import Layout from "@/components/layout";
 import AlbumContent from "@/components/pages/Album";
 import Albums from "@/components/pages/Albums";
 import Songs from "@/components/pages/Songs";
+import Artists from "@/components/pages/Artists";
 
 const router = createBrowserRouter([
     {
@@ -25,11 +26,16 @@ const router = createBrowserRouter([
                 }
             },
             {
-                path: "/artist/:name",
+                path: "/artists",
+                element: <Artists />,
+                loader: fetchAllArtists,
+            },
+            {
+                path: "/albums/artist/:id",
                 element: <Albums />,
                 loader: async ({params}) => {
-                    const name = params.name as string;
-                    return fetchAlbumsByArtist(name);
+                    const id = parseInt(params.id!);
+                    return fetchAlbumsByArtist(id);
                 }
             },
             {
