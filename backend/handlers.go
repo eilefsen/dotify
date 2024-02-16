@@ -108,12 +108,16 @@ func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	slog.Debug("FetchAllSongs", "songs", songs)
 
 	responseJSON, err := json.Marshal(songs)
 	if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -129,12 +133,16 @@ func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	slog.Debug("FetchAllArtists", "artists", artists)
 
 	responseJSON, err := json.Marshal(artists)
 	if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
