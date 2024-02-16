@@ -22,4 +22,38 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = "Input";
 
-export {Input};
+function InputFile() {
+    const fileRef = React.useRef<HTMLInputElement>(null);
+    const [file, setFile] = React.useState<File>(new File([], ""));
+    function handleInputChange() {
+        if (!fileRef.current) {
+            return;
+        }
+        if (fileRef.current.type != "file") {
+            return;
+        }
+        const file = fileRef.current.files![0];
+        setFile(file);
+    }
+
+    return (
+        <>
+            <div className="inline-block rounded-xl bg-neutral-900 border border-white text-center">
+                <div className="text-neutral-100 p-2">
+                    {file.name || "No File Selected"}
+                </div>
+                <Input
+                    ref={fileRef}
+                    className="rounded-t-none w-full"
+                    id="audio"
+                    name="audio"
+                    type="file"
+                    accept=".mp3,.aac,.m4a"
+                    onChange={handleInputChange}
+                />
+            </div>
+        </>
+    );
+});
+
+export {Input, InputFile};

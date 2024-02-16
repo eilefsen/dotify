@@ -44,10 +44,6 @@ const router = createBrowserRouter([
                 element: <Songs />,
                 loader: fetchAllSongs,
             },
-            {
-                path: "/upload/",
-                element: <Upload />,
-            },
         ],
     },
 ]);
