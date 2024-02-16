@@ -38,5 +38,4 @@ function AlbumCard({title, artist, imgSrc, to}: albumCardProps) {
             </div>
         </Link>
     );
-
 }
