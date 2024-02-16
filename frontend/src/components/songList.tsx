@@ -1,7 +1,7 @@
 import {observer} from "mobx-react-lite";
 import {useContext, useRef, ReactNode} from "react";
 import {useHoverDirty} from "react-use";
-import {VscBlank} from "react-icons/vsc";
+import {secondsToMinutesSeconds} from '@/lib/utils';
 
 import {Song, iconsContext, playerStoreContext} from "./player";
 import {icons} from "@/icons";
@@ -91,7 +91,7 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
                 </div>
             </td>
             <td className='pr-5 text-neutral-400 font-bold text-sm text-right'>
-                {song.duration}
+                {secondsToMinutesSeconds(song.duration)}
             </td>
         </tr >
     );
