@@ -22,11 +22,12 @@ func main() {
 		}),
 	))
 	dbcfg := mysql.Config{
-		User:   os.Getenv("DBUSER"),
-		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: os.Getenv("DBNAME"),
+		User:                 os.Getenv("DBUSER"),
+		Passwd:               os.Getenv("DBPASS"),
+		Net:                  "tcp",
+		Addr:                 "127.0.0.1:3306",
+		DBName:               os.Getenv("DBNAME"),
+		AllowNativePasswords: true,
 	}
 	err := models.InitDB(dbcfg.FormatDSN())
 	if err != nil {
