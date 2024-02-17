@@ -14,7 +14,7 @@ export default function Artists() {
     return (
         <>
             <h2 className="text-5xl py-3">Albums</h2>
-            <div className="album-gallery flex gap-8">
+            <div className="album-gallery flex flex-wrap gap-5">
                 {albumCards}
             </div>
         </>
@@ -29,7 +29,7 @@ interface artistCardProps {
 
 function ArtistCard({name, imgSrc, to}: artistCardProps) {
     return (
-        <Link to={to} className="album-card w-64 rounded-2xl bg-white overflow-hidden">
+        <Link to={to} className="album-card w-48 rounded-2xl bg-white overflow-hidden">
             <CoverImg src={imgSrc} alt={name} />
             <div className="px-6 py-1.5 font-bold">
                 <h4 className="text-black text-xl">{name}</h4>

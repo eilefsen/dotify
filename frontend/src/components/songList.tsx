@@ -9,6 +9,7 @@ import {IconContext} from "react-icons";
 
 interface SongListProps {
     songs: Array<Song>;
+    albumIndexing: boolean;
 }
 
 interface SongEntryProps {
@@ -18,9 +19,10 @@ interface SongEntryProps {
 
 interface songTableProps {
     songs: Song[];
+    albumIndexing: boolean;
 }
 
-export function SongTable({songs}: songTableProps) {
+export function SongTable({songs, albumIndexing}: songTableProps) {
     return (
         <table className="w-full table-fixed">
             <colgroup>
@@ -44,7 +46,7 @@ export function SongTable({songs}: songTableProps) {
                 </tr>
             </thead>
             <tbody>
-                <SongList songs={songs} />
+                <SongList songs={songs} albumIndexing={albumIndexing} />
             </tbody>
         </table>
     );
@@ -79,7 +81,7 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
                         }
                     }}
                 >
-                    {isHovering ? btnIcon : index + 1}
+                    {isHovering ? btnIcon : index}
                 </button>
             </td>
             <td className='pl-2'>
@@ -97,10 +99,10 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
     );
 });
 
-export const SongList = observer(({songs}: SongListProps) => {
+export const SongList = observer(({songs, albumIndexing}: SongListProps) => {
     const songElements: Array<ReactNode> = [];
     songs.forEach((song, i) => {
-        const songElement = <SongEntry key={i} song={song} index={i} />;
+        const songElement = <SongEntry key={i} song={song} index={albumIndexing ? song.track : i + 1} />;
         songElements.push(songElement);
     });
 

@@ -14,8 +14,10 @@ export default function AlbumContent() {
         <>
             <h2 className="text-5xl py-3">Album</h2>
             <div className="w-full rounded-2xl border-white border overflow-hidden py-2">
-                <div className="w-64 px-8 py-4 flex items-center">
-                    <CoverImg src={album.imgSrc} alt={album.title} />
+                <div className="px-8 py-4 flex items-center">
+                    <div className="w-48">
+                        <CoverImg src={album.imgSrc} alt={album.title} />
+                    </div>
                     <div className="pl-6 h-full">
                         <div className="text-6xl font-bold">
                             {album.title}
@@ -28,7 +30,7 @@ export default function AlbumContent() {
                 <div className="pl-8">
                     <AlbumPlayButton album={album} />
                 </div>
-                <SongTable songs={album.songs} />
+                <SongTable songs={album.songs} albumIndexing={true} />
             </div >
         </>
     );

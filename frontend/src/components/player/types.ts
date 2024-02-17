@@ -1,5 +1,6 @@
 export interface Song {
     title: string;
+    track: number;
     artist: Artist;
     id: string;
     album: {
@@ -8,7 +9,7 @@ export interface Song {
         artist: Artist;
         imgSrc: string,
     };
-    duration: string;
+    duration: number;
     src: string;
     imgSrc: string;
 }

@@ -23,7 +23,7 @@ export const AudioPlayer = observer(() => {
                 <ProgressBar
                     className='[&_.slider-track]:rounded-none'
                 />
-                <SongTitle title={player.currentSong.title} artist={player.currentSong.artist} />
+                <SongTitle title={player.currentSong.title} artist={player.currentSong.artist.name} />
                 <div className="grid grid-cols-2 items-center mt-4">
                     {/* Transport controls */}
                     <span className='flex'>

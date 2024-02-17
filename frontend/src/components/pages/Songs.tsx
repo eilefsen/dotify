@@ -9,7 +9,7 @@ export default function Songs() {
         <>
             <h2 className="text-5xl py-3">Songs</h2>
             <div className="w-full rounded-2xl border-white border overflow-hidden py-2">
-                <SongTable songs={songs} />
+                <SongTable songs={songs} albumIndexing={false} />
             </div>
         </>
     );
