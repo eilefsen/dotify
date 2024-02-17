@@ -6,6 +6,7 @@ import (
 
 type Song struct {
 	ID       uint32 `json:"id"`
+	Track    uint32 `json:"track"`
 	Title    string `json:"title"`
 	Src      string `json:"src"`
 	Duration uint32 `json:"duration"`
@@ -17,6 +18,7 @@ type Songs []Song
 func (song *Song) scan(r rowScanner) error {
 	return r.Scan(
 		&song.ID,
+		&song.Track,
 		&song.Title,
 		&song.Src,
 		&song.Duration,
@@ -31,8 +33,9 @@ func (song *Song) scan(r rowScanner) error {
 func (Song) selectQuery() string {
 	query := `
     SELECT
-    song.id, song.title, song.src, song.duration,
-    album.id, album.title, album.img_src, artist.*
+    song.id, song.track, song.title, song.src, song.duration,
+    album.id, album.title, album.img_src,
+    artist.id, artist.name
     FROM song
     INNER JOIN album ON album.id=song.album_id
     INNER JOIN artist ON artist.id=song.artist_id
@@ -45,7 +48,7 @@ func (Songs) selectQuery() string {
 
 func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 	var err error
-	songs, err = songs.absSelect(songs.selectQuery()+"WHERE song.album_id = ?", id)
+	songs, err = songs.absSelect(songs.selectQuery()+"WHERE song.album_id = ? GROUP BY song.id ORDER BY song.track IS NULL, song.track ASC ", id)
 	if err == ErrResourceNotFound {
 		return nil, err
 	}
