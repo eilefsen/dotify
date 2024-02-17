@@ -33,7 +33,14 @@ func (ArtistJSON) selectQuery() string {
 	query := `
     SELECT artist.id, artist.name, album.img_src
     FROM artist
-    INNER JOIN album ON album.artist_id=artist.id
+    JOIN album
+    ON album.id =
+    (
+    SELECT  album.id 
+    FROM    album
+    WHERE   album.artist_id = artist.id
+    LIMIT 1
+    )
     `
 	return query
 }
