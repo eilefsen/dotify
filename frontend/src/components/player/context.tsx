@@ -39,6 +39,7 @@ export class PlayerStore {
     seek = 0;
     songIndex = -1;
     songList: Song[] = [];
+    isVisible = false;
 
     constructor(songs: Song[]) {
         this.songList = songs;
@@ -153,6 +154,10 @@ export class PlayerStore {
 
     get currentSong() {
         return this.songList[this.songIndex];
+    }
+
+    get isEmpty() {
+        return (this.songList.length == 0);
     }
 }
 
