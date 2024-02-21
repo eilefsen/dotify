@@ -8,14 +8,15 @@ interface SongTitleProps {
 export const SongTitle = observer(function ({title, artist}: SongTitleProps) {
     return (
         <div className='song-title'>
-            <div className='text-neutral-200 font-bold'>
-                {title ?? "No Song playing"}
-            </div>
-            {artist && (
-                <div className='text-neutral-400 font-bold text-xs'>
-                    {artist}
-                </div>
-            )}
+            <p className='text-neutral-200 font-bold'>
+                {title || "No Song playing"}
+                {artist && (
+                    <span className='text-neutral-400 font-normal'>
+                        <br />
+                        {artist}
+                    </span>
+                )}
+            </p>
         </div >
     );
 });
