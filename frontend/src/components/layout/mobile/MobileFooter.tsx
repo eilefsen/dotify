@@ -69,7 +69,7 @@ export const LibraryFooter = observer(() => {
                         />
                     </div>
                     <div className="flex items-center w-full pt-0.5 px-1">
-                        <button disabled={player.isEmpty} onClick={onClick} >
+                        <button disabled={player.isEmpty} onClick={onClick} className="w-full" >
                             <SongInfo />
                         </button>
                         <div className="ml-auto">
