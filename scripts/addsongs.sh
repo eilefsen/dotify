@@ -8,7 +8,7 @@ addalbums () {
 }
 
 addsongs () {
-    json=$(exiftool $1 -j -q -track -title -artist -album -duration# | jq '.')
+    json=$(exiftool $1 -j -q -track -title -artist -album '-duration#' | jq '.')
 
     songs=$(echo $json | jq -r '[.[] | select(.SourceFile | endswith("mp3") or endswith("m4a") or endswith("flac"))]')
     artist_name=$(echo $songs | jq '[.[].Artist | select(. != null)].[0]')
