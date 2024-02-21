@@ -18,8 +18,8 @@ export default function Layout() {
 const LibraryOutlet = observer(() => {
     const player = useContext(playerStoreContext);
     return (
-        <main className="content overflow-scroll pt-2 fixed top-12 left-0 bottom-20 right-0">
+        <main className={"content overflow-scroll pt-2 fixed left-0 top-12 right-0" + " " + (player.isVisible ? "bottom-0" : "bottom-20")} >
             {player.isVisible ? <AudioPlayer /> : <Outlet />}
-        </main>
+        </main >
     );
 });
