@@ -1,3 +1,6 @@
+import {playerStoreContext} from "@/components/player";
+import {observer} from "mobx-react-lite";
+import {useContext} from "react";
 import {NavLink} from "react-router-dom";
 
 export function LibraryHeader() {
@@ -17,9 +20,14 @@ interface LibraryBtnProps {
     label: string;
 }
 
-function LibraryBtn({to, label}: LibraryBtnProps) {
+const LibraryBtn = observer(({to, label}: LibraryBtnProps) => {
+    const player = useContext(playerStoreContext);
+    function onClick() {
+        player.isVisible = false;
+    }
     return (
         <NavLink to={to}
+            onClick={onClick}
             className={({isActive}) => {
                 const base = "rounded-lg border-neutral-600 border px-4 py-1 h-10 text-xl flex items-center";
                 if (isActive) {
@@ -30,4 +38,4 @@ function LibraryBtn({to, label}: LibraryBtnProps) {
             }}
         >{label}</NavLink>
     );
-}
+});

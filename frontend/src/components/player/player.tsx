@@ -3,41 +3,47 @@ import {useContext} from 'react';
 
 import {playerStoreContext} from './context';
 import {
-    MuteButton,
     NextSongButton,
     PlayButton,
     PrevSongButton,
     ProgressBar,
-    VolumeSlider,
 } from './controls';
 import {SongTitle} from './status';
+import {Link} from 'react-router-dom';
 
 
 export const AudioPlayer = observer(() => {
     const player = useContext(playerStoreContext);
 
-    return (
-        <div>
-            <div className='bg-gray-900 text-gray-400 p-3 relative'>
+    function onClick() {
+        player.isVisible = !player.isVisible;
+    }
 
-                <ProgressBar
-                    className='[&_.slider-track]:rounded-none'
+    return (
+        <div className="player px-12 w-full h-full text-xl text-center flex flex-col gap-4">
+            <Link to={`/album/${player.currentSong.album.id}`}
+                onClick={onClick}
+                className="w-64 h-64 py-2 mx-auto"
+            >
+                <img
+                    src={player.currentSong?.album.imgSrc}
+                    alt={player.currentSong?.album.title}
                 />
-                <SongTitle title={player.currentSong.title} artist={player.currentSong.artist.name} />
-                <div className="grid grid-cols-2 items-center mt-4">
-                    {/* Transport controls */}
-                    <span className='flex'>
-                        <PrevSongButton />
-                        <PlayButton />
-                        <NextSongButton />
-                    </span>
-                    {/* Volume controls */}
-                    <span className='flex gap-2 items-center xxl:justify-self-end'>
-                        <MuteButton />
-                        <VolumeSlider />
-                    </span>
-                </div >
-            </div>
-        </div >
+            </Link>
+            <SongTitle title={player.currentSong.title} artist={player.currentSong.artist.name} />
+            <ProgressBar />
+            <Transport />
+        </div>
     );
 });
+
+
+function Transport() {
+    return (
+        <span className="transport-controls flex align-middle mx-auto justify-center gap-4 px-5 pb-2">
+            <PrevSongButton />
+            <PlayButton />
+            <NextSongButton />
+        </span>
+    );
+}
