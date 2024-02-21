@@ -1,7 +1,7 @@
 import {computed, makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
 
-import {PiGuitar, PiMusicNotesSimple, PiPauseCircleFill, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
+import {PiGuitar, PiMusicNotesSimple, PiPauseCircleBold, PiPauseCircleFill, PiPlayCircleBold, PiPlayCircleFill, PiPlaylist, PiSkipBackFill, PiSkipForwardFill, PiSpeakerHigh, PiSpeakerLow, PiSpeakerNone, PiSpeakerSlash, PiTimer, PiVinylRecord} from "react-icons/pi";
 import {Song} from "./types";
 
 const iconSize = 32;
@@ -11,9 +11,11 @@ const iconClassName = "hover:text-neutral-300 transition-colors duration-75";
 export const iconsContext = createContext({
     iconSize: iconSize,
     play: <PiPlayCircleFill size={playIconSize} className={iconClassName} />,
+    playOutline: <PiPlayCircleBold size={playIconSize} className={iconClassName} />,
     playSmall: <PiPlayCircleFill size={iconSize} className={iconClassName} />,
-    pauseSmall: <PiPauseCircleFill size={iconSize} className={iconClassName} />,
     pause: <PiPauseCircleFill size={playIconSize} className={iconClassName} />,
+    pauseOutline: <PiPauseCircleBold size={playIconSize} className={iconClassName} />,
+    pauseSmall: <PiPauseCircleFill size={iconSize} className={iconClassName} />,
     prev: <PiSkipBackFill size={skipIconSize} className={iconClassName} />,
     next: <PiSkipForwardFill size={skipIconSize} className={iconClassName} />,
     volumeHigh: <PiSpeakerHigh size={iconSize} className={iconClassName} />,
