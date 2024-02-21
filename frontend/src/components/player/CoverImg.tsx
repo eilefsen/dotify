@@ -1,12 +1,13 @@
 interface coverImgProps {
     src: string;
     alt: string;
+    className?: string;
 }
 
-export default function CoverImg({src, alt}: coverImgProps) {
+export default function CoverImg({src, alt, className}: coverImgProps) {
     return (
         <img
-            className='object-cover aspect-square'
+            className={'aspect-square' + className}
             src={src}
             alt={alt}
         />
