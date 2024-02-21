@@ -63,12 +63,17 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
         }
     }
 
+    var bgColor = "bg-neutral-950";
+    if (song.id == player.currentSong?.id) {
+        bgColor = "bg-neutral-900";
+    }
+
     const hoverRef = useRef(null);
     const isHovering = useHoverDirty(hoverRef);
     const btnIcon = toggleIcon();
 
     return (
-        <tr ref={hoverRef} className='w-full h-14 bg-neutral-950 hover:bg-neutral-900 border-neutral-800 border-b'>
+        <tr ref={hoverRef} className={'w-full h-14 border-neutral-800 border-b' + " " + bgColor}>
             <td className="pl-5">
                 <button
                     className={"w-3 hover:text-white text-neutral-400"}
