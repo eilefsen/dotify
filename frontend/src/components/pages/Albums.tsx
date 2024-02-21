@@ -36,19 +36,19 @@ const AlbumLine = observer(({album, to}: AlbumLineProps) => {
     return (
         <Link to={to} className={"album-line p-1 h-16 w-full border-b border-neutral-900 flex items-center active:bg-neutral-800" + " " + bgColor}>
             <img
-                className='aspect-square h-full rounded'
+                className='aspect-square h-full rounded border-neutral-300 border'
                 src={album.imgSrc}
                 alt={album.title}
             />
-            <div className="pl-2 font-bold">
-                <div className='text-neutral-300 font-bold text-base'>
+            <div className="pl-2">
+                <p className='text-neutral-50 font-bold text-base'>
                     {album.title}
-                </div>
-                <div className='text-neutral-400 font-bold text-sm'>
-                    {album.artist.name}
-                </div>
+                </p>
+                <p className='text-neutral-400 font-bold text-sm'>
+                    <span className="font-normal">Album · </span>{album.artist.name}
+                </p>
             </div>
-        </Link>
+        </Link >
     );
 });
 

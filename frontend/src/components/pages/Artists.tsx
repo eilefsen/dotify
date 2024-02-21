@@ -1,25 +1,54 @@
 import {Link, useLoaderData} from "react-router-dom";
-import {CoverImg} from "../player";
-import {ReactNode} from "react";
-import {ArtistWithImg} from "../player/types";
+import {CoverImg, playerStoreContext} from "../player";
+import {ReactNode, useContext} from "react";
+import {Artist, ArtistWithImg} from "../player/types";
+import {observer} from "mobx-react-lite";
 
 export default function Artists() {
-    const albumCards: ReactNode[] = [];
+    const artistLines: ReactNode[] = [];
     const artists = useLoaderData() as ArtistWithImg[];
     console.debug(artists);
     artists.forEach((artist) => {
-        albumCards.push(<ArtistCard key={artist.id} name={artist.name} imgSrc={artist.imgSrc} to={`/albums/artist/${artist.id}`} />);
+        artistLines.push(<ArtistLine key={artist.id} artist={artist} to={`/albums/artist/${artist.id}`} />);
     });
 
     return (
-        <>
-            <h2 className="text-5xl py-3">Albums</h2>
-            <div className="album-gallery flex flex-wrap gap-5">
-                {albumCards}
-            </div>
-        </>
+        <div className="album-list">
+            {artistLines}
+        </div>
     );
 }
+
+interface ArtistLineProps {
+    artist: ArtistWithImg,
+    to: string,
+}
+
+const ArtistLine = observer(({artist, to}: ArtistLineProps) => {
+    const player = useContext(playerStoreContext);
+    var bgColor = "bg-neutral-950";
+    if (artist.id == player.currentSong?.artist.id) {
+        bgColor = "bg-neutral-900";
+    }
+
+    return (
+        <Link to={to} className={"album-line p-1 h-16 w-full border-b border-neutral-900 flex items-center active:bg-neutral-800" + " " + bgColor}>
+            <img
+                className='aspect-square h-full rounded-full border-neutral-300 border'
+                src={artist.imgSrc}
+                alt={artist.name}
+            />
+            <div className="pl-2">
+                <p className='text-neutral-50 font-bold text-base'>
+                    {artist.name}
+                </p>
+                <p className='text-neutral-400 font-normal text-sm'>
+                    Artist
+                </p>
+            </div>
+        </Link>
+    );
+});
 
 interface artistCardProps {
     name: string,

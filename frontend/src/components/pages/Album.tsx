@@ -1,6 +1,6 @@
 import {useLoaderData} from "react-router-dom";
 import {SongTable} from "../songList";
-import {CoverImg, iconsContext, playerStoreContext} from "../player";
+import {iconsContext, playerStoreContext} from "../player";
 import {useContext} from "react";
 import {AlbumWithSongs} from "../player/types";
 import {observer} from "mobx-react-lite";
@@ -12,12 +12,10 @@ export default function AlbumContent() {
 
     return (
         <div className="w-full overflow-hidden py-2">
-            <div className="px-4">
+            <div className="px-4 flex items-center">
+                <AlbumPlayButton album={album} />
                 <div className="flex items-center">
-                    <div className="w-48">
-                        <CoverImg src={album.imgSrc} alt={album.title} />
-                    </div>
-                    <div className="pl-4 h-full w-4/5">
+                    <div className="pl-4 h-full w-full">
                         <div className="text-3xl font-bold">
                             {album.title}
                         </div>
@@ -25,9 +23,6 @@ export default function AlbumContent() {
                             {album.artist.name}
                         </div>
                     </div>
-                </div>
-                <div className="w-fit mx-auto">
-                    <AlbumPlayButton album={album} />
                 </div>
             </div>
             <SongTable songs={album.songs} albumIndexing={true} />
@@ -45,31 +40,38 @@ const AlbumPlayButton = observer(({album}: albumPlayButtonProps) => {
 
     function toggleIcon() {
         if (player.currentSong == undefined) {
-            return icons.play;
+            return icons.playOutline;
         }
         if (player.currentSong.album.id == album.id && player.isPlaying) {
-            return icons.pause;
+            return icons.pauseOutline;
         } else {
-            return icons.play;
+            return icons.playOutline;
         }
     }
     const btnIcon = toggleIcon();
 
     return (
-        <button
-            className={"w-3 hover:text-white text-neutral-400"}
-            onClick={() => {
-                if (player.currentSong == undefined || (player.currentSong.album.id != album.id)) {
-                    player.clearSongs();
-                    player.loadSongs(album.songs);
-                    player.skipToIndex(0);
-                    player.play();
-                } else {
-                    player.togglePlay();
-                }
-            }}
-        >
-            {btnIcon}
-        </button>
+        <div className="w-48 grid relative justify-items-center items-center rounded-lg overflow-hidden">
+            <img
+                className='aspect-square w-full h-full col-start-1 row-start-1 brightness-95'
+                src={album.imgSrc}
+                alt={album.title}
+            />
+            <button
+                className={"w-full h-full col-start-1 row-start-1 drop-shadow-lg flex justify-center items-center active:backdrop-brightness-95 hover:backdrop-brightness-95 [&>svg]:hover:text-current active:text-white hover:text-white text-neutral-100"}
+                onClick={() => {
+                    if (player.currentSong == undefined || (player.currentSong.album.id != album.id)) {
+                        player.clearSongs();
+                        player.loadSongs(album.songs);
+                        player.skipToIndex(0);
+                        player.play();
+                    } else {
+                        player.togglePlay();
+                    }
+                }}
+            >
+                {btnIcon}
+            </button>
+        </div>
     );
 });
