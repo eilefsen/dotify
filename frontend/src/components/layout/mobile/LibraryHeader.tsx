@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 export function LibraryHeader() {
     return (
         <>
-            <div className="library-header fixed top-0 left-0 right-0 h-14 border-neutral-800 border-b flex gap-2 items-center justify-center">
+            <div className="library-header fixed top-0 left-0 right-0 h-14 z-20 bg-neutral-950 border-neutral-800 border-b flex gap-2 items-center justify-center">
                 <LibraryBtn to="/albums" label="Albums" />
                 <LibraryBtn to="/artists" label="Artists" />
                 <LibraryBtn to="/songs" label="Songs" />
