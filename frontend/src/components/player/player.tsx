@@ -20,19 +20,21 @@ export const AudioPlayer = observer(() => {
     }
 
     return (
-        <div className="player px-12 w-full h-full text-xl text-center flex flex-col gap-4">
-            <Link to={`/album/${player.currentSong.album.id}`}
-                onClick={onClick}
-                className="w-64 h-64 py-2 mx-auto"
-            >
-                <img
-                    src={player.currentSong?.album.imgSrc}
-                    alt={player.currentSong?.album.title}
-                />
-            </Link>
-            <SongTitle title={player.currentSong.title} artist={player.currentSong.artist.name} />
-            <ProgressBar />
-            <Transport />
+        <div className="player px-12 w-full h-full text-xl text-center flex items-center">
+            <div className='flex flex-col gap-4 w-full self-center'>
+                <Link to={`/album/${player.currentSong.album.id}`}
+                    onClick={onClick}
+                    className="w-64 h-64 mx-auto"
+                >
+                    <img
+                        src={player.currentSong?.album.imgSrc}
+                        alt={player.currentSong?.album.title}
+                    />
+                </Link>
+                <SongTitle title={player.currentSong.title} artist={player.currentSong.artist.name} />
+                <ProgressBar />
+                <Transport />
+            </div>
         </div>
     );
 });
