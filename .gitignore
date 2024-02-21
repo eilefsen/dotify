@@ -27,5 +27,5 @@ audio/
 !audio/City_Jeans*
 
 generated.sql
-dotify-backend
+bin/
 deploy.sh
