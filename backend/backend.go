@@ -1,7 +1,7 @@
 package main
 
 import (
-	"eilefsen/dotify-backend/models"
+	"dotify/backend/models"
 	"log/slog"
 	"net/http"
 	"os"

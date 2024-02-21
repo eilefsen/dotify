@@ -1,4 +1,4 @@
-module eilefsen/dotify-backend
+module dotify/backend
 
 go 1.21.7
 

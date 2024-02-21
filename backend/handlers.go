@@ -1,8 +1,7 @@
 package main
 
 import (
-	"eilefsen/dotify-backend/models"
-	"eilefsen/dotify-backend/utils"
+	"dotify/backend/models"
 	"encoding/json"
 	"log/slog"
 	"net/http"
@@ -32,7 +31,7 @@ func FetchAllAlbums(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchAlbumByID(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ParseUint32(chi.URLParam(r, "id"))
+	id, err := ParseUint32(chi.URLParam(r, "id"))
 	if err != nil {
 		slog.Error(err.Error())
 		// An error here means that the id argument is not parseable as uint32.
@@ -59,7 +58,7 @@ func FetchAlbumByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
-	id, err := utils.ParseUint32(chi.URLParam(r, "id"))
+	id, err := ParseUint32(chi.URLParam(r, "id"))
 	if err != nil {
 		slog.Error(err.Error())
 		// An error here means that the id argument is not parseable as uint32.
