@@ -13,7 +13,6 @@ export default function Albums() {
 
     return (
         <>
-            <h2 className="text-5xl py-3">Albums</h2>
             <div className="album-gallery flex flex-wrap gap-5">
                 {albumCards}
             </div>

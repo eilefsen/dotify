@@ -5,11 +5,12 @@ import AlbumContent from "@/components/pages/Album";
 import Albums from "@/components/pages/Albums";
 import Songs from "@/components/pages/Songs";
 import Artists from "@/components/pages/Artists";
+import MobileLayout from "@/components/layout/mobile/MobileLayout";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: <MobileLayout />,
         children: [
             {
                 path: "/albums/",

@@ -12,23 +12,24 @@ export default function AlbumContent() {
 
     return (
         <>
-            <h2 className="text-5xl py-3">Album</h2>
-            <div className="w-full rounded-2xl border-white border overflow-hidden py-2">
-                <div className="px-8 py-4 flex items-center">
-                    <div className="w-48">
-                        <CoverImg src={album.imgSrc} alt={album.title} />
-                    </div>
-                    <div className="pl-6 h-full">
-                        <div className="text-6xl font-bold">
-                            {album.title}
+            <div className="w-full overflow-hidden py-2">
+                <div className="px-4">
+                    <div className="flex items-center">
+                        <div className="w-48">
+                            <CoverImg src={album.imgSrc} alt={album.title} />
                         </div>
-                        <div className="pl-1 text-neutral-400 text-2xl font-medium">
-                            {album.artist.name}
+                        <div className="pl-4 h-full w-4/5">
+                            <div className="text-3xl font-bold">
+                                {album.title}
+                            </div>
+                            <div className="pl-1 text-neutral-400 text-2xl font-medium">
+                                {album.artist.name}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="pl-8">
-                    <AlbumPlayButton album={album} />
+                    <div className="w-fit mx-auto">
+                        <AlbumPlayButton album={album} />
+                    </div>
                 </div>
                 <SongTable songs={album.songs} albumIndexing={true} />
             </div >
