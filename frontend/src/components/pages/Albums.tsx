@@ -1,14 +1,15 @@
-import {ReactNode} from "react";
-import {CoverImg} from "../player";
+import {ReactNode, useContext} from "react";
+import {CoverImg, playerStoreContext} from "../player";
 import {Link, useLoaderData} from "react-router-dom";
 import {Album} from "../player/types";
+import {observer} from "mobx-react-lite";
 
 export default function Albums() {
     const albumLines: ReactNode[] = [];
     const albums = useLoaderData() as Album[];
     console.debug(albums);
     albums.forEach((album) => {
-        albumLines.push(<AlbumLine key={album.id} title={album.title} artist={album.artist.name} imgSrc={album.imgSrc} to={`/album/${album.id}`} />);
+        albumLines.push(<AlbumLine key={album.id} album={album} to={`/album/${album.id}`} />);
     });
 
     return (
@@ -21,27 +22,35 @@ export default function Albums() {
 }
 
 interface AlbumLineProps {
-    title: string,
-    artist: string,
-    imgSrc: string,
+    album: Album,
     to: string,
 }
 
-function AlbumLine({title, artist, imgSrc, to}: AlbumLineProps) {
+const AlbumLine = observer(({album, to}: AlbumLineProps) => {
+    const player = useContext(playerStoreContext);
+    var bgColor = "bg-neutral-950";
+    if (album.id == player.currentSong?.album.id) {
+        bgColor = "bg-neutral-900";
+    }
+
     return (
-        <Link to={to} className="album-line p-2 h-16 w-full bg-neutral-800 flex items-center">
-            <CoverImg src={imgSrc} alt={title} className="w-16 h-16" />
+        <Link to={to} className={"album-line p-1 h-16 w-full border-b border-neutral-900 flex items-center active:bg-neutral-800" + " " + bgColor}>
+            <img
+                className='aspect-square h-full rounded'
+                src={album.imgSrc}
+                alt={album.title}
+            />
             <div className="pl-2 font-bold">
                 <div className='text-neutral-300 font-bold text-base'>
-                    {title}
+                    {album.title}
                 </div>
                 <div className='text-neutral-400 font-bold text-sm'>
-                    {artist}
+                    {album.artist.name}
                 </div>
             </div>
         </Link>
     );
-}
+});
 
 interface AlbumCardProps {
     title: string,

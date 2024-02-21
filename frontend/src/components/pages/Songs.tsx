@@ -6,12 +6,6 @@ export default function Songs() {
     const songs = useLoaderData() as Song[];
     console.debug(songs);
     return (
-        <>
-            <h2 className="text-5xl py-3">Songs</h2>
-            <div className="w-full rounded-2xl border-white border overflow-hidden py-2">
-                <SongTable songs={songs} albumIndexing={false} />
-            </div>
-        </>
+        <SongTable songs={songs} albumIndexing={false} />
     );
 }
-
