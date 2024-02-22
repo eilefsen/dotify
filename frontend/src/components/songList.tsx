@@ -73,21 +73,20 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
     const btnIcon = toggleIcon();
 
     return (
-        <tr ref={hoverRef} className={'w-full h-14 border-neutral-800 border-b' + " " + bgColor}>
+        <tr
+            ref={hoverRef}
+            className={'hover:text-white text-neutral-400 w-full h-14 border-neutral-800 border-b' + " " + bgColor}
+            onClick={() => {
+                if (player.currentSong?.id != song.id) {
+                    player.loadSong(song);
+                    player.play();
+                } else {
+                    player.togglePlay();
+                }
+            }}
+        >
             <td className="pl-5">
-                <button
-                    className={"w-3 hover:text-white text-neutral-400"}
-                    onClick={() => {
-                        if (player.currentSong?.id != song.id) {
-                            player.loadSong(song);
-                            player.play();
-                        } else {
-                            player.togglePlay();
-                        }
-                    }}
-                >
-                    {isHovering ? btnIcon : index}
-                </button>
+                {isHovering ? btnIcon : index}
             </td>
             <td className='pl-2'>
                 <div className='text-neutral-300 font-bold text-base'>
