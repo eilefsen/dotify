@@ -1,4 +1,4 @@
-import {PlayButton, ProgressBar, playerStoreContext} from "@/components/player";
+import {NextSongButton, PlayButton, PrevSongButton, ProgressBar, playerStoreContext} from "@/components/player";
 import {SongTitle} from "@/components/player/status";
 import {observer} from "mobx-react-lite";
 import {useContext} from "react";
@@ -34,14 +34,17 @@ export const LibraryFooter = observer(() => {
                             className='[&_.slider-track]:rounded-none [&_.slider-thumb]:hidden'
                         />
                     </div>
-                    <div className="flex items-center w-full pt-0.5 px-1">
-                        <button disabled={player.isEmpty} onClick={onClick} className="w-full text-left" >
+                    <div className="flex items-center w-full pt-0.5 px-2 justify-between">
+                        <button disabled={player.isEmpty} onClick={onClick} className="flex-grow text-left" >
                             <SongInfo />
                         </button>
-                        <div className="ml-auto">
+                        <div className="flex gap-2 h-full">
+                            <PrevSongButton className="hidden sm:block" />
                             <PlayButton />
+                            <NextSongButton className="hidden sm:block" />
                         </div>
                     </div>
+                    <div></div>
                 </div >
             )}
         </>
