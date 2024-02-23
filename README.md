@@ -1,10 +1,12 @@
 # Dotify
-Mobile first website (with backend) for streaming music.
 
-![image](https://github.com/eilefsen/dotify/assets/95104378/1387bb97-463e-4b6b-b44d)
+Mobile first website (with backend) for streaming music.
+![Screenshot 2024-02-23 at 20 31 45](https://github.com/eilefsen/dotify/assets/95104378/694e242b-6b57-42e2-acd8-878888f5601c)
+
 
 
 ## Setting up a local dev server
+
 Clone this repository and set up a MySQL Server if you do not already have one.
 
 ### Database
