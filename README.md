@@ -33,4 +33,4 @@ Clone this repository and set up a MySQL Server if you do not already have one.
 2. Set up the Backend like above.
 3. Set up the frontend like above.
 4. In the frontend directory, run `npx vite build`.
-   * This builds a production ready build, which you simply put inside `/var/www/html/` (or another directory used by your web server)
+   * This builds a production ready build in `/frontend/dist/`, which you simply put inside `/var/www/html/` (or another directory used by your web server)
