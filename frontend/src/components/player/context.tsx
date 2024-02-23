@@ -55,7 +55,6 @@ export class PlayerStore {
         });
 
         this.audio.addEventListener('ended', (ev) => {
-            const target = (ev.currentTarget as HTMLAudioElement);
             runInAction(() => {
                 if (this.skip(1)) {
                     this.play();
