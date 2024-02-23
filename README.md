@@ -20,7 +20,7 @@ Clone this repository and set up a MySQL Server if you do not already have one.
 2. Make sure you sourced `/scripts/.env`
 3. Run the built binary.
 
-## Frontend
+### Frontend
 1. Navigate to `/frontend/`
 2. Run npm install` and wait for it to complete.
 
