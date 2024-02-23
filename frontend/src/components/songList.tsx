@@ -22,15 +22,7 @@ interface songTableProps {
     albumIndexing: boolean;
 }
 
-export const SongTable = observer(({songs, albumIndexing}: songTableProps) => {
-    const player = useContext(playerStoreContext);
-    useEffect(() => {
-        if (player.songCount > 100) {
-            player.songList.splice(0, (player.songCount - 100));
-        }
-        player.addSongs(songs);
-        console.log(player.songCount);
-    }, [songs]);
+export function SongTable({songs, albumIndexing}: songTableProps) {
     return (
         <table className="w-full table-fixed">
             <colgroup>
@@ -58,7 +50,7 @@ export const SongTable = observer(({songs, albumIndexing}: songTableProps) => {
             </tbody>
         </table>
     );
-});
+}
 
 const SongEntry = observer(({song, index}: SongEntryProps) => {
     const icons = useContext(iconsContext);
@@ -113,6 +105,15 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
 
 export const SongList = observer(({songs, albumIndexing}: SongListProps) => {
     const songElements: Array<ReactNode> = [];
+    const player = useContext(playerStoreContext);
+    useEffect(() => {
+        if (player.songCount > 100) {
+            player.songList.splice(0, (player.songCount - 100));
+        }
+        player.addSongs(songs);
+        console.log(player.songCount);
+    }, [songs]);
+
     songs.forEach((song, i) => {
         const songElement = <SongEntry key={i} song={song} index={albumIndexing ? song.track : i + 1} />;
         songElements.push(songElement);
