@@ -44,7 +44,7 @@ export class PlayerStore {
     constructor(songs: Song[]) {
         this.songList = songs;
         this.audio.preload = "metadata";
-        if (this.songCount != 0) {
+        if (this.songCount > 0) {
             this.songIndex = 0;
             this.audio.src = this.currentSong.src;
         }
@@ -54,6 +54,14 @@ export class PlayerStore {
             currentSong: computed,
         });
 
+        this.audio.addEventListener('ended', (ev) => {
+            const target = (ev.currentTarget as HTMLAudioElement);
+            runInAction(() => {
+                if (this.skip(1)) {
+                    this.play();
+                }
+            });
+        });
         this.audio.addEventListener('durationchange', (ev) => {
             const target = (ev.currentTarget as HTMLAudioElement);
             runInAction(() => {
@@ -78,26 +86,18 @@ export class PlayerStore {
     loadSong(song: Song) {
         //TODO: optimize song list somehow
         //TODO: also preload the next song in collection, so that the forward skip button works
-        this.addSong(song);
-        this.skipToIndex(this.songCount - 1);
-    }
-    loadSongs(songs: Song[]) {
-        //TODO: optimize song list somehow
-        //TODO: also preload the next song in collection, so that the forward skip button works
-        this.addSongs(songs);
-        this.skipToIndex(this.songCount - 1);
-    }
-
-    addSong(song: Song) {
         if (this.songIndex < 0) {
             this.songIndex = 0;
         }
-        this.songList.push(song);
+        this.addSong(song);
+    }
+
+    addSong(song: Song) {
+        this.addSongs([song]);
     }
     addSongs(songs: Song[]) {
-        songs.forEach(song => {
-            this.addSong(song);
-        });
+        this.songList.push(...songs);
+        console.debug(this.songList);
     }
     clearSongs() {
         this.songList = [];
@@ -134,13 +134,25 @@ export class PlayerStore {
         this.seek = time;
     }
 
-    skip(increment: number) {
-        this.skipToIndex(this.songIndex + increment);
+    skip(increment: number): boolean {
+        return this.skipToIndex(this.songIndex + increment);
     }
-    skipToIndex(index: number) {
+    skipToIndex(index: number): boolean {
+        if (index > this.songCount - 1 || index < 0) {
+            return false;
+        }
         this.songIndex = index;
         this.audio.src = this.currentSong.src;
         this.audio.load();
+        return true;
+    }
+    skipToID(id: string) {
+        for (let i = 0; i < this.songList.length; i++) {
+            const song = this.songList[i];
+            if (song.id == id) {
+                this.skipToIndex(i);
+            }
+        }
     }
     delayedPlay(ms: number = 500) {
         setTimeout(() => {

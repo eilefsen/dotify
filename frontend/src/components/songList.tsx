@@ -1,5 +1,5 @@
 import {observer} from "mobx-react-lite";
-import {useContext, useRef, ReactNode} from "react";
+import {useContext, useRef, ReactNode, useEffect} from "react";
 import {useHoverDirty} from "react-use";
 import {secondsToMinutesSeconds} from '@/lib/utils';
 
@@ -22,7 +22,15 @@ interface songTableProps {
     albumIndexing: boolean;
 }
 
-export function SongTable({songs, albumIndexing}: songTableProps) {
+export const SongTable = observer(({songs, albumIndexing}: songTableProps) => {
+    const player = useContext(playerStoreContext);
+    useEffect(() => {
+        if (player.songCount > 100) {
+            player.songList.splice(0, (player.songCount - 100));
+        }
+        player.addSongs(songs);
+        console.log(player.songCount);
+    }, [songs]);
     return (
         <table className="w-full table-fixed">
             <colgroup>
@@ -50,7 +58,7 @@ export function SongTable({songs, albumIndexing}: songTableProps) {
             </tbody>
         </table>
     );
-}
+});
 
 const SongEntry = observer(({song, index}: SongEntryProps) => {
     const icons = useContext(iconsContext);
@@ -77,11 +85,11 @@ const SongEntry = observer(({song, index}: SongEntryProps) => {
             ref={hoverRef}
             className={'hover:text-white text-neutral-400 w-full h-14 border-neutral-800 border-b' + " " + bgColor}
             onClick={() => {
-                if (player.currentSong?.id != song.id) {
-                    player.loadSong(song);
-                    player.play();
-                } else {
+                if (player.currentSong?.id == song.id) {
                     player.togglePlay();
+                } else {
+                    player.skipToID(song.id);
+                    player.play();
                 }
             }}
         >

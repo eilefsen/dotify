@@ -7,31 +7,39 @@ import ToggleButton from "@/components/ui/toggleButton";
 
 import {iconsContext, playerStoreContext} from "./context";
 
-export const NextSongButton = observer(() => {
+interface SkipSongButtonProps {
+    className?: string;
+}
+
+export const NextSongButton = observer(({className}: SkipSongButtonProps) => {
     const icons = useContext(iconsContext);
     const player = useContext(playerStoreContext);
     return (
         <button
             onClick={() => {
                 player.skip(1);
+                player.play();
             }}
             disabled={player.songIndex === player.songCount - 1}
             aria-label="next song"
+            className={className}
         >
             {icons.next}
         </button >
     );
 });
-export const PrevSongButton = observer(() => {
+export const PrevSongButton = observer(({className}: SkipSongButtonProps) => {
     const icons = useContext(iconsContext);
     const player = useContext(playerStoreContext);
     return (
         <button
             onClick={() => {
                 player.skip(-1);
+                player.play();
             }}
             disabled={player.songIndex <= 0}
             aria-label="previous song"
+            className={className}
         >
             {icons.prev}
         </button>

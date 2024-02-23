@@ -62,7 +62,7 @@ const AlbumPlayButton = observer(({album}: albumPlayButtonProps) => {
                 onClick={() => {
                     if (player.currentSong == undefined || (player.currentSong.album.id != album.id)) {
                         player.clearSongs();
-                        player.loadSongs(album.songs);
+                        player.addSongs(album.songs);
                         player.skipToIndex(0);
                         player.play();
                     } else {
