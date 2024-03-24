@@ -2962,7 +2962,7 @@ configurex11(struct wl_listener *listener, void *data)
 	}
 	if (c->isfloating || client_is_unmanaged(c))
 		resize(c, (struct wlr_box){.x = event->x, .y = event->y,
-				.width = event->width, .height = event->height}, 0);
+				.width = event->width + c->bw * 2, .height = event->height + c->bw * 2}, 0);
 	else
 		arrange(c->mon);
 }
