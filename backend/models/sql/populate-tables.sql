@@ -19,9 +19,10 @@ VALUES
   );
 
 INSERT INTO
-  song (title, artist_id, src, duration, album_id)
+  song (track, title, artist_id, src, duration, album_id)
 VALUES
   (
+	1,
     'Dogs',
     1,
     '/audio/City_Jeans-Grasshopper/01-Dogs.m4a',
@@ -29,6 +30,7 @@ VALUES
     1
   ),
   (
+	2,
     'Gas Station',
     1,
     '/audio/City_Jeans-Grasshopper/02-Gas_Station.m4a',
@@ -36,6 +38,7 @@ VALUES
     1
   ),
   (
+	3,
     'Grasshopper',
     1,
     '/audio/City_Jeans-Grasshopper/03-Grasshopper.m4a',
@@ -43,6 +46,7 @@ VALUES
     1
   ),
   (
+	1,
     "My Name Is Jonas",
     2,
     "/audio/Weezer-Blue_Album/01-My_Name_Is_Jonas.mp3",
@@ -50,6 +54,7 @@ VALUES
     2
   ),
   (
+	2,
     "No One Else",
     2,
     "/audio/Weezer-Blue_Album/02-No_One_Else.mp3",
@@ -57,6 +62,7 @@ VALUES
     2
   ),
   (
+	3,
     "The World Has Turned And Left Me Here",
     2,
     "/audio/Weezer-Blue_Album/03-The_World_Has_Turned_And_Left_Me_Here.mp3",
@@ -64,6 +70,7 @@ VALUES
     2
   ),
   (
+	4,
     "Buddy Holly",
     2,
     "/audio/Weezer-Blue_Album/04-Buddy_Holly.mp3",
@@ -71,6 +78,7 @@ VALUES
     2
   ),
   (
+	5,
     "Undone - The Sweater Song",
     2,
     "/audio/Weezer-Blue_Album/05-Undone-The_Sweater_Song.mp3",
@@ -78,6 +86,7 @@ VALUES
     2
   ),
   (
+	6,
     "Surf Wax America",
     2,
     "/audio/Weezer-Blue_Album/06-Surf_Wax_America.mp3",
@@ -85,6 +94,7 @@ VALUES
     2
   ),
   (
+	7,
     "Say It Ain't So",
     2,
     "/audio/Weezer-Blue_Album/07-Say_It_Ain't_So.mp3",
@@ -92,6 +102,7 @@ VALUES
     2
   ),
   (
+	8,
     "In The Garage",
     2,
     "/audio/Weezer-Blue_Album/08-In_The_Garage.mp3",
@@ -99,6 +110,7 @@ VALUES
     2
   ),
   (
+	9,
     "Holiday",
     2,
     "/audio/Weezer-Blue_Album/09-Holiday.mp3",
@@ -106,6 +118,7 @@ VALUES
     2
   ),
   (
+	10,
     "Only In Dreams",
     2,
     "/audio/Weezer-Blue_Album/10-Only_In_Dreams.mp3",
