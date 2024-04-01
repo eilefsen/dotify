@@ -17,16 +17,16 @@ type Songs []Song
 
 func (song *Song) scan(r rowScanner) error {
 	return r.Scan(
-		&song.ID,
-		&song.Track,
 		&song.Title,
 		&song.Src,
-		&song.Duration,
 		&song.Album.ID,
 		&song.Album.Title,
 		&song.Album.ImgSrc,
 		&song.Artist.ID,
 		&song.Artist.Name,
+		&song.ID,
+		&song.Track,
+		&song.Duration,
 	)
 }
 
