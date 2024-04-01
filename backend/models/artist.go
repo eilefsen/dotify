@@ -6,15 +6,15 @@ import (
 )
 
 type Artist struct {
-	ID   uint32 `json:"id"`
 	Name string `json:"name"`
+	ID   uint32 `json:"id"`
 }
 
 type Artists []Artist
 
 type ArtistJSON struct {
-	Artist
 	ImgSrc string `json:"imgSrc"`
+	Artist
 }
 type ArtistsJSON []ArtistJSON
 
@@ -44,6 +44,7 @@ func (ArtistJSON) selectQuery() string {
     `
 	return query
 }
+
 func (ArtistsJSON) selectQuery() string {
 	return ArtistJSON{}.selectQuery()
 }

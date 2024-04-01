@@ -5,13 +5,13 @@ import (
 )
 
 type Song struct {
-	ID       uint32 `json:"id"`
-	Track    uint32 `json:"track"`
 	Title    string `json:"title"`
 	Src      string `json:"src"`
-	Duration uint32 `json:"duration"`
 	Artist   Artist `json:"artist"`
 	Album    Album  `json:"album"`
+	ID       uint32 `json:"id"`
+	Track    uint32 `json:"track"`
+	Duration uint32 `json:"duration"`
 }
 type Songs []Song
 
@@ -42,6 +42,7 @@ func (Song) selectQuery() string {
     `
 	return query
 }
+
 func (Songs) selectQuery() string {
 	return Song{}.selectQuery()
 }

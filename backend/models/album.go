@@ -7,16 +7,16 @@ import (
 )
 
 type Album struct {
-	ID     uint32 `json:"id"`
 	Title  string `json:"title"`
 	ImgSrc string `json:"imgSrc"`
 	Artist Artist `json:"artist"`
+	ID     uint32 `json:"id"`
 }
 type Albums []Album
 
 type AlbumJSON struct {
-	Album
 	Songs Songs `json:"songs"`
+	Album
 }
 
 func (album *Album) scan(r rowScanner) error {
@@ -39,6 +39,7 @@ func (Album) selectQuery() string {
     `
 	return query
 }
+
 func (Albums) selectQuery() string {
 	return Album{}.selectQuery()
 }
