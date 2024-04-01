@@ -12,6 +12,7 @@ import Songs from "@/components/pages/Songs";
 import Artists from "@/components/pages/Artists";
 import MobileLayout from "@/components/layout/mobile/MobileLayout";
 import Login from "@/components/pages/login/Login";
+import Admin from "@/components/pages/admin/Admin";
 
 const router = createBrowserRouter([
 	{
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
 			{
 				path: "/login/",
 				element: <Login />,
+			},
+			{
+				path: "/admin/",
+				element: <Admin />,
 			},
 		],
 	},

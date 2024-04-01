@@ -11,7 +11,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 			<input
 				type={type}
 				className={cn(
-					"focus-visible:ring-ring block h-8 rounded-md border border-white bg-black px-3 text-sm text-white transition-colors file:h-full file:w-full file:border-0 file:bg-transparent file:text-lg file:font-medium hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-1 active:bg-neutral-300 disabled:cursor-not-allowed disabled:opacity-50",
+					"focus-visible:ring-ring block h-8 rounded-md border border-white bg-black px-3 text-sm text-white transition-colors file:h-full file:w-full file:border-none file:bg-transparent file:text-lg file:font-medium hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-1 active:bg-neutral-300 disabled:cursor-not-allowed disabled:opacity-50",
 					className,
 				)}
 				ref={ref}
@@ -38,13 +38,13 @@ function InputFile() {
 
 	return (
 		<>
-			<div className="inline-block rounded-xl border border-white bg-neutral-900 text-center">
-				<div className="p-2 text-neutral-100">
+			<div className="inline-block  bg-neutral-900 text-center">
+				<div className="rounded-md rounded-b-none  border-l border-r border-t border-white p-2 text-neutral-100">
 					{file.name || "No File Selected"}
 				</div>
 				<Input
 					ref={fileRef}
-					className="w-full rounded-t-none"
+					className="rounded-t-none"
 					id="audio"
 					name="audio"
 					type="file"
