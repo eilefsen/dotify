@@ -43,6 +43,7 @@ function LoginButton(props: LoginButtonProps) {
 		if (res.status == 200) {
 			console.log("Logged out!");
 			queryClient.setQueryData(["loginStatus"], false);
+			queryClient.setQueryData(["adminLoginStatus"], false);
 		}
 		return res;
 	}

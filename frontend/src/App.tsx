@@ -38,6 +38,7 @@ function App() {
 			const ok = res.status == 200;
 			if (ok) {
 				queryClient.setQueryData(["loginStatus"], true);
+				queryClient.setQueryData(["adminLoginStatus"], true);
 				console.info("Access token refreshed!");
 			}
 			return ok;
