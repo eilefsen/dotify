@@ -21,11 +21,11 @@ type AlbumJSON struct {
 
 func (album *Album) scan(r rowScanner) error {
 	return r.Scan(
+		&album.ID,
 		&album.Title,
 		&album.ImgSrc,
 		&album.Artist.ID,
 		&album.Artist.Name,
-		&album.ID,
 	)
 }
 

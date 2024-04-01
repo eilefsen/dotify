@@ -51,16 +51,16 @@ func (ArtistsJSON) selectQuery() string {
 
 func (artist *Artist) scan(r rowScanner) error {
 	return r.Scan(
-		&artist.Name,
 		&artist.ID,
+		&artist.Name,
 	)
 }
 
 func (artist *ArtistJSON) scan(r rowScanner) error {
 	return r.Scan(
-		&artist.ImgSrc,
-		&artist.Name,
 		&artist.ID,
+		&artist.Name,
+		&artist.ImgSrc,
 	)
 }
 
