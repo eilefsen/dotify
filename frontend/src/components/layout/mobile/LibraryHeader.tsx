@@ -1,10 +1,25 @@
 import { playerStoreContext } from "@/components/player";
 import { cn } from "@/lib/utils";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { PropsWithChildren, useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 export function LibraryHeader() {
+	const queryClient = useQueryClient();
+	const isLoggedIn = useQuery({
+		queryKey: ["loginStatus"],
+		enabled: false,
+	});
+	async function logout() {
+		const res = await axios.post("/api/auth/logout");
+		if (res.status == 200) {
+			console.log("Logged out!");
+			queryClient.setQueryData(["loginStatus"], false);
+		}
+		return res;
+	}
 	return (
 		<>
 			<div className="library-header fixed left-0 right-0 top-0 z-20 flex h-14 items-center justify-center gap-2 overflow-x-scroll border-b border-neutral-800 bg-neutral-950 px-2">
@@ -19,7 +34,19 @@ export function LibraryHeader() {
 						Songs
 					</LibraryBtn>
 				</span>
-				<LibraryBtn to="/login">Login</LibraryBtn>
+				{
+					// inverted boolean because we want to show the login link when not logged in
+					!isLoggedIn.data ? (
+						<LibraryBtn to="/login">Login</LibraryBtn>
+					) : (
+						<button
+							className="flex h-11 items-center justify-center rounded-lg border border-neutral-600 px-4 py-1 text-xl"
+							onClick={logout}
+						>
+							Log out
+						</button>
+					)
+				}
 			</div>
 		</>
 	);

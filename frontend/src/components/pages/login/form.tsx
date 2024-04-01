@@ -70,7 +70,7 @@ export function LoginForm(props: LoginFormProps) {
 			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
+				className="mx-auto space-y-2 border-neutral-600 text-left"
 			>
 				<FormField
 					control={form.control}
