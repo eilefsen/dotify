@@ -28,3 +28,11 @@ CREATE TABLE
     `album_id` INT UNSIGNED NOT NULL,
     FOREIGN KEY (`album_id`) REFERENCES `album` (`id`)
   );
+
+CREATE TABLE `user` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` TEXT NOT NULL UNIQUE,
+    `password` TEXT NOT NULL,
+    `superuser` BOOLEAN NOT NULL
+);
+
