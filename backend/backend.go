@@ -48,6 +48,7 @@ func main() {
 	// protected routes
 	rt.Group(func(rt chi.Router) {
 		rt.Post("/api/auth/status", TokenAuth(authStatusHandler))
+		rt.Post("/api/auth/adminstatus", SuperUserAuth(authStatusHandler))
 		rt.Post("/api/auth/refresh", authRefreshHandler)
 	})
 	// unprotected routes
