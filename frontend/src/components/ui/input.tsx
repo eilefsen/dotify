@@ -22,7 +22,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 );
 Input.displayName = "Input";
 
-function InputFile() {
+interface InputFileProps extends InputProps {}
+
+function InputFile(props: InputFileProps) {
 	const fileRef = React.useRef<HTMLInputElement>(null);
 	const [file, setFile] = React.useState<File>(new File([], ""));
 	function handleInputChange() {
