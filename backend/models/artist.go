@@ -3,11 +3,15 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"log/slog"
 )
 
-type Artist struct {
+type ArtistNoID struct {
 	Name string `json:"name"`
-	ID   uint32 `json:"id"`
+}
+type Artist struct {
+	ArtistNoID
+	ID uint32 `json:"id"`
 }
 
 type Artists []Artist
@@ -62,6 +66,26 @@ func (artist *ArtistJSON) scan(r rowScanner) error {
 		&artist.Name,
 		&artist.ImgSrc,
 	)
+}
+
+func (Artist) New(artist ArtistNoID) (Artist, error) {
+	var a Artist
+	res, err := db.Exec(
+		`INSERT INTO artist (artist.name
+		) VALUES (?, ?)`,
+		&artist.Name,
+	)
+	if err != nil {
+		return a, err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return a, err
+	}
+	a.ID = uint32(id)
+	a.ArtistNoID = artist
+	slog.Info("models.NewSong", "s", a)
+	return a, nil
 }
 
 func (artistsJson ArtistsJSON) All() (ArtistsJSON, error) {
