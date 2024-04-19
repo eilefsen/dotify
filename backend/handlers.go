@@ -324,13 +324,13 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 	relativePath := "../frontend"
 	err := os.MkdirAll(relativePath+uploadsDir, os.ModePerm)
 	if err != nil {
-		slog.Debug("uploadAudioFiles: Failed to make directory")
+		slog.Error("uploadAudioFiles: Failed to make directory")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if err := r.ParseMultipartForm(20 << 20); err != nil {
-		slog.Debug("uploadAudioFiles", "err", err)
+		slog.Error("uploadAudioFiles", "err", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -342,7 +342,7 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 	{
 		f, fh, err := r.FormFile("image")
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to retrieve image from form", "err", err)
+			slog.Error("uploadAudioFiles: Failed to retrieve image from form", "err", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 		defer f.Close()
@@ -354,7 +354,7 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		// write file
 		dst, err := os.Create(fullPath)
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to create image file", "filename", fileName)
+			slog.Error("uploadAudioFiles: Failed to create image file", "filename", fileName)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -364,7 +364,7 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		// at the specified destination
 		_, err = io.Copy(dst, f)
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to copy image file to destination")
+			slog.Error("uploadAudioFiles: Failed to copy image file to destination")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -377,13 +377,13 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		fh := audioFH[0]
 		f, err := fh.Open()
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to retrieve files from form", "err", err)
+			slog.Error("uploadAudioFiles: Failed to retrieve files from form", "err", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 		defer f.Close()
 		m, err := tag.ReadFrom(f)
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Missing metadata", "Filename", fh.Filename)
+			slog.Error("uploadAudioFiles: Missing metadata", "Filename", fh.Filename)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -422,11 +422,14 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		}
 		slog.Debug("uploadAudioFiles", "m", m)
 
-		duration, err := EstimateMP3Duration(f)
-		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to calculate mp3 length", "Filename", fh.Filename)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		duration := uint32(0)
+		if m.FileType() == tag.MP3 {
+			duration, err = EstimateMP3Duration(f)
+			if err != nil {
+				slog.Debug("uploadAudioFiles: Failed to calculate mp3 length", "Filename", fh.Filename)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 		}
 
 		trackNumber, _ := m.Track()
