@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log/slog"
 	"strconv"
+	"time"
 
 	"github.com/tcolgate/mp3"
+	"gopkg.in/vansante/go-ffprobe.v2"
 )
 
 func EstimateMP3Duration(data io.Reader) (uint32, error) {
@@ -28,6 +31,18 @@ func EstimateMP3Duration(data io.Reader) (uint32, error) {
 		t = t + f.Duration().Seconds()
 	}
 	return uint32(t), nil
+}
+
+func mp3Duration(data io.Reader) (uint32, error) {
+	ctx, cancelFn := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelFn()
+
+	d, err := ffprobe.ProbeReader(ctx, data)
+	if err != nil {
+		slog.Error("EstimateMp3Duration", "err", err)
+		return 0, err
+	}
+	return uint32(d.Format.DurationSeconds), nil
 }
 
 func parseFrame() {}
