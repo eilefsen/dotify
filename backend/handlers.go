@@ -3,13 +3,18 @@ package main
 import (
 	"dotify/backend/models"
 	"encoding/json"
+	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/dhowden/tag"
 	"github.com/go-chi/chi/v5"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -311,4 +316,55 @@ func logoutHandler(w http.ResponseWriter, _ *http.Request) {
 
 func authStatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+}
+
+func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
+	uploads_dir := fmt.Sprintf("./dist/audio/upload/%s/", uuid.New().String())
+	err := os.MkdirAll(uploads_dir, os.ModePerm)
+	if err != nil {
+		slog.Debug("uploadAudioFiles: Failed to make directory")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := r.ParseMultipartForm(20 << 20); err != nil {
+		slog.Debug("uploadAudioFiles", "err", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	for _, fh := range r.MultipartForm.File["files[]"] {
+		f, err := fh.Open()
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to retrieve files from form", "err", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		defer f.Close()
+
+		m, err := tag.ReadFrom(f)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to read metadata", "Filename", fh.Filename)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		slog.Debug("uploadAudioFiles", "m", m)
+
+		// write file
+		filename := fmt.Sprintf("%s%s", uuid.New().String(), filepath.Ext(fh.Filename))
+		dst, err := os.Create(uploads_dir + filename)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to create file", "filename", filename)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer dst.Close()
+
+		// Copy the uploaded file to the filesystem
+		// at the specified destination
+		_, err = io.Copy(dst, f)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to copy file to destination")
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
 }

@@ -6,13 +6,14 @@ import {
 	FormControl,
 	FormDescription,
 	FormMessage,
+	Form,
 } from "@/components/ui/form";
-import { Input, InputFile } from "@/components/ui/input";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { InputFile } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { File } from "buffer";
 
-interface UploadProps {}
-export function Upload(props: UploadProps) {
+export function Upload() {
 	return (
 		<>
 			<UploadForm />
@@ -20,68 +21,70 @@ export function Upload(props: UploadProps) {
 	);
 }
 
-import { useForm, Form } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-type Inputs = {
-	file: File;
+type AudioUpload = {
+	files: FileList;
 };
 
-function UploadForm() {
-	const form = useForm<Inputs>();
-
-	const queryClient = useQueryClient();
+export function UploadForm() {
+	const form = useForm();
 
 	const mutation = useMutation({
-		mutationKey: ["login"],
-		mutationFn: (val: Inputs) => {
-			return axios.post("/api/auth/login", val);
+		mutationKey: ["audioFilesUpload"],
+		mutationFn: (data: AudioUpload) => {
+			const formData = new FormData();
+			for (const file of data.files) {
+				formData.append("files[]", file);
+			}
+			return axios.post("/api/admin/upload", formData);
 		},
 		onSuccess: () => {
 			form.reset();
-			console.info("Logged in!");
-			queryClient.setQueryData(["loginStatus"], true);
 		},
 	});
 
-	function onSubmit(values: Inputs) {
+	function onSubmit(values: any) {
 		mutation.mutate(values);
 	}
 
 	let errorMsg;
-
-	if (mutation.isError) {
-		errorMsg = (
-			<span className="text-xl font-bold text-red-600">
-				Wrong username or password
-			</span>
-		);
-	}
-
 	return (
 		<Form {...form}>
-			<h2 className="text-3xl">Log in</h2>
+			<h2 className="-mb-0.5 text-2xl">Submit new Music</h2>
 			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="mx-auto space-y-2 border-neutral-600 text-left"
+				className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
 			>
 				<FormField
 					control={form.control}
-					name="file"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel hidden>File</FormLabel>
-							<FormControl>
-								<InputFile
-									name={field.name}
-									value={field.value}
-									itemRef={field.ref}
-								/>
-							</FormControl>
-							<FormDescription hidden>Input a music file here</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
+					name="files"
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<FormLabel hidden>Image</FormLabel>
+								<FormControl>
+									<InputFile
+										name={field.name}
+										onBlur={field.onBlur}
+										disabled={field.disabled}
+										accept=".mp3"
+										id="audio"
+										value={field.value?.fileName}
+										onChange={(event) => {
+											field.onChange(event.target.files!);
+										}}
+										multiple
+									/>
+								</FormControl>
+								<FormDescription hidden>
+									This is the audio files you are submitting
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
 				/>
 				<Button type="submit">Submit</Button>
 			</form>
