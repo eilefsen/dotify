@@ -6,11 +6,14 @@ import (
 	"log/slog"
 )
 
-type Album struct {
+type AlbumNoID struct {
 	Title  string `json:"title"`
 	ImgSrc string `json:"imgSrc"`
 	Artist Artist `json:"artist"`
-	ID     uint32 `json:"id"`
+}
+type Album struct {
+	AlbumNoID
+	ID uint32 `json:"id"`
 }
 type Albums []Album
 
@@ -44,6 +47,29 @@ func (Albums) selectQuery() string {
 	return Album{}.selectQuery()
 }
 
+func (Album) New(album AlbumNoID) (Album, error) {
+	var a Album
+	res, err := db.Exec(
+		`INSERT INTO artist (album.id, album.title, album.img_src,
+		artist.id
+		) VALUES (?, ?, ?)`,
+		&album.Title,
+		&album.ImgSrc,
+		&album.Artist.ID,
+	)
+	if err != nil {
+		return a, err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return a, err
+	}
+	a.ID = uint32(id)
+	a.AlbumNoID = album
+	slog.Info("models.NewAlbum", "a", a)
+	return a, nil
+}
+
 func (AlbumJSON) ByID(id uint32) (AlbumJSON, error) {
 	albumJson := AlbumJSON{
 		Songs: Songs{},
@@ -62,10 +88,12 @@ func (AlbumJSON) ByID(id uint32) (AlbumJSON, error) {
 
 	albumJson = AlbumJSON{
 		Album: Album{
-			ID:     alb.ID,
-			Title:  alb.Title,
-			ImgSrc: alb.ImgSrc,
-			Artist: alb.Artist,
+			ID: alb.ID,
+			AlbumNoID: AlbumNoID{
+				Title:  alb.Title,
+				ImgSrc: alb.ImgSrc,
+				Artist: alb.Artist,
+			},
 		},
 		Songs: songs,
 	}

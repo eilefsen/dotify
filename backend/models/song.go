@@ -55,20 +55,18 @@ func (Song) New(song SongNoID) (Song, error) {
 	var s Song
 	res, err := db.Exec(
 		`
-		INSERT INTO song (song.track, song.title, song.src, song.duration,
-		album.id, album.title, album.img_src,
-		artist.id, artist.name
-		) VALUES ( ?, ?, ?)
+		INSERT INTO song (
+		song.track, song.title, song.src, song.duration,
+		album.id,
+		artist.id,
+		) VALUES ( ?, ?, ?, ?, ?, ?)
 		`,
 		&song.Track,
 		&song.Title,
 		&song.Src,
 		&song.Duration,
 		&song.Album.ID,
-		&song.Album.Title,
-		&song.Album.ImgSrc,
 		&song.Artist.ID,
-		&song.Artist.Name,
 	)
 	if err != nil {
 		return s, err

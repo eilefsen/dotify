@@ -72,7 +72,7 @@ func (Artist) New(artist ArtistNoID) (Artist, error) {
 	var a Artist
 	res, err := db.Exec(
 		`INSERT INTO artist (artist.name
-		) VALUES (?, ?)`,
+		) VALUES (?)`,
 		&artist.Name,
 	)
 	if err != nil {
@@ -84,7 +84,7 @@ func (Artist) New(artist ArtistNoID) (Artist, error) {
 	}
 	a.ID = uint32(id)
 	a.ArtistNoID = artist
-	slog.Info("models.NewSong", "s", a)
+	slog.Info("models.NewArtist", "a", a)
 	return a, nil
 }
 
