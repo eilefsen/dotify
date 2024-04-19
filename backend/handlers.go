@@ -319,8 +319,10 @@ func authStatusHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
-	uploads_dir := fmt.Sprintf("./dist/audio/upload/%s/", uuid.New().String())
-	err := os.MkdirAll(uploads_dir, os.ModePerm)
+	batchID := uuid.New()
+	uploadsDir := fmt.Sprintf("/public/audio/upload/%s/", batchID.String())
+	relativePath := "../frontend"
+	err := os.MkdirAll(relativePath+uploadsDir, os.ModePerm)
 	if err != nil {
 		slog.Debug("uploadAudioFiles: Failed to make directory")
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -332,27 +334,113 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	for _, fh := range r.MultipartForm.File["files[]"] {
+
+	audioFH := r.MultipartForm.File["audioFiles[]"]
+
+	var imgsrc string
+
+	{
+		f, fh, err := r.FormFile("image")
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to retrieve image from form", "err", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		defer f.Close()
+
+		fileName := fmt.Sprintf("%s%s", uuid.New().String(), filepath.Ext(fh.Filename))
+		imgsrc = uploadsDir + fileName
+		fullPath := relativePath + imgsrc
+
+		// write file
+		dst, err := os.Create(fullPath)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to create image file", "filename", fileName)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer dst.Close()
+
+		// Copy the uploaded file to the filesystem
+		// at the specified destination
+		_, err = io.Copy(dst, f)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to copy image file to destination")
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	var artist models.Artist
+	var album models.Album
+
+	{
+		fh := audioFH[0]
 		f, err := fh.Open()
 		if err != nil {
 			slog.Debug("uploadAudioFiles: Failed to retrieve files from form", "err", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 		defer f.Close()
+		m, err := tag.ReadFrom(f)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Missing metadata", "Filename", fh.Filename)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		slog.Debug("uploadAudioFiles", "m", m)
+		artist, err = models.Artist{}.New(m.Artist())
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to insert Artist to database", "err", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		album, err = models.Album{}.New(models.AlbumNoID{Title: m.Album(), Artist: artist, ImgSrc: imgsrc})
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to insert Album to database", "err", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	for _, fh := range audioFH {
+		f, err := fh.Open()
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to retrieve files from form", "err", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+		defer f.Close()
+		fileName := fmt.Sprintf("%s%s", uuid.New().String(), filepath.Ext(fh.Filename))
+
+		src := uploadsDir + fileName
+		fullPath := relativePath + src
 
 		m, err := tag.ReadFrom(f)
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to read metadata", "Filename", fh.Filename)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			slog.Debug("uploadAudioFiles: Missing metadata", "Filename", fh.Filename)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		slog.Debug("uploadAudioFiles", "m", m)
 
-		// write file
-		filename := fmt.Sprintf("%s%s", uuid.New().String(), filepath.Ext(fh.Filename))
-		dst, err := os.Create(uploads_dir + filename)
+		trackNumber, _ := m.Track()
+		_, err = models.Song{}.New(models.SongNoID{
+			Title:    m.Title(),
+			Artist:   artist,
+			Album:    album,
+			Src:      src,
+			Track:    uint32(trackNumber),
+			Duration: 0,
+		})
 		if err != nil {
-			slog.Debug("uploadAudioFiles: Failed to create file", "filename", filename)
+			slog.Debug("uploadAudioFiles: Failed to insert Song to database", "err", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// write file
+		dst, err := os.Create(fullPath)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to create file", "filename", fileName)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

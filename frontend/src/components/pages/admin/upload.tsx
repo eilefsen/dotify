@@ -11,7 +11,6 @@ import {
 import { InputFile } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { File } from "buffer";
 
 export function Upload() {
 	return (
@@ -23,8 +22,9 @@ export function Upload() {
 
 import { useForm } from "react-hook-form";
 
-type AudioUpload = {
-	files: FileList;
+type AlbumUpload = {
+	Image: File;
+	Audio: FileList;
 };
 
 export function UploadForm() {
@@ -32,11 +32,12 @@ export function UploadForm() {
 
 	const mutation = useMutation({
 		mutationKey: ["audioFilesUpload"],
-		mutationFn: (data: AudioUpload) => {
+		mutationFn: (data: AlbumUpload) => {
 			const formData = new FormData();
-			for (const file of data.files) {
-				formData.append("files[]", file);
+			for (const audioFile of data.Audio) {
+				formData.append("audioFiles[]", audioFile);
 			}
+			formData.append("image", data.Image);
 			return axios.post("/api/admin/upload", formData);
 		},
 		onSuccess: () => {
@@ -59,11 +60,11 @@ export function UploadForm() {
 			>
 				<FormField
 					control={form.control}
-					name="files"
+					name="Audio"
 					render={({ field }) => {
 						return (
 							<FormItem>
-								<FormLabel hidden>Image</FormLabel>
+								<FormLabel hidden>Audio</FormLabel>
 								<FormControl>
 									<InputFile
 										name={field.name}
@@ -79,7 +80,35 @@ export function UploadForm() {
 									/>
 								</FormControl>
 								<FormDescription hidden>
-									This is the audio files you are submitting
+									This is the audio files of the album you are submitting
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
+				/>
+				<FormField
+					control={form.control}
+					name="Image"
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<FormLabel hidden>Image</FormLabel>
+								<FormControl>
+									<InputFile
+										name={field.name}
+										onBlur={field.onBlur}
+										disabled={field.disabled}
+										accept=".jpg"
+										id="image"
+										value={field.value?.fileName}
+										onChange={(event) => {
+											field.onChange(event.target.files![0]);
+										}}
+									/>
+								</FormControl>
+								<FormDescription hidden>
+									This is the image for the album you are submitting
 								</FormDescription>
 								<FormMessage />
 							</FormItem>
