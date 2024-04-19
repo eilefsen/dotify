@@ -7,7 +7,8 @@ DROP TABLE IF EXISTS artist;
 CREATE TABLE
   `artist` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL UNIQUE
+    `name` VARCHAR(255) NOT NULL,
+	UNIQUE (`name`)
   );
 
 CREATE TABLE
@@ -15,11 +16,11 @@ CREATE TABLE
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `title` VARCHAR(255) NOT NULL,
     `artist_id` INT UNSIGNED NOT NULL,
-    `img_src` VARCHAR(511) NOT NULL
+    `img_src` VARCHAR(511) NOT NULL,
+	UNIQUE(`title`, `artist_id`),
+    FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`)
   );
 
-ALTER TABLE album 
-  ADD CONSTRAINT uq_album UNIQUE(title, artist_id);
 
 CREATE TABLE
   `song` (
@@ -30,11 +31,10 @@ CREATE TABLE
     `src` VARCHAR(511) NOT NULL,
     `duration` INT UNSIGNED NOT NULL,
     `album_id` INT UNSIGNED NOT NULL,
-    FOREIGN KEY (`album_id`) REFERENCES `album` (`id`)
+    FOREIGN KEY (`album_id`) REFERENCES `album` (`id`),
+    FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`)
   );
 
-ALTER TABLE song 
-  ADD CONSTRAINT uq_song UNIQUE(title, artist_id, album_id);
 
 CREATE TABLE `user` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
