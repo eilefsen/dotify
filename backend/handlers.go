@@ -422,6 +422,13 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		}
 		slog.Debug("uploadAudioFiles", "m", m)
 
+		duration, err := EstimateMP3Duration(f)
+		if err != nil {
+			slog.Debug("uploadAudioFiles: Failed to calculate mp3 length", "Filename", fh.Filename)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		trackNumber, _ := m.Track()
 		_, err = models.Song{}.New(models.SongNoID{
 			Title:    m.Title(),
@@ -429,7 +436,7 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 			Album:    album,
 			Src:      src,
 			Track:    uint32(trackNumber),
-			Duration: 0,
+			Duration: duration,
 		})
 		if err != nil {
 			slog.Debug("uploadAudioFiles: Failed to insert Song to database", "err", err)

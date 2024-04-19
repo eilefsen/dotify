@@ -10,7 +10,11 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/uuid v1.6.0
 	github.com/lmittmann/tint v1.0.4
+	github.com/tcolgate/mp3 v0.0.0-20170426193717-e79c5a46d300
 	golang.org/x/crypto v0.21.0
 )
 
-require github.com/cespare/xxhash/v2 v2.1.2 // indirect
+require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	gopkg.in/vansante/go-ffprobe.v2 v2.1.1 // indirect
+)
