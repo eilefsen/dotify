@@ -6,12 +6,9 @@ import (
 	"log/slog"
 )
 
-type ArtistNoID struct {
-	Name string `json:"name"`
-}
 type Artist struct {
-	ArtistNoID
-	ID uint32 `json:"id"`
+	Name string `json:"name"`
+	ID   uint32 `json:"id"`
 }
 
 type Artists []Artist
@@ -68,12 +65,12 @@ func (artist *ArtistJSON) scan(r rowScanner) error {
 	)
 }
 
-func (Artist) New(artist ArtistNoID) (Artist, error) {
+func (Artist) New(name string) (Artist, error) {
 	var a Artist
 	res, err := db.Exec(
-		`INSERT INTO artist (artist.name
+		`INSERT IGNORE INTO artist (artist.name
 		) VALUES (?)`,
-		&artist.Name,
+		name,
 	)
 	if err != nil {
 		return a, err
@@ -83,7 +80,7 @@ func (Artist) New(artist ArtistNoID) (Artist, error) {
 		return a, err
 	}
 	a.ID = uint32(id)
-	a.ArtistNoID = artist
+	a.Name = name
 	slog.Info("models.NewArtist", "a", a)
 	return a, nil
 }

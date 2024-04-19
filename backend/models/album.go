@@ -50,12 +50,12 @@ func (Albums) selectQuery() string {
 func (Album) New(album AlbumNoID) (Album, error) {
 	var a Album
 	res, err := db.Exec(
-		`INSERT INTO artist (album.id, album.title, album.img_src,
+		`INSERT IGNORE INTO artist (album.id, album.title, album.img_src,
 		artist.id
 		) VALUES (?, ?, ?)`,
-		&album.Title,
-		&album.ImgSrc,
-		&album.Artist.ID,
+		album.Title,
+		album.ImgSrc,
+		album.Artist.ID,
 	)
 	if err != nil {
 		return a, err
