@@ -6,17 +6,20 @@ import (
 	"log/slog"
 )
 
-type Album struct {
-	ID     uint32 `json:"id"`
+type AlbumNoID struct {
 	Title  string `json:"title"`
 	ImgSrc string `json:"imgSrc"`
 	Artist Artist `json:"artist"`
 }
+type Album struct {
+	AlbumNoID
+	ID uint32 `json:"id"`
+}
 type Albums []Album
 
 type AlbumJSON struct {
-	Album
 	Songs Songs `json:"songs"`
+	Album
 }
 
 func (album *Album) scan(r rowScanner) error {
@@ -39,8 +42,39 @@ func (Album) selectQuery() string {
     `
 	return query
 }
+
 func (Albums) selectQuery() string {
 	return Album{}.selectQuery()
+}
+
+func (Album) New(album AlbumNoID) (Album, error) {
+	var a Album
+	res, err := db.Exec(
+		`INSERT IGNORE INTO album (album.title, album.img_src,
+		artist_id
+		) VALUES (?, ?, ?)`,
+		album.Title,
+		album.ImgSrc,
+		album.Artist.ID,
+	)
+	if err != nil {
+		return a, err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return a, err
+	}
+	if id == 0 {
+		a, err = Album{}.ByTitle(album.Title)
+		if err != nil {
+			return a, err
+		}
+	} else {
+		a.ID = uint32(id)
+		a.AlbumNoID = album
+	}
+	slog.Info("models.NewAlbum", "a", a)
+	return a, nil
 }
 
 func (AlbumJSON) ByID(id uint32) (AlbumJSON, error) {
@@ -61,10 +95,12 @@ func (AlbumJSON) ByID(id uint32) (AlbumJSON, error) {
 
 	albumJson = AlbumJSON{
 		Album: Album{
-			ID:     alb.ID,
-			Title:  alb.Title,
-			ImgSrc: alb.ImgSrc,
-			Artist: alb.Artist,
+			ID: alb.ID,
+			AlbumNoID: AlbumNoID{
+				Title:  alb.Title,
+				ImgSrc: alb.ImgSrc,
+				Artist: alb.Artist,
+			},
 		},
 		Songs: songs,
 	}
@@ -82,6 +118,21 @@ func (a Album) ById(id uint32) (Album, error) {
 	}
 	if err := row.Err(); err != nil {
 		return a, fmt.Errorf("Album.ById %q: %v", id, err)
+	}
+	return a, nil
+}
+
+func (a Album) ByTitle(title string) (Album, error) {
+	row := db.QueryRow(a.selectQuery()+"WHERE album.title = ?", title)
+	err := a.scan(row)
+	if err == sql.ErrNoRows {
+		return a, ErrResourceNotFound
+	}
+	if err != nil {
+		return a, fmt.Errorf("Album.ByTitle %q: %v", title, err)
+	}
+	if err := row.Err(); err != nil {
+		return a, fmt.Errorf("Album.ByTitle %q: %v", title, err)
 	}
 	return a, nil
 }

@@ -3,18 +3,19 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"log/slog"
 )
 
 type Artist struct {
-	ID   uint32 `json:"id"`
 	Name string `json:"name"`
+	ID   uint32 `json:"id"`
 }
 
 type Artists []Artist
 
 type ArtistJSON struct {
-	Artist
 	ImgSrc string `json:"imgSrc"`
+	Artist
 }
 type ArtistsJSON []ArtistJSON
 
@@ -44,6 +45,7 @@ func (ArtistJSON) selectQuery() string {
     `
 	return query
 }
+
 func (ArtistsJSON) selectQuery() string {
 	return ArtistJSON{}.selectQuery()
 }
@@ -61,6 +63,33 @@ func (artist *ArtistJSON) scan(r rowScanner) error {
 		&artist.Name,
 		&artist.ImgSrc,
 	)
+}
+
+func (Artist) New(name string) (Artist, error) {
+	var a Artist
+	res, err := db.Exec(
+		`INSERT IGNORE INTO artist (artist.name
+		) VALUES (?)`,
+		name,
+	)
+	if err != nil {
+		return a, err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return a, err
+	}
+	if id == 0 {
+		a, err = Artist{}.ByName(name)
+		if err != nil {
+			return a, err
+		}
+	} else {
+		a.ID = uint32(id)
+		a.Name = name
+	}
+	slog.Info("models.NewArtist", "a", a)
+	return a, nil
 }
 
 func (artistsJson ArtistsJSON) All() (ArtistsJSON, error) {

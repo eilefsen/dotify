@@ -45,10 +45,23 @@ func main() {
 			http.Error(w, "You've been rate limited", http.StatusTooManyRequests)
 		}),
 	))
-	rt.Get("/api/albums", FetchAllAlbums)
-	rt.Get("/api/album/{id}", FetchAlbumByID)
-	rt.Get("/api/artists", FetchAllArtists)
-	rt.Get("/api/albums/artist/{id}", FetchAlbumsByArtist)
-	rt.Get("/api/songs", FetchAllSongs)
+	// protected routes
+	rt.Group(func(rt chi.Router) {
+		rt.Post("/api/auth/status", TokenAuth(authStatusHandler))
+		rt.Post("/api/auth/adminstatus", SuperUserAuth(authStatusHandler))
+		rt.Post("/api/admin/upload", SuperUserAuth(uploadAudioFiles))
+		rt.Post("/api/auth/refresh", authRefreshHandler)
+	})
+	// unprotected routes
+	rt.Group(func(rt chi.Router) {
+		rt.Post("/api/auth/login", login)
+		rt.Post("/api/auth/logout", logoutHandler)
+		rt.Get("/api/albums", FetchAllAlbums)
+		rt.Get("/api/album/{id}", FetchAlbumByID)
+		rt.Get("/api/artists", FetchAllArtists)
+		rt.Get("/api/albums/artist/{id}", FetchAlbumsByArtist)
+		rt.Get("/api/songs", FetchAllSongs)
+	})
+
 	http.ListenAndServe(":"+os.Getenv("BACKEND_PORT"), rt)
 }

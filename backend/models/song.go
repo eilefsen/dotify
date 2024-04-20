@@ -2,16 +2,20 @@ package models
 
 import (
 	"fmt"
+	"log/slog"
 )
 
-type Song struct {
-	ID       uint32 `json:"id"`
-	Track    uint32 `json:"track"`
+type SongNoID struct {
 	Title    string `json:"title"`
 	Src      string `json:"src"`
-	Duration uint32 `json:"duration"`
 	Artist   Artist `json:"artist"`
 	Album    Album  `json:"album"`
+	Track    uint32 `json:"track"`
+	Duration uint32 `json:"duration"`
+}
+type Song struct {
+	SongNoID
+	ID uint32 `json:"id"`
 }
 type Songs []Song
 
@@ -42,8 +46,39 @@ func (Song) selectQuery() string {
     `
 	return query
 }
+
 func (Songs) selectQuery() string {
 	return Song{}.selectQuery()
+}
+
+func (Song) New(song SongNoID) (Song, error) {
+	var s Song
+	res, err := db.Exec(
+		`
+		INSERT INTO song (
+		song.track, song.title, song.src, song.duration,
+		album_id,
+		artist_id
+		) VALUES ( ?, ?, ?, ?, ?, ?)
+		`,
+		song.Track,
+		song.Title,
+		song.Src,
+		song.Duration,
+		song.Album.ID,
+		song.Artist.ID,
+	)
+	if err != nil {
+		return s, err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return s, err
+	}
+	s.ID = uint32(id)
+	s.SongNoID = song
+	slog.Info("models.NewSong", "s", s)
+	return s, nil
 }
 
 func (songs Songs) ByAlbum(id uint32) (Songs, error) {
