@@ -67,6 +67,7 @@ export class PlayerStore {
 
 	constructor(songs: Song[]) {
 		this.songList = songs;
+
 		this.audio.preload = "metadata";
 		if (this.songCount > 0) {
 			this.songIndex = 0;
@@ -97,6 +98,61 @@ export class PlayerStore {
 				target.volume = this.volume;
 				this.isReady = true;
 			});
+			if ("mediaSession" in navigator) {
+				navigator.mediaSession.metadata = new MediaMetadata({
+					title: this.currentSong.title,
+					artist: this.currentSong.artist.name,
+					album: this.currentSong.album.title,
+					artwork: [
+						{
+							src: this.currentSong.album.imgSrc,
+							type: "image/jpg",
+						},
+					],
+				});
+				navigator.mediaSession.setActionHandler("play", () => {
+					this.play();
+				});
+				navigator.mediaSession.setActionHandler("pause", () => {
+					this.pause();
+				});
+				navigator.mediaSession.setActionHandler("previoustrack", () => {
+					this.skip(-1);
+					this.play();
+				});
+				navigator.mediaSession.setActionHandler("nexttrack", () => {
+					this.skip(1);
+					this.play();
+				});
+				navigator.mediaSession.setActionHandler("seekto", (details) => {
+					if (details.seekTime != undefined) {
+						this.setProgress(details.seekTime);
+					}
+				});
+				navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+					if (details.seekOffset != undefined) {
+						this.setProgress(this.seek - details.seekOffset);
+					}
+				});
+				navigator.mediaSession.setActionHandler("seekforward", (details) => {
+					if (details.seekOffset != undefined) {
+						this.setProgress(this.seek + details.seekOffset);
+					}
+				});
+			}
+		});
+		this.audio.addEventListener("loadeddata", (ev) => {
+			if (navigator.mediaSession.metadata != null) {
+				navigator.mediaSession.metadata.title = this.currentSong.title;
+				navigator.mediaSession.metadata.artist = this.currentSong.artist.name;
+				navigator.mediaSession.metadata.album = this.currentSong.album.title;
+				navigator.mediaSession.metadata.artwork = [
+					{
+						src: this.currentSong.album.imgSrc,
+						type: "image/jpg",
+					},
+				];
+			}
 		});
 		this.audio.addEventListener("timeupdate", (ev) => {
 			const target = ev.currentTarget as HTMLAudioElement;
@@ -130,8 +186,10 @@ export class PlayerStore {
 	togglePlay() {
 		if (this.isPlaying) {
 			this.pause();
+			navigator.mediaSession.playbackState = "paused";
 		} else {
 			this.play();
+			navigator.mediaSession.playbackState = "playing";
 		}
 	}
 	play() {
