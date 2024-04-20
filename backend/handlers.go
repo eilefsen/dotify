@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"dotify/backend/models"
 	"encoding/json"
 	"fmt"
@@ -423,8 +424,11 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		slog.Debug("uploadAudioFiles", "m", m)
 
 		duration := uint32(0)
+		var buf bytes.Buffer
 		if m.FileType() == tag.MP3 {
-			duration, err = EstimateMP3Duration(f)
+			tee := io.TeeReader(f, &buf)
+
+			duration, err = EstimateMP3Duration(tee)
 			if err != nil {
 				slog.Debug("uploadAudioFiles: Failed to calculate mp3 length", "Filename", fh.Filename)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -456,9 +460,9 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 		}
 		defer dst.Close()
 
-		// Copy the uploaded file to the filesystem
+		// Copy the uploaded file (buf) to the filesystem
 		// at the specified destination
-		_, err = io.Copy(dst, f)
+		_, err = io.Copy(dst, &buf)
 		if err != nil {
 			slog.Debug("uploadAudioFiles: Failed to copy file to destination")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
