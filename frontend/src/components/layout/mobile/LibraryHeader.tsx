@@ -7,11 +7,6 @@ import { PropsWithChildren, useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 export function LibraryHeader() {
-	const isLoggedIn = useQuery({
-		queryKey: ["loginStatus"],
-		initialData: false,
-		enabled: false,
-	});
 	return (
 		<>
 			<div className="library-header fixed left-0 right-0 top-0 z-20 flex h-14 items-center justify-center gap-2 overflow-x-scroll border-b border-neutral-800 bg-neutral-950 px-2">
@@ -26,7 +21,6 @@ export function LibraryHeader() {
 						Songs
 					</LibraryBtn>
 				</span>
-				<LoginButton isLoggedIn={isLoggedIn.data} />
 			</div>
 		</>
 	);
