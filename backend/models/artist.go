@@ -79,8 +79,15 @@ func (Artist) New(name string) (Artist, error) {
 	if err != nil {
 		return a, err
 	}
-	a.ID = uint32(id)
-	a.Name = name
+	if id == 0 {
+		a, err = Artist{}.ByName(name)
+		if err != nil {
+			return a, err
+		}
+	} else {
+		a.ID = uint32(id)
+		a.Name = name
+	}
 	slog.Info("models.NewArtist", "a", a)
 	return a, nil
 }

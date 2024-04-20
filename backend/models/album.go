@@ -64,8 +64,15 @@ func (Album) New(album AlbumNoID) (Album, error) {
 	if err != nil {
 		return a, err
 	}
-	a.ID = uint32(id)
-	a.AlbumNoID = album
+	if id == 0 {
+		a, err = Album{}.ByTitle(album.Title)
+		if err != nil {
+			return a, err
+		}
+	} else {
+		a.ID = uint32(id)
+		a.AlbumNoID = album
+	}
 	slog.Info("models.NewAlbum", "a", a)
 	return a, nil
 }
@@ -111,6 +118,21 @@ func (a Album) ById(id uint32) (Album, error) {
 	}
 	if err := row.Err(); err != nil {
 		return a, fmt.Errorf("Album.ById %q: %v", id, err)
+	}
+	return a, nil
+}
+
+func (a Album) ByTitle(title string) (Album, error) {
+	row := db.QueryRow(a.selectQuery()+"WHERE album.title = ?", title)
+	err := a.scan(row)
+	if err == sql.ErrNoRows {
+		return a, ErrResourceNotFound
+	}
+	if err != nil {
+		return a, fmt.Errorf("Album.ByTitle %q: %v", title, err)
+	}
+	if err := row.Err(); err != nil {
+		return a, fmt.Errorf("Album.ByTitle %q: %v", title, err)
 	}
 	return a, nil
 }
