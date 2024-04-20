@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Upload } from "./upload";
-import { useNavigate } from "react-router-dom";
+import Login from "../login/Login";
 
 export default function Admin() {
 	const result = useQuery({
@@ -20,9 +20,5 @@ export default function Admin() {
 		retry: false,
 	});
 
-	const navigate = useNavigate();
-	if (!result.data) {
-		navigate("/login");
-	}
-	return <>{result.data && <Upload />}</>;
+	return <>{result.data ? <Upload /> : <Login />}</>;
 }

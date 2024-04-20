@@ -20,11 +20,7 @@ const formSchema = z.object({
 	password: z.string().min(2).max(250),
 });
 
-interface LoginFormProps {
-	onSuccess?: () => void;
-}
-
-export function LoginForm(props: LoginFormProps) {
+export function LoginForm() {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -42,9 +38,6 @@ export function LoginForm(props: LoginFormProps) {
 		},
 		onSuccess: () => {
 			form.reset();
-			if (props.onSuccess) {
-				props.onSuccess();
-			}
 			console.info("Logged in!");
 			queryClient.setQueryData(["loginStatus"], true);
 		},
