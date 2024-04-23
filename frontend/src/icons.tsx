@@ -1,4 +1,5 @@
 import {
+	PiGithubLogoBold,
 	PiGuitar,
 	PiMusicNotesSimple,
 	PiPauseCircleBold,
@@ -49,4 +50,5 @@ export const icons = {
 	timer: <PiTimer size={24} className={iconClassName} />,
 	login: <PiSignIn size={32} />,
 	logout: <PiSignOut size={32} />,
+	github: <PiGithubLogoBold size={32} />,
 };
