@@ -1,3 +1,4 @@
+import { ArtistWithAlbums } from "@/components/pages/Artist";
 import {
 	Album,
 	AlbumWithSongs,
@@ -45,6 +46,22 @@ export async function fetchAlbumByID(id: number): Promise<AlbumWithSongs> {
 
 export async function fetchAlbumsByArtist(id: number): Promise<Album[]> {
 	const res = await fetch(`/api/albums/artist/${id}`);
+	if (res.status == 404) {
+		throw new Response("Not Found", { status: 404 });
+	}
+	if (res.status == 400) {
+		throw new Response("Bad Request", { status: 400 });
+	}
+	if (res.status == 429) {
+		throw new Response("You've been rate limited", { status: 429 });
+	}
+	return res.json();
+}
+
+export async function fetchArtistWithAlbums(
+	id: number,
+): Promise<ArtistWithAlbums> {
+	const res = await fetch(`/api/artist/${id}`);
 	if (res.status == 404) {
 		throw new Response("Not Found", { status: 404 });
 	}

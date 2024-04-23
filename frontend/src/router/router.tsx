@@ -5,6 +5,7 @@ import {
 	fetchAllAlbums,
 	fetchAllArtists,
 	fetchAllSongs,
+	fetchArtistWithAlbums,
 } from "./loaders";
 import AlbumContent from "@/components/pages/Album";
 import Albums from "@/components/pages/Albums";
@@ -13,6 +14,7 @@ import Artists from "@/components/pages/Artists";
 import MobileLayout from "@/components/layout/mobile/MobileLayout";
 import Login from "@/components/pages/login/Login";
 import Admin from "@/components/pages/admin/Admin";
+import { Artist } from "@/components/pages/Artist";
 
 const router = createBrowserRouter([
 	{
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
 				loader: async ({ params }) => {
 					const id = parseInt(params.id!);
 					return fetchAlbumsByArtist(id);
+				},
+			},
+			{
+				path: "/artist/:id",
+				element: <Artist />,
+				loader: async ({ params }) => {
+					const id = parseInt(params.id!);
+					return fetchArtistWithAlbums(id);
 				},
 			},
 			{

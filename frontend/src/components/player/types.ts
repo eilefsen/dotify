@@ -1,34 +1,35 @@
 export interface Song {
-    title: string;
-    track: number;
-    artist: Artist;
-    id: string;
-    album: {
-        id: string,
-        title: string,
-        artist: Artist;
-        imgSrc: string,
-    };
-    duration: number;
-    src: string;
-    imgSrc: string;
+	title: string;
+	track: number;
+	artist: Artist;
+	id: string;
+	album: {
+		id: string;
+		title: string;
+		artist: Artist;
+		imgSrc: string;
+	};
+	duration: number;
+	src: string;
+	imgSrc: string;
 }
 
 export interface Album {
-    id: string,
-    title: string,
-    artist: Artist;
-    imgSrc: string,
+	id: string;
+	title: string;
+	artist: Artist;
+	imgSrc: string;
 }
 export interface AlbumWithSongs extends Album {
-    songs: Song[],
+	songs: Song[];
 }
 
 export interface Artist {
-    id: string,
-    name: string,
+	id: string;
+	name: string;
+	website: string;
 }
 
 export interface ArtistWithImg extends Artist {
-    imgSrc: string,
+	imgSrc: string;
 }

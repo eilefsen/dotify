@@ -60,6 +60,7 @@ func main() {
 		rt.Get("/api/album/{id}", FetchAlbumByID)
 		rt.Get("/api/artists", FetchAllArtists)
 		rt.Get("/api/albums/artist/{id}", FetchAlbumsByArtist)
+		rt.Get("/api/artist/{id}", FetchArtistWithAlbums)
 		rt.Get("/api/songs", FetchAllSongs)
 	})
 

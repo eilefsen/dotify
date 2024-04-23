@@ -7,8 +7,9 @@ import (
 )
 
 type Artist struct {
-	Name string `json:"name"`
-	ID   uint32 `json:"id"`
+	Name    string `json:"name"`
+	Website string `json:"website"`
+	ID      uint32 `json:"id"`
 }
 
 type Artists []Artist
@@ -21,7 +22,7 @@ type ArtistsJSON []ArtistJSON
 
 func (Artist) selectQuery() string {
 	query := `
-    SELECT artist.id, artist.name FROM artist
+    SELECT artist.id, artist.name, artist.website FROM artist
     `
 	return query
 }
@@ -32,7 +33,7 @@ func (Artists) selectQuery() string {
 
 func (ArtistJSON) selectQuery() string {
 	query := `
-    SELECT artist.id, artist.name, album.img_src
+    SELECT artist.id, artist.name, artist.website, album.img_src
     FROM artist
     JOIN album
     ON album.id =
@@ -54,6 +55,7 @@ func (artist *Artist) scan(r rowScanner) error {
 	return r.Scan(
 		&artist.ID,
 		&artist.Name,
+		&artist.Website,
 	)
 }
 
@@ -61,6 +63,7 @@ func (artist *ArtistJSON) scan(r rowScanner) error {
 	return r.Scan(
 		&artist.ID,
 		&artist.Name,
+		&artist.Website,
 		&artist.ImgSrc,
 	)
 }
@@ -140,6 +143,19 @@ func (artist Artist) ByID(id uint32) (Artist, error) {
 		return artist, fmt.Errorf("Artist.ByID %q: %v", id, err)
 	}
 	return artist, nil
+}
+
+func (ArtistJSON) ByID(id uint32) (ArtistJSON, error) {
+	var a ArtistJSON
+	row := db.QueryRow(a.selectQuery()+"WHERE artist.id = ?", id)
+	err := a.scan(row)
+	if err != nil {
+		return a, fmt.Errorf("ArtistsJSON.ByID: %v", err)
+	}
+	if err := row.Err(); err != nil {
+		return a, fmt.Errorf("ArtistsJSON.ByID: %v", err)
+	}
+	return a, nil
 }
 
 func (artist Artist) ByName(name string) (Artist, error) {

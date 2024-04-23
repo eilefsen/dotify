@@ -109,6 +109,54 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+type ArtistJSONSWithAlbums struct {
+	Artist models.ArtistJSON `json:"artist"`
+	Albums models.Albums     `json:"albums"`
+}
+
+func FetchArtistWithAlbums(w http.ResponseWriter, r *http.Request) {
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	artist, err := models.ArtistJSON{}.ByID(id)
+	if err == models.ErrResourceNotFound {
+		slog.Error("FetchArtistWithAlbums: No artist found", "artist", artist, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	albums, err := models.Albums{}.ByArtist(artist.ID)
+	if err == models.ErrResourceNotFound {
+		slog.Error("FetchArtistWithAlbums: No albums found", "artist", artist, "error", err)
+		albums = models.Albums{}
+	}
+	if err != nil {
+		slog.Error("FetchArtistWithAlbums:", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	slog.Debug("FetchArtistWithAlbums:", "albums", albums, "artist", artist)
+
+	responseJSON, err := json.Marshal(ArtistJSONSWithAlbums{
+		Artist: artist,
+		Albums: albums,
+	})
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
 func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	songs, err := models.Songs{}.All()
 	if err == models.ErrResourceNotFound {
