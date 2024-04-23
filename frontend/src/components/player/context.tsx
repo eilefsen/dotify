@@ -2,6 +2,7 @@ import { computed, makeAutoObservable, runInAction } from "mobx";
 import { createContext } from "react";
 
 import {
+	PiGithubLogoBold,
 	PiGuitar,
 	PiMusicNotesSimple,
 	PiPauseCircleBold,
@@ -51,6 +52,7 @@ export const iconsContext = createContext({
 	timer: <PiTimer size={iconSize} className={iconClassName} />,
 	login: <PiSignIn className={iconClassName} />,
 	logout: <PiSignOut className={iconClassName} />,
+	github: <PiGithubLogoBold size={32} />,
 });
 
 export class PlayerStore {

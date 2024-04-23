@@ -1,7 +1,5 @@
 import { iconsContext, playerStoreContext } from "@/components/player";
 import { cn } from "@/lib/utils";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { PropsWithChildren, useContext } from "react";
 import { NavLink } from "react-router-dom";
@@ -21,43 +19,21 @@ export function LibraryHeader() {
 						Songs
 					</LibraryBtn>
 				</span>
+				<GithubButton />
 			</div>
 		</>
 	);
 }
 
-interface LoginButtonProps {
-	isLoggedIn: boolean;
-}
-function LoginButton(props: LoginButtonProps) {
+function GithubButton() {
 	const icons = useContext(iconsContext);
-	const queryClient = useQueryClient();
-	async function logout() {
-		const res = await axios.post("/api/auth/logout");
-		if (res.status == 200) {
-			console.log("Logged out!");
-			queryClient.setQueryData(["loginStatus"], false);
-			queryClient.setQueryData(["adminLoginStatus"], false);
-		}
-		return res;
-	}
-	const classString =
-		"flex h-11 w-32 items-center justify-center rounded-lg border border-white bg-neutral-950 hover:bg-white hover:text-black px-4 py-1 text-xl transition-colors";
 	return (
-		<>
-			{
-				// inverted boolean because we want to show the login link when not logged in
-				!props.isLoggedIn ? (
-					<LibraryBtn className={classString} to="/login">
-						{icons.login}
-					</LibraryBtn>
-				) : (
-					<button className={classString} onClick={logout}>
-						{icons.logout}
-					</button>
-				)
-			}
-		</>
+		<a
+			className="flex h-11 w-24 items-center justify-center rounded-lg border border-neutral-300 bg-white px-4  py-1 text-xl text-black transition-colors hover:bg-black hover:text-white "
+			href="https://github.com/eilefsen/dotify"
+		>
+			{icons.github}
+		</a>
 	);
 }
 
