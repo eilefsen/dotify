@@ -8,7 +8,7 @@ CREATE TABLE
   `artist` (
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
-    `website` VARCHAR(255),
+    `website` VARCHAR(255) DEFAULT "" NOT NULL,
 	UNIQUE (`name`)
   );
 
