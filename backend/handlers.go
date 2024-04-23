@@ -321,8 +321,8 @@ func authStatusHandler(w http.ResponseWriter, r *http.Request) {
 
 func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 	batchID := uuid.New()
-	uploadsDir := fmt.Sprintf("/audio/upload/%s/", batchID.String())
-	relativePath := "./dist"
+	uploadsDir := fmt.Sprintf("/audio/upload/", batchID.String())
+	relativePath := os.Getenv("UPLOADS_DIR_PREFIX")
 	err := os.MkdirAll(relativePath+uploadsDir, os.ModePerm)
 	if err != nil {
 		slog.Error("uploadAudioFiles: Failed to make directory")
