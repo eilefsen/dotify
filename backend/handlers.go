@@ -21,22 +21,24 @@ import (
 
 func FetchAllAlbums(w http.ResponseWriter, r *http.Request) {
 	albums, err := models.Albums{}.All()
+	w.Header().Set("Content-Type", "application/json")
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchAllAlbums: No albums found", "error", err)
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
-	if err != nil {
+		albums = models.Albums{}
+	} else if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 	slog.Debug("FetchAllAlbums", "albums", albums)
 
 	responseJSON, err := json.Marshal(albums)
 	if err != nil {
 		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.Write(responseJSON)
 }
 
@@ -87,8 +89,7 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 	albums, err := models.Albums{}.ByArtist(artist.ID)
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchAlbumsByArtist: No album found", "artist", artist, "error", err)
-		w.WriteHeader(http.StatusNoContent)
-		return
+		albums = models.Albums{}
 	}
 	if err != nil {
 		slog.Error("FetchAlbumsByArtist:", "error", err)
@@ -112,10 +113,8 @@ func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	songs, err := models.Songs{}.All()
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchAllSongs: No songs found", "error", err)
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
-	if err != nil {
+		songs = models.Songs{}
+	} else if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -136,11 +135,9 @@ func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
 	artists, err := models.ArtistsJSON{}.All()
 	if err == models.ErrResourceNotFound {
-		slog.Error("FetchAllArtists: No artists found", "error", err)
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
-	if err != nil {
+		slog.Info("FetchAllArtists: No artists found", "error", err)
+		artists = models.ArtistsJSON{}
+	} else if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -174,13 +171,14 @@ func login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-
+	slog.Debug("login:", "password", creds.Password, "username", creds.Username, "dbUsername", u.Username)
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(creds.Password))
 	if err != nil {
 		slog.Info("login: Invalid login", "username", creds.Username)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
+	slog.Debug("login: Login is valid")
 
 	atExpire := time.Now().Add(5 * time.Minute)
 	rtExpire := time.Now().Add(24 * time.Hour)
@@ -206,6 +204,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 		Domain:   os.Getenv("DOMAIN"),
 	}
+	slog.Debug("login:", "cookie", atCookie)
 
 	http.SetCookie(w, &atCookie)
 	rtCookie := http.Cookie{
@@ -321,8 +320,8 @@ func authStatusHandler(w http.ResponseWriter, r *http.Request) {
 
 func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 	batchID := uuid.New()
-	uploadsDir := fmt.Sprintf("/audio/upload/", batchID.String())
 	relativePath := os.Getenv("UPLOADS_DIR_PREFIX")
+	uploadsDir := fmt.Sprintf("/audio/upload/%s/", batchID.String())
 	err := os.MkdirAll(relativePath+uploadsDir, os.ModePerm)
 	if err != nil {
 		slog.Error("uploadAudioFiles: Failed to make directory")
