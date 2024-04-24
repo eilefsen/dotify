@@ -41,14 +41,6 @@ const router = createBrowserRouter([
 				loader: fetchAllArtists,
 			},
 			{
-				path: "/albums/artist/:id",
-				element: <Albums />,
-				loader: async ({ params }) => {
-					const id = parseInt(params.id!);
-					return fetchAlbumsByArtist(id);
-				},
-			},
-			{
 				path: "/artist/:id",
 				element: <Artist />,
 				loader: async ({ params }) => {
