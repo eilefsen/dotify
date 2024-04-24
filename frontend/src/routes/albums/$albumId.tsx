@@ -1,7 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/albums/$albumId")({
 	component: () => <AlbumContent />,
+	loader: async (params) => {
+		const res = await axios.get(`/api/${params.location.pathname}`);
+		return res.data;
+	},
 });
 
 import { useContext } from "react";
@@ -9,9 +13,10 @@ import { observer } from "mobx-react-lite";
 import { playerStoreContext, iconsContext } from "@/components/player";
 import { AlbumWithSongs } from "@/components/player/types";
 import { SongTable } from "@/components/songList";
+import axios from "axios";
 
 export default function AlbumContent() {
-	const album = useLoaderData() as AlbumWithSongs;
+	const album = useLoaderData({ strict: true, from: "/albums/$albumId" });
 	console.debug("Album:", album);
 
 	return (

@@ -19,17 +19,18 @@ interface AlbumsProps {
 }
 
 export default function Albums(props: AlbumsProps) {
-	let albums;
+	let albums: Album[];
 	if (props.albums) {
 		albums = props.albums;
 	} else {
+		albums = useLoaderData({ strict: true, from: "/albums/" });
 	}
 	console.debug(albums);
 
 	const albumLines: ReactNode[] = [];
 	albums.forEach((album) => {
 		albumLines.push(
-			<AlbumLine key={album.id} album={album} to={`/album/${album.id}`} />,
+			<AlbumLine key={album.id} album={album} to={`/albums/${album.id}`} />,
 		);
 	});
 
