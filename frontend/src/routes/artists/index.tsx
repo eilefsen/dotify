@@ -1,19 +1,32 @@
-import { Link, useLoaderData } from "react-router-dom";
-import { CoverImg, playerStoreContext } from "../player";
+import { Link, createFileRoute, useLoaderData } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/artists/")({
+	component: () => <Artists />,
+	loader: async (params) => {
+		const res = await axios.get(`/api/${params.location.pathname}`);
+		return res.data;
+	},
+});
+
 import { ReactNode, useContext } from "react";
-import { Artist, ArtistWithImg } from "../player/types";
 import { observer } from "mobx-react-lite";
+import { playerStoreContext, CoverImg } from "@/components/player";
+import { ArtistWithImg } from "@/components/player/types";
+import axios from "axios";
 
 export default function Artists() {
 	const artistLines: ReactNode[] = [];
-	const artists = useLoaderData() as ArtistWithImg[];
+	const artists: ArtistWithImg[] = useLoaderData({
+		strict: true,
+		from: "/artists/",
+	});
 	console.debug(artists);
 	artists.forEach((artist) => {
 		artistLines.push(
 			<ArtistLine
 				key={artist.id}
 				artist={artist}
-				to={`/artist/${artist.id}`}
+				to={`/artists/${artist.id}`}
 			/>,
 		);
 	});

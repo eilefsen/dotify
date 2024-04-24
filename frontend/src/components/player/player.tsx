@@ -11,7 +11,7 @@ import {
 	VolumeSlider,
 } from "./controls";
 import { SongTitle } from "./status";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 export const AudioPlayer = observer(() => {
 	const player = useContext(playerStoreContext);

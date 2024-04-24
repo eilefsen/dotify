@@ -1,25 +1,36 @@
+import { Link, createFileRoute, useLoaderData } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/albums/")({
+	component: () => <Albums />,
+	loader: async (params) => {
+		const res = await axios.get(`/api/${params.location.pathname}`);
+		return res.data;
+	},
+});
+
 import { ReactNode, useContext } from "react";
-import { CoverImg, playerStoreContext } from "../player";
-import { Link, useLoaderData } from "react-router-dom";
-import { Album } from "../player/types";
 import { observer } from "mobx-react-lite";
+import { playerStoreContext } from "@/components/player";
+import { Album } from "@/components/player/types";
+import axios from "axios";
 
 interface AlbumsProps {
 	albums?: Album[];
 }
 
 export default function Albums(props: AlbumsProps) {
-	const albumLines: ReactNode[] = [];
-	let albums;
+	let albums: Album[];
 	if (props.albums) {
 		albums = props.albums;
 	} else {
-		albums = useLoaderData() as Album[];
+		albums = useLoaderData({ strict: true, from: "/albums/" });
 	}
 	console.debug(albums);
+
+	const albumLines: ReactNode[] = [];
 	albums.forEach((album) => {
 		albumLines.push(
-			<AlbumLine key={album.id} album={album} to={`/album/${album.id}`} />,
+			<AlbumLine key={album.id} album={album} to={`/albums/${album.id}`} />,
 		);
 	});
 
@@ -66,25 +77,3 @@ const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
 		</Link>
 	);
 });
-
-interface AlbumCardProps {
-	title: string;
-	artist: string;
-	imgSrc: string;
-	to: string;
-}
-
-function AlbumCard({ title, artist, imgSrc, to }: AlbumCardProps) {
-	return (
-		<Link
-			to={to}
-			className="album-card w-48 overflow-hidden rounded-2xl bg-white"
-		>
-			<CoverImg src={imgSrc} alt={title} />
-			<div className="px-6 py-1.5 font-bold">
-				<h4 className="text-xl text-black">{title}</h4>
-				<h5 className="text-neutral-800 ">{artist}</h5>
-			</div>
-		</Link>
-	);
-}

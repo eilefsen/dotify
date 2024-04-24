@@ -1,19 +1,21 @@
-import { AudioPlayer, playerStoreContext } from "@/components/player";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { playerStoreContext, AudioPlayer } from "@/components/player";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { observer } from "mobx-react-lite";
 import { useContext } from "react";
-import { Outlet } from "react-router-dom";
-import { LibraryHeader } from "./LibraryHeader";
-import { LibraryFooter } from "./MobileFooter";
 
-export default function Layout() {
-	return (
+export const Route = createRootRoute({
+	component: () => (
 		<>
-			<LibraryHeader />
+			<Header />
 			<LibraryOutlet />
-			<LibraryFooter />
+			<Footer />
+			<TanStackRouterDevtools />
 		</>
-	);
-}
+	),
+});
 
 const LibraryOutlet = observer(() => {
 	const player = useContext(playerStoreContext);

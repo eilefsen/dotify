@@ -1,6 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -10,10 +8,21 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+	createFileRoute,
+	useNavigate,
+	useRouter,
+} from "@tanstack/react-router";
+
+export const Route = createFileRoute("/login")({
+	component: LoginForm,
+});
 
 const formSchema = z.object({
 	username: z.string().min(2).max(250),
@@ -28,6 +37,8 @@ export function LoginForm() {
 			password: "",
 		},
 	});
+	const router = useRouter();
+	const navigate = useNavigate({ from: "/login" });
 
 	const queryClient = useQueryClient();
 
@@ -47,7 +58,8 @@ export function LoginForm() {
 			form.reset();
 			console.info("Logged in!");
 			queryClient.setQueryData(["loginStatus"], data.login);
-			queryClient.setQueryData(["adminLoginStatus"], data.login);
+			queryClient.setQueryData(["adminLoginStatus"], data.admin);
+			navigate({ to: router.state.redirect?.from });
 		},
 	});
 

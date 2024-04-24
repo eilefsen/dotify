@@ -1,6 +1,15 @@
-import { useLoaderData } from "react-router-dom";
-import { ArtistWithImg, Album } from "../player/types";
-import Albums from "./Albums";
+import { ArtistWithImg, Album } from "@/components/player/types";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+import Albums from "../albums";
+import axios from "axios";
+
+export const Route = createFileRoute("/artists/$artistId")({
+	component: () => <Artist />,
+	loader: async (params) => {
+		const res = await axios.get(`/api/${params.location.pathname}`);
+		return res.data;
+	},
+});
 
 export interface ArtistWithAlbums {
 	artist: ArtistWithImg;
@@ -8,7 +17,10 @@ export interface ArtistWithAlbums {
 }
 
 export function Artist() {
-	const data = useLoaderData() as ArtistWithAlbums;
+	const data: ArtistWithAlbums = useLoaderData({
+		from: "/artists/$artistId",
+		strict: true,
+	});
 	return (
 		<div className="artist-page">
 			<div className="mx-auto max-w-sm p-6 text-center">
@@ -29,3 +41,4 @@ export function Artist() {
 		</div>
 	);
 }
+

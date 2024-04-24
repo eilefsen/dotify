@@ -1,3 +1,9 @@
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/admin/upload")({
+	component: Upload,
+});
+
 import { Button } from "@/components/ui/button";
 import {
 	FormField,
@@ -70,7 +76,7 @@ export function UploadForm() {
 		errorMsg = "Failed to upload";
 	}
 	return (
-		<div className="mx-auto w-fit">
+		<div className="mx-auto w-full">
 			<Form {...form}>
 				<h2 className="w-fit text-2xl">Submit new Music</h2>
 				<span className="text-red-500">{errorMsg}</span>
