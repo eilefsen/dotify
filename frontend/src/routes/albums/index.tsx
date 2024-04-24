@@ -1,28 +1,32 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useLoaderData } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/albums/")({
 	component: () => <Albums />,
+	loader: async (params) => {
+		const res = await axios.get(`/api/${params.location.pathname}`);
+		return res.data;
+	},
 });
 
 import { ReactNode, useContext } from "react";
-import { Link, useLoaderData } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { playerStoreContext } from "@/components/player";
 import { Album } from "@/components/player/types";
+import axios from "axios";
 
 interface AlbumsProps {
 	albums?: Album[];
 }
 
 export default function Albums(props: AlbumsProps) {
-	const albumLines: ReactNode[] = [];
 	let albums;
 	if (props.albums) {
 		albums = props.albums;
 	} else {
-		albums = useLoaderData() as Album[];
 	}
 	console.debug(albums);
+
+	const albumLines: ReactNode[] = [];
 	albums.forEach((album) => {
 		albumLines.push(
 			<AlbumLine key={album.id} album={album} to={`/album/${album.id}`} />,
@@ -72,4 +76,3 @@ const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
 		</Link>
 	);
 });
-

@@ -4,7 +4,6 @@ export const Route = createFileRoute("/albums/$albumId")({
 	component: () => <AlbumContent />,
 });
 
-import { useLoaderData } from "react-router-dom";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { playerStoreContext, iconsContext } from "@/components/player";
@@ -83,4 +82,3 @@ const AlbumPlayButton = observer(({ album }: albumPlayButtonProps) => {
 		</div>
 	);
 });
-
