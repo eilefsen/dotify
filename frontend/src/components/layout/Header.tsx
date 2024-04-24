@@ -2,7 +2,7 @@ import { iconsContext, playerStoreContext } from "@/components/player";
 import { cn } from "@/lib/utils";
 import { observer } from "mobx-react-lite";
 import { PropsWithChildren, useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 export function Header() {
 	return (
@@ -47,23 +47,22 @@ const LibraryBtn = observer((props: LibraryBtnProps) => {
 	function onClick() {
 		player.isVisible = false;
 	}
+	const baseCN = cn(
+		"flex h-11 items-center justify-center rounded-lg border border-neutral-600 p-1 text-xl",
+		props.className,
+	);
 	return (
-		<NavLink
+		<Link
+			activeProps={{
+				className: cn(baseCN, "bg-white text-neutral-800"),
+			}}
+			inactiveProps={{
+				className: cn(baseCN, "bg-neutral-800 text-white"),
+			}}
 			to={props.to}
 			onClick={onClick}
-			className={({ isActive }) => {
-				const base = cn(
-					"flex h-11 items-center justify-center rounded-lg border border-neutral-600 p-1 text-xl",
-					props.className,
-				);
-				if (isActive) {
-					return base + " bg-white text-neutral-800";
-				} else {
-					return base + " bg-neutral-800 text-white";
-				}
-			}}
 		>
 			{props.children}
-		</NavLink>
+		</Link>
 	);
 });
