@@ -1,2 +1,2 @@
 ALTER TABLE artist
-ADD `website` VARCHAR(255);
+ADD COLUMN `website` VARCHAR(255) DEFAULT "" NOT NULL,
