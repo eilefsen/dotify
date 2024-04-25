@@ -188,6 +188,7 @@ func (artists Artists) absSelect(query string, args ...any) (Artists, error) {
 		artists = append(artists, a)
 	}
 	if err := rows.Err(); err != nil {
+		slog.Error("DB Error", "err", err)
 		return nil, err
 	}
 	if len(artists) == 0 {

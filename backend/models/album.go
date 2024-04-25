@@ -176,6 +176,7 @@ func (albums Albums) absSelect(query string, args ...any) (Albums, error) {
 		albums = append(albums, a)
 	}
 	if err := rows.Err(); err != nil {
+		slog.Error("DB Error", "err", err)
 		return nil, err
 	}
 	if len(albums) == 0 {

@@ -120,6 +120,7 @@ func (songs Songs) absSelect(query string, args ...any) (Songs, error) {
 		songs = append(songs, s)
 	}
 	if err := rows.Err(); err != nil {
+		slog.Error("DB Error", "err", err)
 		return nil, err
 	}
 	if len(songs) == 0 {
