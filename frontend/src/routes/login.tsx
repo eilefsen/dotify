@@ -37,8 +37,6 @@ export function LoginForm() {
 			password: "",
 		},
 	});
-	const router = useRouter();
-	const navigate = useNavigate({ from: "/login" });
 
 	const queryClient = useQueryClient();
 
@@ -59,7 +57,6 @@ export function LoginForm() {
 			console.info("Logged in!");
 			queryClient.setQueryData(["loginStatus"], data.login);
 			queryClient.setQueryData(["adminLoginStatus"], data.admin);
-			navigate({ to: router.state.redirect?.from });
 		},
 	});
 
