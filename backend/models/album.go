@@ -11,6 +11,7 @@ type AlbumNoID struct {
 	ImgSrc string `json:"imgSrc"`
 	Artist Artist `json:"artist"`
 }
+
 type Album struct {
 	AlbumNoID
 	ID uint32 `json:"id"`
@@ -75,6 +76,20 @@ func (Album) New(album AlbumNoID) (Album, error) {
 	}
 	slog.Info("models.NewAlbum", "a", a)
 	return a, nil
+}
+
+func (a Album) Update() error {
+	_, err := db.Exec(
+		`UPDATE album SET title = ?, artist_id = ? WHERE id = ? `,
+		a.Title,
+		a.Artist.ID,
+		a.ID,
+	)
+	if err != nil {
+		return err
+	}
+	slog.Info("models.Album.Update", "a", a)
+	return nil
 }
 
 func (AlbumJSON) ByID(id uint32) (AlbumJSON, error) {

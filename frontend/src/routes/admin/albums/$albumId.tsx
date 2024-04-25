@@ -42,13 +42,14 @@ export const Route = createFileRoute("/admin/albums/$albumId")({
 
 interface AlbumFormData {
 	Title: string;
-	Artist: Artist;
+	Artist: string;
 }
 
 export function AlbumForm() {
 	const loaderData: AlbumAndArtists = useLoaderData({
 		from: "/admin/albums/$albumId",
 	});
+	console.log(loaderData.artists);
 
 	const params = useParams({ from: "/admin/albums/$albumId" });
 	const form = useForm();
@@ -56,7 +57,16 @@ export function AlbumForm() {
 		mutationKey: ["editAlbum"],
 		mutationFn: (data: AlbumFormData) => {
 			console.log(data);
-			return axios.post(`/api/admin/albums/${params.albumId}`, data);
+
+			const album = {
+				title: data.Title,
+				artist: {
+					id: Number(data.Artist),
+				},
+			};
+			console.log(album);
+
+			return axios.post(`/api/admin/albums/${params.albumId}`, album);
 		},
 		onSuccess: () => {
 			form.reset();
@@ -73,7 +83,11 @@ export function AlbumForm() {
 
 	const selectItems: ReactNode[] = [];
 	for (const artist of loaderData.artists) {
-		const el = <SelectItem value={artist.id}>{artist.name}</SelectItem>;
+		const el = (
+			<SelectItem value={artist.id.toString()} key={artist.id}>
+				{artist.name}
+			</SelectItem>
+		);
 		selectItems.push(el);
 	}
 
@@ -95,7 +109,7 @@ export function AlbumForm() {
 					<FormField
 						control={form.control}
 						name="Title"
-						defaultValue={""}
+						defaultValue={loaderData.album.title}
 						render={({ field }) => {
 							return (
 								<FormItem>
@@ -111,31 +125,38 @@ export function AlbumForm() {
 							);
 						}}
 					/>
-					<FormField
-						control={form.control}
-						name="Artist"
-						defaultValue={""}
-						render={({ field }) => {
-							return (
-								<FormItem>
-									<FormLabel>Artist</FormLabel>
-									<FormControl>
-										<Select>
-											<SelectTrigger className="w-[180px]">
-												<SelectValue placeholder="Artist" />
-											</SelectTrigger>
+					<div className="flex justify-between">
+						<FormField
+							control={form.control}
+							name="Artist"
+							defaultValue={loaderData.album.artist.id.toString()}
+							render={({ field }) => {
+								return (
+									<FormItem>
+										<FormLabel>Artist</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger className="w-[180px]">
+													<SelectValue placeholder="Artist" />
+												</SelectTrigger>
+											</FormControl>
 											<SelectContent>{selectItems}</SelectContent>
 										</Select>
-									</FormControl>
-									<FormDescription hidden>
-										This is the artist of the album you are editing
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							);
-						}}
-					/>
-					<Button type="submit">Submit</Button>
+										<FormDescription hidden>
+											This is the artist of the album you are editing
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								);
+							}}
+						/>
+						<Button className="self-end" type="submit">
+							Submit
+						</Button>
+					</div>
 				</form>
 			</Form>
 		</div>
