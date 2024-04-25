@@ -22,6 +22,7 @@ import { Route as ArtistsArtistIdImport } from './routes/artists/$artistId'
 import { Route as AlbumsAlbumIdImport } from './routes/albums/$albumId'
 import { Route as AdminUploadImport } from './routes/admin/upload'
 import { Route as AdminArtistsIndexImport } from './routes/admin/artists/index'
+import { Route as AdminAlbumIndexImport } from './routes/admin/album/index'
 import { Route as AdminArtistsArtistIdImport } from './routes/admin/artists/$artistId'
 
 // Create Virtual Routes
@@ -80,6 +81,11 @@ const AdminArtistsIndexRoute = AdminArtistsIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
+const AdminAlbumIndexRoute = AdminAlbumIndexImport.update({
+  path: '/album/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminArtistsArtistIdRoute = AdminArtistsArtistIdImport.update({
   path: '/artists/$artistId',
   getParentRoute: () => AdminRoute,
@@ -129,6 +135,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArtistsArtistIdImport
       parentRoute: typeof AdminImport
     }
+    '/admin/album/': {
+      preLoaderRoute: typeof AdminAlbumIndexImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/artists/': {
       preLoaderRoute: typeof AdminArtistsIndexImport
       parentRoute: typeof AdminImport
@@ -143,6 +153,7 @@ export const routeTree = rootRoute.addChildren([
   AdminRoute.addChildren([
     AdminUploadRoute,
     AdminArtistsArtistIdRoute,
+    AdminAlbumIndexRoute,
     AdminArtistsIndexRoute,
   ]),
   LoginRoute,
