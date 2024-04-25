@@ -31,7 +31,6 @@ interface AlbumsListProps {
 function AlbumsList(props: AlbumsListProps) {
 	const albumLines: ReactNode[] = [];
 	props.albums.forEach((album) => {
-		console.log(album);
 		albumLines.push(
 			<AlbumLine
 				key={album.id}

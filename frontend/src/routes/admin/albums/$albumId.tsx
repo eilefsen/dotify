@@ -60,22 +60,18 @@ export function AlbumForm() {
 	const loaderData: AlbumAndArtists = useLoaderData({
 		from: "/admin/albums/$albumId",
 	});
-	console.log(loaderData.artists);
 
 	const params = useParams({ from: "/admin/albums/$albumId" });
 	const form = useForm();
 	const mutation = useMutation({
 		mutationKey: ["editAlbum"],
 		mutationFn: (data: AlbumFormData) => {
-			console.log(data);
-
 			const album = {
 				title: data.Title,
 				artist: {
 					id: Number(data.Artist),
 				},
 			};
-			console.log(album);
 
 			return axios.post(`/api/admin/albums/${params.albumId}`, album);
 		},
