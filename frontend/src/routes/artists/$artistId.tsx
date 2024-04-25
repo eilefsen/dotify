@@ -1,18 +1,21 @@
-import { ArtistWithImg, Album } from "@/components/player/types";
+import { Artist, Album } from "@/components/player/types";
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import Albums from "../albums";
 import axios from "axios";
 
 export const Route = createFileRoute("/artists/$artistId")({
 	component: () => <Artist />,
-	loader: async (params) => {
-		const res = await axios.get(`/api/${params.location.pathname}`);
-		return res.data;
+	loader: async (params): Promise<ArtistWithAlbums> => {
+		const artistRes = await axios.get(`/api/${params.location.pathname}`);
+		const albumsRes = await axios.get(
+			`/api/albums/artist/${params.params.artistId}`,
+		);
+		return { artist: artistRes.data, albums: albumsRes.data };
 	},
 });
 
 export interface ArtistWithAlbums {
-	artist: ArtistWithImg;
+	artist: Artist;
 	albums: Album[];
 }
 
@@ -41,4 +44,3 @@ export function Artist() {
 		</div>
 	);
 }
-

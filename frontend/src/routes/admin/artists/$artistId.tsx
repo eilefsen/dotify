@@ -1,4 +1,4 @@
-import { Album, ArtistWithImg } from "@/components/player/types";
+import { Album, Artist, ArtistNoID } from "@/components/player/types";
 import { Button } from "@/components/ui/button";
 import {
 	FormField,
@@ -52,7 +52,7 @@ interface ArtistFormData {
 }
 
 interface LoaderData {
-	artist: ArtistWithImg;
+	artist: Artist;
 	albums: Album[];
 }
 
@@ -100,7 +100,15 @@ export function ArtistForm() {
 		mutationKey: ["editArtist"],
 		mutationFn: (data: ArtistFormData) => {
 			console.log(data);
-			return axios.post(`/api/admin/artists/${params.artistId}`, data);
+
+			const artist: ArtistNoID = {
+				name: data.Name,
+				website: data.Website,
+				imgSrc: data.Image,
+			};
+			console.log(artist);
+
+			return axios.post(`/api/admin/artists/${params.artistId}`, artist);
 		},
 		onSuccess: () => {
 			form.reset();
@@ -158,7 +166,7 @@ export function ArtistForm() {
 					<FormField
 						control={form.control}
 						name="Name"
-						defaultValue={""}
+						defaultValue={loaderData.artist.name}
 						render={({ field }) => {
 							return (
 								<FormItem>
@@ -177,7 +185,7 @@ export function ArtistForm() {
 					<FormField
 						control={form.control}
 						name="Website"
-						defaultValue={""}
+						defaultValue={loaderData.artist.website}
 						render={({ field }) => {
 							return (
 								<FormItem>

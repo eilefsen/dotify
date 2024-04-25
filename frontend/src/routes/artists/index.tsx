@@ -11,15 +11,15 @@ export const Route = createFileRoute("/artists/")({
 import { ReactNode, useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { playerStoreContext, CoverImg } from "@/components/player";
-import { ArtistWithImg } from "@/components/player/types";
+import { Artist } from "@/components/player/types";
 import axios from "axios";
 
 interface ArtistProps {
-	artists?: ArtistWithImg[];
+	artists?: Artist[];
 }
 
 export default function Artists(props: ArtistProps) {
-	let artists: ArtistWithImg[];
+	let artists: Artist[];
 	if (props.artists) {
 		artists = props.artists;
 	} else {
@@ -44,7 +44,7 @@ export default function Artists(props: ArtistProps) {
 }
 
 interface ArtistLineProps {
-	artist: ArtistWithImg;
+	artist: Artist;
 	to: string;
 }
 

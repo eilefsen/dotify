@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 import axios from "axios";
 import { ArtistLine } from "../../artists";
-import { ArtistWithImg } from "@/components/player/types";
+import { Artist } from "@/components/player/types";
 
 export const Route = createFileRoute("/admin/artists/")({
 	component: ArtistAdmin,
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/admin/artists/")({
 });
 
 function ArtistAdmin() {
-	const artists: ArtistWithImg[] = useLoaderData({ from: "/admin/artists/" });
+	const artists: Artist[] = useLoaderData({ from: "/admin/artists/" });
 	return (
 		<div className="pt-2">
 			<ArtistsList artists={artists} />
@@ -25,7 +25,7 @@ function ArtistAdmin() {
 }
 
 interface ArtistsListProps {
-	artists: ArtistWithImg[];
+	artists: Artist[];
 }
 
 function ArtistsList(props: ArtistsListProps) {
