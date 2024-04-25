@@ -18,7 +18,7 @@ import (
 func main() {
 	slog.SetDefault(slog.New(
 		tint.NewHandler(os.Stdout, &tint.Options{
-			Level: slog.LevelInfo,
+			Level: slog.LevelDebug,
 		}),
 	))
 	dbcfg := mysql.Config{
