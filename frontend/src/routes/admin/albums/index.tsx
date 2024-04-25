@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 import { AlbumLine } from "@/routes/albums";
 
-export const Route = createFileRoute("/admin/album/")({
+export const Route = createFileRoute("/admin/albums/")({
 	component: AlbumAdmin,
 	loader: async () => {
 		const res = await axios.get(`/api/artists`);
@@ -42,4 +42,3 @@ function AlbumsList(props: AlbumsListProps) {
 
 	return <div className="album-list">{artistLines}</div>;
 }
-

@@ -36,6 +36,14 @@ function Admin() {
 				>
 					Edit Artists
 				</Link>
+				<Link
+					className="rounded px-2 py-1"
+					inactiveProps={{ className: "bg-neutral-700 text-white" }}
+					activeProps={{ className: "bg-white text-black" }}
+					to="/admin/albums"
+				>
+					Edit Albums
+				</Link>
 			</div>
 			<div className="pt-1">{outlet}</div>
 		</div>
