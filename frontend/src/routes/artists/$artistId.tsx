@@ -27,7 +27,7 @@ export function Artist() {
 	return (
 		<div className="artist-page">
 			<div className="mx-auto max-w-sm p-6 text-center">
-				<img src={data.artist.imgSrc} />
+				<img className="w-full" src={data.artist.imgSrc} />
 				<h2 className="mt-2 text-5xl font-bold sm:text-6xl">
 					{data.artist.name}
 				</h2>
