@@ -1,4 +1,4 @@
-import { Album, ArtistWithImg } from "@/components/player/types";
+import { Album } from "@/components/player/types";
 import {
 	ReactNode,
 	createFileRoute,
@@ -10,13 +10,13 @@ import { AlbumLine } from "@/routes/albums";
 export const Route = createFileRoute("/admin/albums/")({
 	component: AlbumAdmin,
 	loader: async () => {
-		const res = await axios.get(`/api/artists`);
+		const res = await axios.get(`/api/albums`);
 		return res.data;
 	},
 });
 
 function AlbumAdmin() {
-	const albums: Album[] = useLoaderData({ from: "/admin/album/" });
+	const albums: Album[] = useLoaderData({ from: "/admin/albums/" });
 	return (
 		<div className="pt-2">
 			<AlbumsList albums={albums} />
@@ -29,9 +29,10 @@ interface AlbumsListProps {
 }
 
 function AlbumsList(props: AlbumsListProps) {
-	const artistLines: ReactNode[] = [];
+	const albumLines: ReactNode[] = [];
 	props.albums.forEach((album) => {
-		artistLines.push(
+		console.log(album);
+		albumLines.push(
 			<AlbumLine
 				key={album.id}
 				album={album}
@@ -40,5 +41,5 @@ function AlbumsList(props: AlbumsListProps) {
 		);
 	});
 
-	return <div className="album-list">{artistLines}</div>;
+	return <div className="album-list">{albumLines}</div>;
 }
