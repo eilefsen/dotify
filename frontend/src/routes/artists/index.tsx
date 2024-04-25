@@ -14,13 +14,22 @@ import { playerStoreContext, CoverImg } from "@/components/player";
 import { ArtistWithImg } from "@/components/player/types";
 import axios from "axios";
 
-export default function Artists() {
+interface ArtistProps {
+	artists?: ArtistWithImg[];
+}
+
+export default function Artists(props: ArtistProps) {
+	let artists: ArtistWithImg[];
+	if (props.artists) {
+		artists = props.artists;
+	} else {
+		artists = useLoaderData({
+			strict: true,
+			from: "/artists/",
+		});
+	}
+
 	const artistLines: ReactNode[] = [];
-	const artists: ArtistWithImg[] = useLoaderData({
-		strict: true,
-		from: "/artists/",
-	});
-	console.debug(artists);
 	artists.forEach((artist) => {
 		artistLines.push(
 			<ArtistLine
