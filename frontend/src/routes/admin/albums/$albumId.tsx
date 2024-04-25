@@ -25,16 +25,27 @@ import {
 
 interface AlbumAndArtists {
 	album: Album;
+	allAlbums: Album[];
 	artists: Artist[];
 }
 
 export const Route = createFileRoute("/admin/albums/$albumId")({
 	component: AlbumForm,
 	loader: async (params) => {
-		const albumRes = await axios.get(`/api/albums/${params.params.albumId}`);
-		const artistsRes = await axios.get(`/api/artists`);
+		const albumRes = await axios.get(`/api/albums`);
+		const artistsRes = await axios.get(`/api/artists_no_img`);
+
+		let album;
+		for (const a of albumRes.data as Album[]) {
+			if (a.id == params.params.albumId) {
+				album = a;
+				break;
+			}
+		}
+
 		return {
-			album: albumRes.data,
+			album: album,
+			allAlbums: albumRes.data,
 			artists: artistsRes.data,
 		};
 	},
@@ -90,15 +101,19 @@ export function AlbumForm() {
 		);
 		selectItems.push(el);
 	}
+	const imageSelectItems: ReactNode[] = [];
+	for (const a of loaderData.allAlbums) {
+		const el = (
+			<SelectItem value={a.imgSrc} key={a.id}>
+				{a.title}
+			</SelectItem>
+		);
+		imageSelectItems.push(el);
+	}
 
 	return (
 		<div className="mx-auto w-full">
 			<h2 className="w-fit text-2xl">Edit Album</h2>
-			<img
-				className="w-3/5"
-				src={loaderData.album.imgSrc}
-				alt={loaderData.album.title}
-			/>
 
 			<Form {...form}>
 				<span className="text-red-500">{errorMsg}</span>
@@ -106,6 +121,34 @@ export function AlbumForm() {
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
 				>
+					<FormField
+						control={form.control}
+						name="Image"
+						defaultValue={loaderData.album.imgSrc}
+						render={({ field }) => {
+							return (
+								<FormItem>
+									<img className="w-3/5" src={field.value} />
+									<FormLabel>Image</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl>
+											<SelectTrigger className="w-[180px]">
+												<SelectValue />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>{imageSelectItems}</SelectContent>
+									</Select>
+									<FormDescription hidden>
+										This is the title of the album you are editing
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							);
+						}}
+					/>
 					<FormField
 						control={form.control}
 						name="Title"
