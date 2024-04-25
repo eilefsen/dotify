@@ -23,8 +23,11 @@ import { useMutation } from "@tanstack/react-query";
 import {
 	ReactNode,
 	createFileRoute,
+	getRouteApi,
 	useLoaderData,
+	useNavigate,
 	useParams,
+	useRouter,
 } from "@tanstack/react-router";
 import axios from "axios";
 import { memo } from "react";
@@ -61,12 +64,18 @@ interface ImageSelectGroupsProps {
 }
 function ImageSelectGroups(props: ImageSelectGroupsProps) {
 	const imageSelectGroups: ReactNode[] = [];
-	for (const album of props.albums) {
+
+	const artists = [
+		...new Map(
+			props.albums.map((item) => [item.artist.id, item.artist]),
+		).values(),
+	];
+
+	for (const artist of artists) {
+		// pick out albums matching artist of group
 		const imageSelectItems: ReactNode[] = [];
-		const consumedIDs: string[] = [];
 		for (const a of props.albums) {
-			if (a.artist.id == album.artist.id && !(a.artist.id in consumedIDs)) {
-				consumedIDs.push(a.artist.id);
+			if (a.artist.id == artist.id) {
 				const el = (
 					<SelectItem value={a.imgSrc} key={a.id}>
 						{a.title}
@@ -75,12 +84,13 @@ function ImageSelectGroups(props: ImageSelectGroupsProps) {
 				imageSelectItems.push(el);
 			}
 		}
+
 		const group = (
 			<SelectGroup
 				className="border-neutral-700 [&:not(:last-child)]:border-b"
-				key={album.artist.id}
+				key={artist.id}
 			>
-				<SelectLabel>{album.artist.name}</SelectLabel>
+				<SelectLabel>{artist.name}</SelectLabel>
 				{imageSelectItems}
 			</SelectGroup>
 		);
@@ -95,12 +105,14 @@ export function ArtistForm() {
 	const loaderData: LoaderData = useLoaderData({
 		from: "/admin/artists/$artistId",
 	});
-
 	const params = useParams({ from: "/admin/artists/$artistId" });
 	const form = useForm();
+
+	const router = useRouter();
+
 	const mutation = useMutation({
 		mutationKey: ["editArtist"],
-		mutationFn: (data: ArtistFormData) => {
+		mutationFn: async (data: ArtistFormData) => {
 			console.log(data);
 
 			const artist: ArtistNoID = {
@@ -110,10 +122,14 @@ export function ArtistForm() {
 			};
 			console.log(artist);
 
-			return axios.post(`/api/admin/artists/${params.artistId}`, artist);
+			const res = await axios.post(
+				`/api/admin/artists/${params.artistId}`,
+				artist,
+			);
+			return res;
 		},
 		onSuccess: () => {
-			form.reset();
+			router.invalidate();
 		},
 	});
 	function onSubmit(values: any) {
@@ -122,8 +138,11 @@ export function ArtistForm() {
 
 	let errorMsg;
 	if (mutation.isError) {
-		console.error(mutation.error);
 		errorMsg = "Failed to make changes";
+	}
+	let successMsg;
+	if (mutation.isSuccess) {
+		successMsg = "Success!";
 	}
 
 	return (
@@ -131,7 +150,6 @@ export function ArtistForm() {
 			<h2 className="w-fit text-2xl">Edit Artist</h2>
 
 			<Form {...form}>
-				<span className="text-red-500">{errorMsg}</span>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
@@ -150,7 +168,7 @@ export function ArtistForm() {
 										defaultValue={field.value}
 									>
 										<FormControl>
-											<SelectTrigger className="w-[180px]">
+											<SelectTrigger className="w-full">
 												<SelectValue />
 											</SelectTrigger>
 										</FormControl>
@@ -207,6 +225,10 @@ export function ArtistForm() {
 					<Button type="submit">Submit</Button>
 				</form>
 			</Form>
+			<div className="pt-2 text-center">
+				<span className="text-red-500">{errorMsg}</span>
+				<span className="text-white">{successMsg}</span>
+			</div>
 		</div>
 	);
 }
