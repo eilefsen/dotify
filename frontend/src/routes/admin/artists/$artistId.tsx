@@ -23,9 +23,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
 	ReactNode,
 	createFileRoute,
-	getRouteApi,
 	useLoaderData,
-	useNavigate,
 	useParams,
 	useRouter,
 } from "@tanstack/react-router";
