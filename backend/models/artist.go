@@ -70,7 +70,7 @@ func (Artist) New(name string) (Artist, error) {
 
 func (a Artist) Update() error {
 	_, err := db.Exec(
-		`UPDATE ARTIST SET name = ?, website = ?, img_src = ? WHERE id = ?`,
+		`UPDATE artist SET name = ?, website = ?, img_src = ? WHERE id = ?`,
 		a.Name,
 		a.Website,
 		a.ImgSrc,
