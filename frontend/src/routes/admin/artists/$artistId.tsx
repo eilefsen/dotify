@@ -63,8 +63,10 @@ function ImageSelectGroups(props: ImageSelectGroupsProps) {
 	const imageSelectGroups: ReactNode[] = [];
 	for (const album of props.albums) {
 		const imageSelectItems: ReactNode[] = [];
+		const consumedIDs: string[] = [];
 		for (const a of props.albums) {
-			if (a.artist.id == album.artist.id) {
+			if (a.artist.id == album.artist.id && !(a.artist.id in consumedIDs)) {
+				consumedIDs.push(a.artist.id);
 				const el = (
 					<SelectItem value={a.imgSrc} key={a.id}>
 						{a.title}
@@ -120,6 +122,7 @@ export function ArtistForm() {
 
 	let errorMsg;
 	if (mutation.isError) {
+		console.error(mutation.error);
 		errorMsg = "Failed to make changes";
 	}
 
