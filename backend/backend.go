@@ -60,7 +60,7 @@ func main() {
 		rt.Post("/api/auth/logout", logoutHandler)
 		rt.Get("/api/albums", FetchAllAlbums)
 		rt.Get("/api/albums/{id}", FetchAlbumByID)
-		rt.Get("/api/artists", FetchAllArtists)
+		rt.Get("/api/artists", FetchAllArtistJSONs)
 		rt.Get("/api/albums/artist/{id}", FetchAlbumsByArtist)
 		rt.Get("/api/artists/{id}", FetchArtistWithAlbums)
 		rt.Get("/api/artist_only/{id}", FetchArtist)

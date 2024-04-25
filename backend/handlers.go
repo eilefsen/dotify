@@ -298,16 +298,29 @@ func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
-func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
+func FetchAllArtistJSONs(w http.ResponseWriter, r *http.Request) {
 	artists, err := models.ArtistsJSON{}.All()
 	if err == models.ErrResourceNotFound {
-		slog.Info("FetchAllArtists: No artists found", "error", err)
+		slog.Info("FetchAllArtistJSONs: No artists found", "error", err)
 		artists = models.ArtistsJSON{}
 	} else if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	slog.Debug("FetchAllArtistJSONs", "artists", artists)
+
+	responseJSON, err := json.Marshal(artists)
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
 	slog.Debug("FetchAllArtists", "artists", artists)
 
 	responseJSON, err := json.Marshal(artists)
