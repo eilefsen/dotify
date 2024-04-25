@@ -95,6 +95,20 @@ func (Artist) New(name string) (Artist, error) {
 	return a, nil
 }
 
+func (a Artist) Update() error {
+	_, err := db.Exec(
+		`UPDATE ARTIST SET name = ?, website = ? WHERE id = ?`,
+		a.Name,
+		a.Website,
+		a.ID,
+	)
+	if err != nil {
+		return err
+	}
+	slog.Info("models.NewArtist", "a", a)
+	return nil
+}
+
 func (artistsJson ArtistsJSON) All() (ArtistsJSON, error) {
 	rows, err := db.Query(artistsJson.selectQuery())
 	if err != nil {
