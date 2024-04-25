@@ -157,6 +157,35 @@ func FetchArtistWithAlbums(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func FetchArtist(w http.ResponseWriter, r *http.Request) {
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	artist, err := models.ArtistJSON{}.ByID(id)
+	if err == models.ErrResourceNotFound {
+		slog.Error("FetchArtist: No artist found", "artist", artist, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	slog.Debug("FetchArtist:", "artist", artist)
+
+	responseJSON, err := json.Marshal(artist)
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
 func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	songs, err := models.Songs{}.All()
 	if err == models.ErrResourceNotFound {
