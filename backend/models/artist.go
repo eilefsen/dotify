@@ -9,21 +9,22 @@ import (
 type Artist struct {
 	Name    string `json:"name"`
 	Website string `json:"website"`
+	ImgSrc  string `json:"imgSrc"`
 	ID      uint32 `json:"id"`
 }
 
 type Artists []Artist
 
-type ArtistJSON struct {
-	ImgSrc string `json:"imgSrc"`
-	Artist
-}
-type ArtistsJSON []ArtistJSON
+// type ArtistJSON struct {
+// 	ImgSrc string `json:"imgSrc"`
+// 	Artist
+// }
+// type ArtistsJSON []ArtistJSON
 
 func (Artist) selectQuery() string {
 	query := `
-    SELECT artist.id, artist.name, artist.website FROM artist
-    `
+	SELECT artist.id, artist.name, artist.website, artist.img_src FROM artist
+	`
 	return query
 }
 
@@ -31,35 +32,7 @@ func (Artists) selectQuery() string {
 	return Artist{}.selectQuery()
 }
 
-func (ArtistJSON) selectQuery() string {
-	query := `
-    SELECT artist.id, artist.name, artist.website, album.img_src
-    FROM artist
-    JOIN album
-    ON album.id =
-    (
-    SELECT  album.id 
-    FROM    album
-    WHERE   album.artist_id = artist.id
-    LIMIT 1
-    )
-    `
-	return query
-}
-
-func (ArtistsJSON) selectQuery() string {
-	return ArtistJSON{}.selectQuery()
-}
-
 func (artist *Artist) scan(r rowScanner) error {
-	return r.Scan(
-		&artist.ID,
-		&artist.Name,
-		&artist.Website,
-	)
-}
-
-func (artist *ArtistJSON) scan(r rowScanner) error {
 	return r.Scan(
 		&artist.ID,
 		&artist.Name,
@@ -97,9 +70,10 @@ func (Artist) New(name string) (Artist, error) {
 
 func (a Artist) Update() error {
 	_, err := db.Exec(
-		`UPDATE ARTIST SET name = ?, website = ? WHERE id = ?`,
+		`UPDATE ARTIST SET name = ?, website = ?, img_src = ? WHERE id = ?`,
 		a.Name,
 		a.Website,
+		a.ImgSrc,
 		a.ID,
 	)
 	if err != nil {
@@ -107,29 +81,6 @@ func (a Artist) Update() error {
 	}
 	slog.Info("models.NewArtist", "a", a)
 	return nil
-}
-
-func (artistsJson ArtistsJSON) All() (ArtistsJSON, error) {
-	rows, err := db.Query(artistsJson.selectQuery())
-	if err != nil {
-		return nil, fmt.Errorf("ArtistsJSON.All: %v", err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var a ArtistJSON
-		err := a.scan(rows)
-		if err != nil {
-			return nil, fmt.Errorf("ArtistsJSON.All: %v", err)
-		}
-		artistsJson = append(artistsJson, a)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("ArtistsJSON.All: %v", err)
-	}
-	if len(artistsJson) == 0 {
-		return nil, ErrResourceNotFound
-	}
-	return artistsJson, nil
 }
 
 func (artists Artists) All() (Artists, error) {
@@ -148,28 +99,18 @@ func (artist Artist) ByID(id uint32) (Artist, error) {
 	row := db.QueryRow(artist.selectQuery()+"WHERE artist.id = ?", id)
 	err := artist.scan(row)
 	if err == sql.ErrNoRows {
+		slog.Error("models.Artist.ByID:", "err", err)
 		return artist, ErrResourceNotFound
 	}
 	if err != nil {
+		slog.Error("models.Artist.ByID:", "err", err)
 		return artist, fmt.Errorf("Artist.ByID %q: %v", id, err)
 	}
 	if err := row.Err(); err != nil {
+		slog.Error("models.Artist.ByID:", "err", err)
 		return artist, fmt.Errorf("Artist.ByID %q: %v", id, err)
 	}
 	return artist, nil
-}
-
-func (ArtistJSON) ByID(id uint32) (ArtistJSON, error) {
-	var a ArtistJSON
-	row := db.QueryRow(a.selectQuery()+"WHERE artist.id = ?", id)
-	err := a.scan(row)
-	if err != nil {
-		return a, fmt.Errorf("ArtistsJSON.ByID: %v", err)
-	}
-	if err := row.Err(); err != nil {
-		return a, fmt.Errorf("ArtistsJSON.ByID: %v", err)
-	}
-	return a, nil
 }
 
 func (artist Artist) ByName(name string) (Artist, error) {

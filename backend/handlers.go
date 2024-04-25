@@ -109,9 +109,9 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
-type ArtistJSONSWithAlbums struct {
-	Artist models.ArtistJSON `json:"artist"`
-	Albums models.Albums     `json:"albums"`
+type ArtistWithAlbums struct {
+	Artist models.Artist `json:"artist"`
+	Albums models.Albums `json:"albums"`
 }
 
 func FetchArtistWithAlbums(w http.ResponseWriter, r *http.Request) {
@@ -124,12 +124,14 @@ func FetchArtistWithAlbums(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	artist, err := models.ArtistJSON{}.ByID(id)
+	artist, err := models.Artist{}.ByID(id)
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchArtistWithAlbums: No artist found", "artist", artist, "error", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	artist.ID = id
+	slog.Debug("FetchArtistWithAlbums:", "artist", artist)
 
 	albums, err := models.Albums{}.ByArtist(artist.ID)
 	if err == models.ErrResourceNotFound {
@@ -143,7 +145,7 @@ func FetchArtistWithAlbums(w http.ResponseWriter, r *http.Request) {
 	}
 	slog.Debug("FetchArtistWithAlbums:", "albums", albums, "artist", artist)
 
-	responseJSON, err := json.Marshal(ArtistJSONSWithAlbums{
+	responseJSON, err := json.Marshal(ArtistWithAlbums{
 		Artist: artist,
 		Albums: albums,
 	})
@@ -167,7 +169,7 @@ func FetchArtist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	artist, err := models.ArtistJSON{}.ByID(id)
+	artist, err := models.Artist{}.ByID(id)
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchArtist: No artist found", "artist", artist, "error", err)
 		w.WriteHeader(http.StatusNotFound)
@@ -288,29 +290,6 @@ func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("FetchAllSongs", "songs", songs)
 
 	responseJSON, err := json.Marshal(songs)
-	if err != nil {
-		slog.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(responseJSON)
-}
-
-func FetchAllArtistJSONs(w http.ResponseWriter, r *http.Request) {
-	artists, err := models.ArtistsJSON{}.All()
-	if err == models.ErrResourceNotFound {
-		slog.Info("FetchAllArtistJSONs: No artists found", "error", err)
-		artists = models.ArtistsJSON{}
-	} else if err != nil {
-		slog.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	slog.Debug("FetchAllArtistJSONs", "artists", artists)
-
-	responseJSON, err := json.Marshal(artists)
 	if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

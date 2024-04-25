@@ -24,12 +24,11 @@ export interface AlbumWithSongs extends Album {
 	songs: Song[];
 }
 
-export interface Artist {
-	id: string;
+export interface ArtistNoID {
 	name: string;
 	website: string;
-}
-
-export interface ArtistWithImg extends Artist {
 	imgSrc: string;
+}
+export interface Artist extends ArtistNoID {
+	id: string;
 }
