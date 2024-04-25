@@ -45,7 +45,7 @@ interface AlbumLineProps {
 	to: string;
 }
 
-const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
+export const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
 	const player = useContext(playerStoreContext);
 	var bgColor = "bg-neutral-950";
 	if (album.id == player.currentSong?.album.id) {
