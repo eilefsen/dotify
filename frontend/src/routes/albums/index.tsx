@@ -25,7 +25,6 @@ export default function Albums(props: AlbumsProps) {
 	} else {
 		albums = useLoaderData({ strict: true, from: "/albums/" });
 	}
-	console.debug(albums);
 
 	const albumLines: ReactNode[] = [];
 	albums.forEach((album) => {
