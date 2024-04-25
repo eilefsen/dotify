@@ -21,7 +21,8 @@ import { Route as AlbumsIndexImport } from './routes/albums/index'
 import { Route as ArtistsArtistIdImport } from './routes/artists/$artistId'
 import { Route as AlbumsAlbumIdImport } from './routes/albums/$albumId'
 import { Route as AdminUploadImport } from './routes/admin/upload'
-import { Route as AdminArtistsImport } from './routes/admin/artists'
+import { Route as AdminArtistsIndexImport } from './routes/admin/artists/index'
+import { Route as AdminArtistsArtistIdImport } from './routes/admin/artists/$artistId'
 
 // Create Virtual Routes
 
@@ -74,8 +75,13 @@ const AdminUploadRoute = AdminUploadImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminArtistsRoute = AdminArtistsImport.update({
-  path: '/artists',
+const AdminArtistsIndexRoute = AdminArtistsIndexImport.update({
+  path: '/artists/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminArtistsArtistIdRoute = AdminArtistsArtistIdImport.update({
+  path: '/artists/$artistId',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -99,10 +105,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SongsImport
       parentRoute: typeof rootRoute
     }
-    '/admin/artists': {
-      preLoaderRoute: typeof AdminArtistsImport
-      parentRoute: typeof AdminImport
-    }
     '/admin/upload': {
       preLoaderRoute: typeof AdminUploadImport
       parentRoute: typeof AdminImport
@@ -123,6 +125,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtistsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/admin/artists/$artistId': {
+      preLoaderRoute: typeof AdminArtistsArtistIdImport
+      parentRoute: typeof AdminImport
+    }
+    '/admin/artists/': {
+      preLoaderRoute: typeof AdminArtistsIndexImport
+      parentRoute: typeof AdminImport
+    }
   }
 }
 
@@ -130,7 +140,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
-  AdminRoute.addChildren([AdminArtistsRoute, AdminUploadRoute]),
+  AdminRoute.addChildren([
+    AdminUploadRoute,
+    AdminArtistsArtistIdRoute,
+    AdminArtistsIndexRoute,
+  ]),
   LoginRoute,
   SongsRoute,
   AlbumsAlbumIdRoute,

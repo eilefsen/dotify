@@ -48,7 +48,7 @@ interface ArtistLineProps {
 	to: string;
 }
 
-const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
+export const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
 	const player = useContext(playerStoreContext);
 	var bgColor = "bg-neutral-950";
 	if (artist.id == player.currentSong?.artist.id) {
