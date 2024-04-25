@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"log/slog"
+	"time"
 )
 
 var db *sql.DB
@@ -14,6 +15,7 @@ func InitDB(dataSourceName string) error {
 		slog.Error("InitDB", "err", err)
 		return err
 	}
+	db.SetConnMaxLifetime(time.Second * 10)
 	return db.Ping()
 }
 
