@@ -50,6 +50,7 @@ func main() {
 		rt.Post("/api/auth/status", TokenAuth(authStatusHandler))
 		rt.Post("/api/auth/adminstatus", SuperUserAuth(authStatusHandler))
 		rt.Post("/api/admin/upload", SuperUserAuth(uploadAudioFiles))
+		rt.Post("/api/admin/artists/{id}", SuperUserAuth(UpdateArtist))
 		rt.Post("/api/auth/refresh", authRefreshHandler)
 	})
 	// unprotected routes

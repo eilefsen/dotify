@@ -213,12 +213,12 @@ func UpdateArtist(w http.ResponseWriter, r *http.Request) {
 
 	err = artist.Update()
 	if err != nil {
-		slog.Error("UpdateArtist: ", "artist", artist, "error", err)
+		slog.Error("UpdateArtist:", "artist", artist, "error", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	slog.Debug("FetchArtist:", "artist", artist)
+	slog.Debug("UpdateArtist:", "artist", artist)
 
 	responseJSON, err := json.Marshal(artist)
 	if err != nil {
