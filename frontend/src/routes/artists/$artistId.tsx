@@ -28,11 +28,11 @@ export function Artist() {
 		<div className="artist-page">
 			<div className="mx-auto max-w-xs p-6 text-center sm:max-w-sm">
 				<img className="w-full" src={data.artist.imgSrc} />
-				<h2 className="mt-2 text-5xl font-bold sm:text-6xl">
+				<h2 className="mt-2 text-4xl font-extrabold sm:text-6xl">
 					{data.artist.name}
 				</h2>
 				<a
-					className="text-neutral-300 underline underline-offset-2"
+					className="text-base font-normal text-neutral-300 underline underline-offset-2"
 					href={data.artist.website}
 				>
 					{data.artist.website}
