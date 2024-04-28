@@ -19,7 +19,7 @@ function Admin() {
 
 	return (
 		<div className="mx-auto max-w-md px-1 pt-4">
-			<div className="flex justify-start">
+			<div className="flex justify-start gap-2">
 				<Link
 					className="rounded px-2 py-1"
 					inactiveProps={{ className: "bg-neutral-700 text-white" }}

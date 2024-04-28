@@ -75,11 +75,17 @@ export function UploadForm() {
 	if (mutation.isError) {
 		errorMsg = "Failed to upload";
 	}
+	let successMsg;
+
+	if (mutation.isSuccess) {
+		successMsg = "Success!";
+	}
 	return (
 		<div className="mx-auto w-full">
 			<Form {...form}>
 				<h2 className="w-fit text-2xl">Submit new Music</h2>
 				<span className="text-red-500">{errorMsg}</span>
+				<span className="text-white">{successMsg}</span>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
@@ -144,8 +150,11 @@ export function UploadForm() {
 					<Button type="submit">Submit</Button>
 				</form>
 			</Form>
+			<div className="py-2" />
 			<Progress
-				className={"transition-opacity " + progressBarClassName}
+				className={
+					"w-full max-w-[30rem] transition-opacity " + progressBarClassName
+				}
 				value={progress}
 			/>
 		</div>
