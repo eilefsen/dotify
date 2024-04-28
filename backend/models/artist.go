@@ -70,7 +70,10 @@ func (Artist) New(name string) (Artist, error) {
 
 func (Artist) Delete(id uint32) error {
 	albums, err := Albums{}.ByArtist(id)
-	if err != nil {
+	if err == ErrResourceNotFound {
+		slog.Error("FetchAllSongs: No songs found", "error", err)
+		albums = Albums{}
+	} else if err != nil {
 		slog.Error("Artist.Delete: could not get albums", "err", err)
 		return err
 	}
