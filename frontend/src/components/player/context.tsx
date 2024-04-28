@@ -178,18 +178,18 @@ export class PlayerStore {
 	togglePlay() {
 		if (this.isPlaying) {
 			this.pause();
-			navigator.mediaSession.playbackState = "paused";
 		} else {
 			this.play();
-			navigator.mediaSession.playbackState = "playing";
 		}
 	}
 	play() {
 		this.audio.play();
+		navigator.mediaSession.playbackState = "playing";
 		this.isPlaying = true;
 	}
 	pause() {
 		this.audio.pause();
+		navigator.mediaSession.playbackState = "paused";
 		this.isPlaying = false;
 	}
 
