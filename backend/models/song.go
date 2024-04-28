@@ -1,8 +1,10 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"log/slog"
+	"os"
 )
 
 type SongNoID struct {
@@ -81,6 +83,40 @@ func (Song) New(song SongNoID) (Song, error) {
 	return s, nil
 }
 
+func (Song) Delete(id uint32) error {
+	s, err := Song{}.ByID(id)
+	if err != nil {
+		slog.Error("Song.Delete: failed to get song", "id", id, "err", err)
+		return err
+	}
+
+	// delete from database before file, its better to have an orphan file than a broken song
+	_, err = db.Exec("DELETE FROM song WHERE ID = ?", id)
+	if err != nil {
+		slog.Error("Song.Delete: failed to delete from db", "id", id, "err", err)
+		return err
+	}
+
+	err = s.DeleteFile()
+	if err != nil {
+		slog.Error("Song.Delete: failed to delete from file system", "id", id, "err", err)
+		return err
+	}
+
+	slog.Info("Song.Delete: Deleted song from database", "id", id)
+	return nil
+}
+
+func (s Song) DeleteFile() error {
+	err := os.Remove(s.Src)
+	if err != nil {
+		slog.Error("Song.DeleteFile:", "file", s.Src, "err", err)
+		return err
+	}
+
+	return nil
+}
+
 func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 	var err error
 	songs, err = songs.absSelect(songs.selectQuery()+"WHERE song.album_id = ? GROUP BY song.id ORDER BY song.track IS NULL, song.track ASC ", id)
@@ -103,6 +139,22 @@ func (songs Songs) All() (Songs, error) {
 		return nil, fmt.Errorf("Songs.All: %v", err)
 	}
 	return songs, nil
+}
+
+func (Song) ByID(id uint32) (Song, error) {
+	var s Song
+	row := db.QueryRow(s.selectQuery()+"WHERE song.id = ?", id)
+	err := s.scan(row)
+	if err == sql.ErrNoRows {
+		return s, ErrResourceNotFound
+	}
+	if err != nil {
+		return s, fmt.Errorf("Song.ById %q: %v", id, err)
+	}
+	if err := row.Err(); err != nil {
+		return s, fmt.Errorf("Song.ById %q: %v", id, err)
+	}
+	return s, nil
 }
 
 func (songs Songs) absSelect(query string, args ...any) (Songs, error) {
