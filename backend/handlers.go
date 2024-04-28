@@ -90,8 +90,7 @@ func FetchAlbumsByArtist(w http.ResponseWriter, r *http.Request) {
 	if err == models.ErrResourceNotFound {
 		slog.Error("FetchAlbumsByArtist: No album found", "artist", artist, "error", err)
 		albums = models.Albums{}
-	}
-	if err != nil {
+	} else if err != nil {
 		slog.Error("FetchAlbumsByArtist:", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
