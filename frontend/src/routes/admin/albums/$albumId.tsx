@@ -73,7 +73,7 @@ export function AlbumForm() {
 				},
 			};
 
-			return axios.post(`/api/admin/albums/${params.albumId}`, album);
+			return axios.put(`/api/admin/albums/${params.albumId}`, album);
 		},
 		onSuccess: () => {
 			form.reset();

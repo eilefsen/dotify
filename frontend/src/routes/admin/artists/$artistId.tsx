@@ -120,7 +120,7 @@ export function ArtistForm() {
 			};
 			console.log(artist);
 
-			const res = await axios.post(
+			const res = await axios.put(
 				`/api/admin/artists/${params.artistId}`,
 				artist,
 			);
