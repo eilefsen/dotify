@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path/filepath"
 )
 
 type SongNoID struct {
@@ -108,9 +109,11 @@ func (Song) Delete(id uint32) error {
 }
 
 func (s Song) DeleteFile() error {
-	err := os.Remove(s.Src)
+	relativePath := os.Getenv("UPLOADS_DIR_PREFIX")
+	fullPath := filepath.Join(relativePath, s.Src)
+	err := os.Remove(fullPath)
 	if err != nil {
-		slog.Error("Song.DeleteFile:", "file", s.Src, "err", err)
+		slog.Error("Song.DeleteFile:", "file", fullPath, "relativePath", relativePath, "err", err)
 		return err
 	}
 

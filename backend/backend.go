@@ -52,6 +52,7 @@ func main() {
 		rt.Post("/api/admin/upload", SuperUserAuth(uploadAudioFiles))
 		rt.Put("/api/admin/artists/{id}", SuperUserAuth(UpdateArtist))
 		rt.Put("/api/admin/albums/{id}", SuperUserAuth(UpdateAlbum))
+		rt.Delete("/api/admin/albums/{id}", SuperUserAuth(DeleteAlbum))
 		rt.Post("/api/auth/refresh", authRefreshHandler)
 	})
 	// unprotected routes

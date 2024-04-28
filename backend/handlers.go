@@ -277,6 +277,24 @@ func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func DeleteAlbum(w http.ResponseWriter, r *http.Request) {
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = models.Album{}.Delete(id)
+	if err != nil {
+		slog.Error("DeleteAlbum:", "id", id, "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	songs, err := models.Songs{}.All()
 	if err == models.ErrResourceNotFound {
