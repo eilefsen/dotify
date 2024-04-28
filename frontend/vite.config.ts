@@ -10,6 +10,7 @@ export default defineConfig({
 		react(),
 		TanStackRouterVite(),
 		VitePWA({
+			registerType: "autoUpdate",
 			manifest: {
 				name: "Music Player for the web",
 				short_name: "Dotify",
@@ -19,7 +20,7 @@ export default defineConfig({
 				icons: [
 					{
 						src: "/images/apple-touch-icon-120x120.png",
-						sizes: "192x192",
+						sizes: "120x120",
 						type: "image/png",
 					},
 					{
