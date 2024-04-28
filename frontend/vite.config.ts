@@ -12,20 +12,30 @@ export default defineConfig({
 		VitePWA({
 			registerType: "autoUpdate",
 			manifest: {
-				name: "Music Player for the web",
+				name: "Dotify",
 				short_name: "Dotify",
 				start_url: "/",
 				background_color: "#000000",
 				theme_color: "#ffffff",
 				icons: [
 					{
-						src: "/images/apple-touch-icon-120x120.png",
+						src: "/images/mac/mac-120x120.png",
 						sizes: "120x120",
 						type: "image/png",
 					},
 					{
-						src: "/images/icon-512x512.png",
-						sizes: "512x512",
+						src: "/images/mac/mac-196x196.png",
+						sizes: "196x196",
+						type: "image/png",
+					},
+					{
+						src: "/images/mac/mac-310x310.png",
+						sizes: "310x310",
+						type: "image/png",
+					},
+					{
+						src: "/images/mac/mac-1024x1024.png",
+						sizes: "1024x1024",
 						type: "image/png",
 					},
 				],
