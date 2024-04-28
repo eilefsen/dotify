@@ -131,16 +131,6 @@ export class PlayerStore {
 						this.setProgress(details.seekTime);
 					}
 				});
-				navigator.mediaSession.setActionHandler("seekbackward", (details) => {
-					if (details.seekOffset != undefined) {
-						this.setProgress(this.seek - details.seekOffset);
-					}
-				});
-				navigator.mediaSession.setActionHandler("seekforward", (details) => {
-					if (details.seekOffset != undefined) {
-						this.setProgress(this.seek + details.seekOffset);
-					}
-				});
 			}
 		});
 		this.audio.addEventListener("loadeddata", (ev) => {
