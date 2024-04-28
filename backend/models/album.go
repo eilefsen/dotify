@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"os"
+	"path/filepath"
 )
 
 type AlbumNoID struct {
@@ -79,6 +81,12 @@ func (Album) New(album AlbumNoID) (Album, error) {
 }
 
 func (Album) Delete(id uint32) error {
+	a, err := Album{}.ById(id)
+	if err != nil {
+		slog.Error("Album.Delete: failed to get album songs", "id", id, "err", err)
+		return err
+	}
+
 	songs, err := Songs{}.ByAlbum(id)
 	if err != nil {
 		slog.Error("Album.Delete: failed to get album songs", "id", id, "err", err)
@@ -91,6 +99,14 @@ func (Album) Delete(id uint32) error {
 			slog.Error("Album.Delete: Error deleting songs", "err", err)
 			return err
 		}
+	}
+
+	relativePath := os.Getenv("UPLOADS_DIR_PREFIX")
+	fullPath := filepath.Join(relativePath, a.ImgSrc)
+	err = os.Remove(fullPath)
+	if err != nil {
+		slog.Error("Album.Delete: Failed to delete from disk", "file", fullPath, "relativePath", relativePath, "err", err)
+		return err
 	}
 
 	_, err = db.Exec(
@@ -195,7 +211,7 @@ func (albums Albums) ByArtist(id uint32) (Albums, error) {
 	var err error
 	albums, err = albums.absSelect(albums.selectQuery()+"WHERE album.artist_id = ?", id)
 	if err == ErrResourceNotFound {
-		return nil, err
+		return Albums{}, err
 	}
 	if err != nil {
 		return nil, fmt.Errorf("Album.ByArtist: %v", err)
