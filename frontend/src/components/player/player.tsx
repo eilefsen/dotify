@@ -24,7 +24,7 @@ export const AudioPlayer = observer(() => {
 		<div className="player flex h-full w-full items-center justify-center px-12 text-center text-xl">
 			<div className="flex w-full max-w-xl flex-col gap-4 self-center">
 				<Link
-					to={`/album/${player.currentSong.album.id}`}
+					to={`/albums/${player.currentSong.album.id}`}
 					onClick={onClick}
 					className="mx-auto h-64 w-64"
 				>
