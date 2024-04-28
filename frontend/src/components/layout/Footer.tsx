@@ -36,11 +36,11 @@ export const Footer = observer(() => {
 	return (
 		<>
 			{!player.isVisible && (
-				<div className="fixed bottom-0 left-0 right-0 z-20 flex bg-black px-2 py-1.5">
+				<div className="fixed bottom-0 left-0 right-0 z-20 flex bg-black">
 					<div className="absolute left-0 right-0 top-0 h-1">
 						<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
 					</div>
-					<div className="flex w-full items-center justify-between px-2 pt-0.5">
+					<div className="flex w-full items-center justify-between px-4 py-2">
 						<button
 							disabled={player.isEmpty}
 							onClick={onClick}
