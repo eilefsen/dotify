@@ -68,6 +68,33 @@ func (Artist) New(name string) (Artist, error) {
 	return a, nil
 }
 
+func (Artist) Delete(id uint32) error {
+	albums, err := Albums{}.ByArtist(id)
+	if err != nil {
+		slog.Error("Artist.Delete: could not get albums", "err", err)
+		return err
+	}
+	for _, a := range albums {
+		err := a.Delete(a.ID)
+		if err != nil {
+			slog.Error("Artist.Delete: failed to delete albums", "err", err, "id", id)
+			return err
+		}
+	}
+
+	_, err = db.Exec(
+		`DELETE FROM artist WHERE id = ?`,
+		id,
+	)
+	if err != nil {
+		slog.Error("Artist.Delete:", "err", err)
+		return err
+	}
+
+	slog.Info("Artist.Delete: Successfully deleted artist", "id", id)
+	return nil
+}
+
 func (a Artist) Update() error {
 	_, err := db.Exec(
 		`UPDATE artist SET name = ?, website = ?, img_src = ? WHERE id = ?`,
