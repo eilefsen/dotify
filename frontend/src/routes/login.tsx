@@ -76,7 +76,7 @@ export function LoginForm() {
 
 	return (
 		<Form {...form}>
-			<h2 className="text-3xl">Log in</h2>
+			<h2 className="text-3xl leading-normal">Login</h2>
 			{errorMsg}
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}

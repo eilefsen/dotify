@@ -19,33 +19,39 @@ function Admin() {
 
 	return (
 		<div className="mx-auto max-w-md px-1 pt-4">
-			<div className="flex justify-start gap-2">
+			<div className="flex w-full justify-stretch gap-2">
 				<Link
-					className="rounded px-2 py-1"
-					inactiveProps={{ className: "bg-neutral-700 text-white" }}
-					activeProps={{ className: "bg-white text-black" }}
+					className="w-full rounded border px-1 py-1.5 text-center"
+					inactiveProps={{
+						className: "border-neutral-300 bg-neutral-950 text-white",
+					}}
+					activeProps={{ className: "bg-white text-black border-white" }}
 					to="/admin/upload"
 				>
 					Upload Music
 				</Link>
 				<Link
-					className="rounded px-2 py-1"
-					inactiveProps={{ className: "bg-neutral-700 text-white" }}
-					activeProps={{ className: "bg-white text-black" }}
+					className="w-full rounded border px-1 py-1.5 text-center"
+					inactiveProps={{
+						className: "border-neutral-300 bg-neutral-950 text-white",
+					}}
+					activeProps={{ className: "bg-white text-black border-white" }}
 					to="/admin/artists"
 				>
 					Edit Artists
 				</Link>
 				<Link
-					className="rounded px-2 py-1"
-					inactiveProps={{ className: "bg-neutral-700 text-white" }}
-					activeProps={{ className: "bg-white text-black" }}
+					className="w-full rounded border px-1 py-1.5 text-center"
+					inactiveProps={{
+						className: "border-neutral-300 bg-neutral-950 text-white",
+					}}
+					activeProps={{ className: "bg-white text-black border-white" }}
 					to="/admin/albums"
 				>
 					Edit Albums
 				</Link>
 			</div>
-			<div className="pt-1">{outlet}</div>
+			<div className="pt-2">{outlet}</div>
 		</div>
 	);
 }

@@ -83,12 +83,12 @@ export function UploadForm() {
 	return (
 		<div className="mx-auto w-full">
 			<Form {...form}>
-				<h2 className="w-fit text-2xl">Submit new Music</h2>
+				<h2 className="text-2xl leading-relaxed">Submit new Music</h2>
 				<span className="text-red-500">{errorMsg}</span>
 				<span className="text-white">{successMsg}</span>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
+					className="mx-auto w-full space-y-4 text-left "
 				>
 					<FormField
 						control={form.control}
@@ -99,6 +99,7 @@ export function UploadForm() {
 									<FormLabel hidden>Audio</FormLabel>
 									<FormControl>
 										<InputFile
+											className="w-full"
 											name={field.name}
 											onBlur={field.onBlur}
 											disabled={field.disabled}
@@ -128,6 +129,7 @@ export function UploadForm() {
 									<FormLabel hidden>Image</FormLabel>
 									<FormControl>
 										<InputFile
+											className="w-full"
 											name={field.name}
 											onBlur={field.onBlur}
 											disabled={field.disabled}
@@ -148,15 +150,13 @@ export function UploadForm() {
 						}}
 					/>
 					<Button type="submit">Submit</Button>
+					<div className="py-2" />
+					<Progress
+						className={"w-full transition-opacity " + progressBarClassName}
+						value={progress}
+					/>
 				</form>
 			</Form>
-			<div className="py-2" />
-			<Progress
-				className={
-					"w-full max-w-[30rem] transition-opacity " + progressBarClassName
-				}
-				value={progress}
-			/>
 		</div>
 	);
 }
