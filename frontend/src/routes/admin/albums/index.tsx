@@ -1,4 +1,4 @@
-import { Album, ArtistNoID } from "@/components/player/types";
+import { Album } from "@/components/player/types";
 import {
 	ReactNode,
 	createFileRoute,
