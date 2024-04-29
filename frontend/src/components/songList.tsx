@@ -144,7 +144,9 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		>
 			<td className="pl-5">{isHovering ? btnIcon : index}</td>
 			<td className="pl-2">
-				<div className="text-base font-bold text-foreground">{song.title}</div>
+				<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
+					{song.title}
+				</div>
 				<div className="text-sm font-bold text-muted-foreground">
 					{song.artist.name}
 				</div>
