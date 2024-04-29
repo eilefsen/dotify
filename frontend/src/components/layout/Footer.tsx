@@ -36,19 +36,19 @@ export const Footer = observer(() => {
 	return (
 		<>
 			{!player.isVisible && (
-				<div className="fixed bottom-0 left-0 right-0 z-20 flex bg-black">
+				<div className="fixed bottom-0 left-0 right-0 z-20 bg-black">
 					<div className="absolute left-0 right-0 top-0 h-1">
 						<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
 					</div>
-					<div className="flex w-full items-center justify-between px-4 py-2">
+					<div className="grid w-full grid-cols-4 items-center justify-between px-4 py-2">
 						<button
 							disabled={player.isEmpty}
 							onClick={onClick}
-							className="flex-grow text-left"
+							className="col-span-3 flex-grow text-left"
 						>
 							<SongInfo />
 						</button>
-						<div className="flex h-full gap-2">
+						<div className="flex h-full justify-end gap-3">
 							<PrevSongButton className="hidden sm:block" />
 							<PlayButton />
 							<NextSongButton className="hidden sm:block" />
@@ -64,7 +64,7 @@ export const Footer = observer(() => {
 const SongInfo = observer(function () {
 	const player = useContext(playerStoreContext);
 	return (
-		<div className="song-info flex h-full w-full items-center pr-2">
+		<div className="song-info flex h-full w-full max-w-md items-center pr-2">
 			{player.currentSong && (
 				<>
 					<img
@@ -74,7 +74,7 @@ const SongInfo = observer(function () {
 					/>
 				</>
 			)}
-			<div className="flex h-20 w-full items-center pl-2">
+			<div className="flex h-20 w-full items-center overflow-x-hidden whitespace-nowrap pl-2">
 				<SongTitle
 					title={player.currentSong?.title}
 					artist={player.currentSong?.artist.name}
