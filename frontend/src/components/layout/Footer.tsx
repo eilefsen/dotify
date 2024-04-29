@@ -19,7 +19,9 @@ export function BaseFooter({ content, className }: BaseFooterProps) {
 	return (
 		<div
 			className={
-				"fixed bottom-0 left-0 right-0 z-20 flex bg-black" + " " + className
+				"fixed bottom-0 left-0 right-0 z-20 flex bg-background" +
+				" " +
+				className
 			}
 		>
 			<div className="footer-content h-full w-full">{content}</div>
@@ -37,7 +39,7 @@ export const Footer = observer(() => {
 	return (
 		<>
 			{!player.isVisible && (
-				<div className="fixed bottom-0 left-0 right-0 z-20 bg-black">
+				<div className="fixed bottom-0 left-0 right-0 z-20 bg-background">
 					<div className="absolute left-0 right-0 top-0 h-1">
 						<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
 					</div>
@@ -83,11 +85,11 @@ const SongInfo = observer(function () {
 					<img
 						src={player.currentSong.album.imgSrc}
 						alt={`${player.currentSong.album.artist} - ${player.currentSong.album.title}`}
-						className="aspect-square h-16 w-16 rounded border border-white"
+						className="aspect-square h-16 w-16 rounded border border-border"
 					/>
 				</>
 			)}
-			<div className="w-0 flex-1 items-center  font-bold text-neutral-200">
+			<div className="w-0 flex-1 items-center font-bold text-foreground">
 				<div className="w-full overflow-x-hidden">
 					<div className="relative w-full whitespace-nowrap">
 						<div ref={titleRef}>
@@ -96,14 +98,14 @@ const SongInfo = observer(function () {
 							</div>
 						</div>
 						{isTitleOverflow && (
-							<div className="absolute top-0 w-fit animate-marquee2 pr-12">
+							<div className="animate-marquee2 absolute top-0 w-fit pr-12">
 								{player.currentSong?.title || "No Song playing"}
 							</div>
 						)}
 					</div>
 				</div>
 				{player.currentSong?.artist.name && (
-					<div className="overflow-x-hidden font-light text-neutral-300">
+					<div className="overflow-x-hidden font-light text-muted-foreground">
 						{player.currentSong?.artist.name}
 					</div>
 				)}
