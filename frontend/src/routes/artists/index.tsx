@@ -76,23 +76,3 @@ export const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
 		</Link>
 	);
 });
-
-interface artistCardProps {
-	name: string;
-	imgSrc: string;
-	to: string;
-}
-
-function ArtistCard({ name, imgSrc, to }: artistCardProps) {
-	return (
-		<Link
-			to={to}
-			className="album-card w-48 overflow-hidden rounded-2xl bg-white"
-		>
-			<CoverImg src={imgSrc} alt={name} />
-			<div className="px-6 py-1.5 font-bold">
-				<h4 className="text-xl text-black">{name}</h4>
-			</div>
-		</Link>
-	);
-}
