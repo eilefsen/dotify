@@ -12,6 +12,7 @@ export default defineConfig({
 		VitePWA({
 			registerType: "autoUpdate",
 			manifest: {
+				scope: "/",
 				name: "Dotify",
 				short_name: "Dotify",
 				start_url: "/",
