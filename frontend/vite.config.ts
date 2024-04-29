@@ -16,7 +16,7 @@ export default defineConfig({
 				short_name: "Dotify",
 				start_url: "/",
 				background_color: "#000000",
-				theme_color: "#ffffff",
+				theme_color: "#000000",
 				icons: [
 					{
 						src: "/images/mac/mac-120x120.png",

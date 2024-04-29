@@ -48,7 +48,7 @@ const LibraryBtn = observer((props: LibraryBtnProps) => {
 		player.isVisible = false;
 	}
 	const baseCN = cn(
-		"flex h-11 items-center justify-center rounded-lg border border-neutral-600 p-1 text-xl",
+		"flex h-11 items-center justify-center rounded-lg border border-neutral-400 p-1 text-xl",
 		props.className,
 	);
 	return (
@@ -57,7 +57,7 @@ const LibraryBtn = observer((props: LibraryBtnProps) => {
 				className: cn(baseCN, "bg-white text-neutral-800"),
 			}}
 			inactiveProps={{
-				className: cn(baseCN, "bg-neutral-800 text-white"),
+				className: cn(baseCN, "bg-neutral-950 text-white"),
 			}}
 			to={props.to}
 			onClick={onClick}
