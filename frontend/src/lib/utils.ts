@@ -13,3 +13,8 @@ export function secondsToMinutesSeconds(d: number) {
 	var sDisplay = String(s).padStart(2, "0");
 	return mDisplay + ":" + sDisplay;
 }
+export function sleep(delay: number) {
+	return new Promise(function (resolve) {
+		setTimeout(resolve, delay);
+	});
+}
