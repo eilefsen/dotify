@@ -1,5 +1,3 @@
-import { CopyIcon, TrashIcon } from "@radix-ui/react-icons";
-
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -23,14 +21,11 @@ export function DeleteDialog(props: DeleteDialogProps) {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button
-					type="submit"
-					className="flex border-none bg-red-600 px-3 text-white hover:bg-red-700"
-				>
+				<Button variant="destructiveHover" type="submit" className="flex">
 					<Trash2Icon />
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="bg-neutral-950 sm:max-w-md">
+			<DialogContent className="bg-background sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle>Delete {props.kind}</DialogTitle>
 					<DialogDescription>
@@ -41,15 +36,13 @@ export function DeleteDialog(props: DeleteDialogProps) {
 					<Button
 						type="submit"
 						onClick={props.onClick}
-						className="flex border-none bg-red-600 px-3 text-white hover:bg-red-700"
+						className="flex"
+						variant="destructiveHover"
 					>
 						<Trash2Icon />
 					</Button>
 					<DialogClose asChild>
-						<Button
-							type="submit"
-							className="flex border-none bg-white px-3 font-bold text-black hover:bg-neutral-200 "
-						>
+						<Button type="submit" className="flex" variant="outline">
 							No
 						</Button>
 					</DialogClose>
