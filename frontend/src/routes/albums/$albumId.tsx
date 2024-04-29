@@ -87,7 +87,7 @@ const AlbumPlayButton = observer(({ album }: albumPlayButtonProps) => {
 				alt={album.title}
 			/>
 			<button
-				className="col-start-1 row-start-1 flex h-full w-full items-center justify-center text-foreground drop-shadow-lg hover:backdrop-brightness-105 active:backdrop-brightness-110 dark:hover:backdrop-brightness-95 dark:active:backdrop-brightness-90 [&>svg]:hover:text-current"
+				className="col-start-1 row-start-1 flex h-full w-full items-center justify-center text-foreground drop-shadow-lg hover:text-primary hover:backdrop-brightness-105 dark:hover:backdrop-brightness-95  dark:active:brightness-95 dark:active:backdrop-brightness-90 [&>svg]:hover:text-current"
 				onClick={() => {
 					if (
 						player.currentSong == undefined ||
