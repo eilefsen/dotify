@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite";
 import { useContext, useRef, ReactNode, useEffect } from "react";
 import { useHoverDirty } from "react-use";
-import { secondsToMinutesSeconds } from "@/lib/utils";
+import { getRandomInt, secondsToMinutesSeconds } from "@/lib/utils";
 
 import { Song, iconsContext, playerStoreContext } from "./player";
 import { icons } from "@/icons";
 import { IconContext } from "react-icons";
+import { Skeleton } from "./ui/skeleton";
 
 interface SongListProps {
 	songs: Array<Song>;
@@ -20,6 +21,62 @@ interface SongEntryProps {
 interface songTableProps {
 	songs: Song[];
 	albumIndexing: boolean;
+}
+
+export function PendingSongTable() {
+	return (
+		<table className="w-full table-fixed">
+			<colgroup>
+				<col className="w-12" />
+				<col />
+				<col className="w-16" />
+			</colgroup>
+			<thead>
+				<tr className="h-11 border-b border-neutral-600 text-left text-lg text-neutral-300">
+					<th className="pl-5">#</th>
+					<th>Title</th>
+					<th className="pr-5">
+						<IconContext.Provider value={{ className: "ml-auto" }}>
+							{icons.timer}
+						</IconContext.Provider>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<PendingSongList />
+			</tbody>
+		</table>
+	);
+}
+export function PendingSongList() {
+	const songElements: Array<ReactNode> = [];
+
+	for (let i = 0; i < 10; i++) {
+		const songElement = <PendingSongEntry index={i} key={i} />;
+		songElements.push(songElement);
+	}
+
+	return <>{songElements}</>;
+}
+
+interface PendingSongEntryProps {
+	index: number;
+}
+
+function PendingSongEntry(props: PendingSongEntryProps) {
+	const duration = getRandomInt(80, 300);
+	return (
+		<tr className="h-14 w-full  border-b border-neutral-800 bg-neutral-950 text-neutral-400 hover:text-white">
+			<td className="pl-5">{props.index + 1}</td>
+			<td className="pl-2">
+				<Skeleton className="my-2 h-4 w-40" />
+				<Skeleton className="my-2 h-3 w-20" />
+			</td>
+			<td className="pr-5 text-right text-sm font-bold text-neutral-400">
+				{secondsToMinutesSeconds(duration)}
+			</td>
+		</tr>
+	);
 }
 
 export function SongTable({ songs, albumIndexing }: songTableProps) {
