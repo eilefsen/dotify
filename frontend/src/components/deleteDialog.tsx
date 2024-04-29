@@ -30,7 +30,7 @@ export function DeleteDialog(props: DeleteDialogProps) {
 					<Trash2Icon />
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-md">
+			<DialogContent className="bg-neutral-950 sm:max-w-md">
 				<DialogHeader>
 					<DialogTitle>Delete {props.kind}</DialogTitle>
 					<DialogDescription>
