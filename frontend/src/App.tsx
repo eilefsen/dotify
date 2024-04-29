@@ -21,9 +21,14 @@ declare module "@tanstack/react-router" {
 }
 
 import { icons } from "./icons";
+import { useScrollBlock } from "./lib/hooks";
 
 function App() {
 	const player = new PlayerStore([]);
+
+	const [blockScroll, _] = useScrollBlock();
+
+	blockScroll();
 
 	return (
 		<iconsContext.Provider value={icons}>
