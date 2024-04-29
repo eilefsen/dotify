@@ -32,7 +32,7 @@ export function PendingSongTable() {
 				<col className="w-16" />
 			</colgroup>
 			<thead>
-				<tr className="h-11 border-b border-neutral-600 text-left text-lg text-neutral-300">
+				<tr className="h-11 border-b border-border text-left text-lg text-muted-foreground">
 					<th className="pl-5">#</th>
 					<th>Title</th>
 					<th className="pr-5">
@@ -66,7 +66,7 @@ interface PendingSongEntryProps {
 function PendingSongEntry(props: PendingSongEntryProps) {
 	const duration = getRandomInt(80, 300);
 	return (
-		<tr className="h-14 w-full  border-b border-neutral-800 bg-neutral-950 text-neutral-400 hover:text-white">
+		<tr className="h-14 w-full border-b border-secondary bg-background text-muted-foreground">
 			<td className="pl-5">{props.index + 1}</td>
 			<td className="pl-2">
 				<Skeleton className="my-2 h-4 w-40" />
@@ -88,7 +88,7 @@ export function SongTable({ songs, albumIndexing }: songTableProps) {
 				<col className="w-16" />
 			</colgroup>
 			<thead>
-				<tr className="h-11 border-b border-neutral-600 text-left text-lg text-neutral-300">
+				<tr className="h-11 border-b border-secondary text-left text-lg text-muted-foreground">
 					<th className="pl-5">#</th>
 					<th>Title</th>
 					<th className="pr-5">
@@ -116,9 +116,9 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		}
 	}
 
-	var bgColor = "bg-neutral-950";
+	var bgColor = "bg-background";
 	if (song.id == player.currentSong?.id) {
-		bgColor = "bg-neutral-900";
+		bgColor = "bg-secondary";
 	}
 
 	const hoverRef = useRef(null);
@@ -129,7 +129,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		<tr
 			ref={hoverRef}
 			className={
-				"h-14 w-full  border-b border-neutral-800 text-neutral-400 hover:text-white" +
+				"h-14 w-full border-b border-secondary text-primary hover:text-white" +
 				" " +
 				bgColor
 			}
@@ -144,12 +144,12 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		>
 			<td className="pl-5">{isHovering ? btnIcon : index}</td>
 			<td className="pl-2">
-				<div className="text-base font-bold text-neutral-300">{song.title}</div>
-				<div className="text-sm font-bold text-neutral-400">
+				<div className="text-base font-bold text-foreground">{song.title}</div>
+				<div className="text-sm font-bold text-muted-foreground">
 					{song.artist.name}
 				</div>
 			</td>
-			<td className="pr-5 text-right text-sm font-bold text-neutral-400">
+			<td className="pr-5 text-right text-sm font-bold text-primary">
 				{secondsToMinutesSeconds(song.duration)}
 			</td>
 		</tr>

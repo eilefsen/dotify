@@ -25,12 +25,12 @@ export function PendingAlbums(props: PendingAlbumsProps) {
 	const albumLines: ReactNode[] = [];
 	for (let i = 0; i < props.amount; i++) {
 		albumLines.push(
-			<div className="skeleton-album flex h-20 w-full items-center border-b border-neutral-900 p-2 active:bg-neutral-800">
-				<Skeleton className="aspect-square h-full rounded border border-neutral-700" />
+			<div className="skeleton-album flex h-20 w-full items-center border-b border-secondary p-2">
+				<Skeleton className="aspect-square h-full rounded" />
 				<div className="pl-2">
 					<Skeleton className="mb-2 h-3.5 w-40" />
 					<div className="flex items-center gap-2">
-						<span className="text-sm font-normal text-neutral-400">
+						<span className="text-sm font-normal text-muted-foreground">
 							Album ·{" "}
 						</span>
 						<Skeleton className="h-3 w-20" />
@@ -80,28 +80,28 @@ interface AlbumLineProps {
 
 export const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
 	const player = useContext(playerStoreContext);
-	var bgColor = "bg-neutral-950";
+	var bgColor = "bg-background";
 	if (album.id == player.currentSong?.album.id) {
-		bgColor = "bg-neutral-900";
+		bgColor = "bg-secondary";
 	}
 
 	return (
 		<Link
 			to={to}
 			className={
-				"album-line flex h-20 w-full items-center border-b border-neutral-900 p-2 active:bg-neutral-800" +
+				"album-line flex h-20 w-full items-center border-b border-secondary p-2 active:bg-secondary" +
 				" " +
 				bgColor
 			}
 		>
 			<img
-				className="aspect-square h-full rounded border border-neutral-300"
+				className="aspect-square h-full rounded border border-accent"
 				src={album.imgSrc}
 				alt={album.title}
 			/>
 			<div className="pl-2">
-				<p className="text-base font-bold text-neutral-50">{album.title}</p>
-				<p className="text-sm font-bold text-neutral-400">
+				<p className="text-base font-bold text-foreground">{album.title}</p>
+				<p className="text-sm font-bold text-muted-foreground">
 					<span className="font-normal">Album · </span>
 					{album.artist.name}
 				</p>

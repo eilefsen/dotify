@@ -5,7 +5,6 @@ import { playerStoreContext, iconsContext } from "@/components/player";
 import { AlbumWithSongs } from "@/components/player/types";
 import { PendingSongTable, SongTable } from "@/components/songList";
 import axios from "axios";
-import { sleep } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/albums/$albumId")({
@@ -49,7 +48,7 @@ export default function AlbumContent() {
 				<div className="flex items-center">
 					<div className="h-full w-full pl-4">
 						<div className="text-3xl font-bold">{album.title}</div>
-						<div className="text-2xl font-medium text-neutral-400">
+						<div className="text-2xl font-medium text-muted-foreground">
 							{album.artist.name}
 						</div>
 					</div>
@@ -88,9 +87,7 @@ const AlbumPlayButton = observer(({ album }: albumPlayButtonProps) => {
 				alt={album.title}
 			/>
 			<button
-				className={
-					"col-start-1 row-start-1 flex h-full w-full items-center justify-center text-neutral-100 drop-shadow-lg hover:text-white hover:backdrop-brightness-95 active:text-white active:backdrop-brightness-95 [&>svg]:hover:text-current"
-				}
+				className="col-start-1 row-start-1 flex h-full w-full items-center justify-center text-foreground drop-shadow-lg hover:backdrop-brightness-105 active:backdrop-brightness-110 dark:hover:backdrop-brightness-95 dark:active:backdrop-brightness-90 [&>svg]:hover:text-current"
 				onClick={() => {
 					if (
 						player.currentSong == undefined ||
