@@ -7,7 +7,8 @@ export const Route = createFileRoute("/artists/")({
 		return res.data;
 	},
 	pendingComponent: PendingArtists,
-	pendingMs: 0,
+	pendingMs: 100,
+	pendingMinMs: 200,
 });
 
 import { ReactNode, useContext } from "react";
