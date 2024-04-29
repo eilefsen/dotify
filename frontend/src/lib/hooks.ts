@@ -26,7 +26,9 @@ export const useIsOverflow = (
 			if (callback) callback(hasOverflow);
 		};
 
-		if (current) {
+		if ("ResizeObserver" in window) {
+			new ResizeObserver(trigger).observe(current.parentElement!);
+		} else {
 			trigger();
 		}
 	}, [callback, ref, ...deps]);

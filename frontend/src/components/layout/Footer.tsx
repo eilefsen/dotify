@@ -41,15 +41,15 @@ export const Footer = observer(() => {
 					<div className="absolute left-0 right-0 top-0 h-1">
 						<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
 					</div>
-					<div className="grid w-full grid-cols-4 items-center justify-between px-4 py-2">
+					<div className="grid w-full grid-cols-5 items-center justify-between px-4 py-2">
 						<button
 							disabled={player.isEmpty}
 							onClick={onClick}
-							className="col-span-3 flex-grow text-left"
+							className="col-span-4 flex-grow text-left"
 						>
 							<SongInfo />
 						</button>
-						<div className="flex h-full justify-end gap-3">
+						<div className="col-span-1 flex h-full justify-end gap-3">
 							<PrevSongButton className="hidden sm:block" />
 							<PlayButton />
 							<NextSongButton className="hidden sm:block" />
@@ -89,9 +89,11 @@ const SongInfo = observer(function () {
 			)}
 			<div className="w-0 flex-1 items-center  font-bold text-neutral-200">
 				<div className="w-full overflow-x-hidden">
-					<div className="relative whitespace-nowrap">
-						<div ref={titleRef} className={titleCN}>
-							{player.currentSong?.title || "No Song playing"}
+					<div className="relative w-full whitespace-nowrap">
+						<div ref={titleRef}>
+							<div className={titleCN}>
+								{player.currentSong?.title || "No Song playing"}
+							</div>
 						</div>
 						{isTitleOverflow && (
 							<div className="absolute top-0 w-fit animate-marquee2 pr-12">
