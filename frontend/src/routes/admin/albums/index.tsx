@@ -7,8 +7,6 @@ import {
 } from "@tanstack/react-router";
 import axios from "axios";
 import { AlbumLine } from "@/routes/albums";
-import { PiTrashFill } from "react-icons/pi";
-import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { DeleteDialog } from "@/components/deleteDialog";
 
