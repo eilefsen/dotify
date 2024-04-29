@@ -49,7 +49,10 @@ function ArtistsList(props: ArtistsListProps) {
 
 	props.artists.forEach((artist) => {
 		artistLines.push(
-			<div className="flex items-center gap-2" key={artist.id}>
+			<div
+				className="flex items-center gap-2 border-b border-muted"
+				key={artist.id}
+			>
 				<ArtistLine artist={artist} to={`/admin/artists/${artist.id}`} />
 				<DeleteDialog
 					kind="artist"

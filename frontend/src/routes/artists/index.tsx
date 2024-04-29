@@ -57,11 +57,13 @@ export default function Artists(props: ArtistProps) {
 	const artistLines: ReactNode[] = [];
 	artists.forEach((artist) => {
 		artistLines.push(
-			<ArtistLine
-				key={artist.id}
-				artist={artist}
-				to={`/artists/${artist.id}`}
-			/>,
+			<div className="border-b border-border">
+				<ArtistLine
+					key={artist.id}
+					artist={artist}
+					to={`/artists/${artist.id}`}
+				/>
+			</div>,
 		);
 	});
 
@@ -84,7 +86,7 @@ export const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
 		<Link
 			to={to}
 			className={
-				"album-line flex h-20 w-full items-center border-b border-border p-2 active:bg-secondary" +
+				"album-line flex h-20 w-full items-center p-2 active:bg-secondary" +
 				" " +
 				bgColor
 			}

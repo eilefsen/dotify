@@ -49,7 +49,7 @@ function AlbumsList(props: AlbumsListProps) {
 
 	props.albums.forEach((album) => {
 		albumLines.push(
-			<div className="flex items-center gap-2" key={album.id}>
+			<div className="flex items-center gap-2 border-b" key={album.id}>
 				<AlbumLine album={album} to={`/admin/albums/${album.id}`} />
 				<DeleteDialog
 					kind="album"

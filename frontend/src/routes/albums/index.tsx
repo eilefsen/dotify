@@ -62,7 +62,9 @@ export default function Albums(props: AlbumsProps) {
 	const albumLines: ReactNode[] = [];
 	albums.forEach((album) => {
 		albumLines.push(
-			<AlbumLine key={album.id} album={album} to={`/albums/${album.id}`} />,
+			<div className="border-b border-secondary">
+				<AlbumLine key={album.id} album={album} to={`/albums/${album.id}`} />
+			</div>,
 		);
 	});
 
@@ -89,7 +91,7 @@ export const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
 		<Link
 			to={to}
 			className={
-				"album-line flex h-20 w-full items-center border-b border-secondary p-2 active:bg-secondary" +
+				"album-line flex h-20 w-full items-center p-2 active:bg-secondary" +
 				" " +
 				bgColor
 			}
