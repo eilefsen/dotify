@@ -7,7 +7,7 @@ import { Link } from "@tanstack/react-router";
 export function Header() {
 	return (
 		<>
-			<div className="fixed left-0 right-0 top-0 z-20 flex h-14 items-center justify-center gap-2 overflow-hidden border-b border-border bg-secondary px-2">
+			<div className="fixed left-0 right-0 top-0 z-20 flex h-14 items-center justify-center gap-2 overflow-hidden border-b border-primary bg-secondary px-2">
 				<span className="flex w-full gap-2">
 					<LibraryBtn className="w-full" to="/albums">
 						Albums
