@@ -9,6 +9,7 @@ import { useIsOverflow } from "@/lib/hooks";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useContext } from "react";
+import { OverflowMarquee } from "../overflowMarquee";
 
 interface BaseFooterProps {
 	content: React.ReactNode;
@@ -47,7 +48,7 @@ export const Footer = observer(() => {
 						<button
 							disabled={player.isEmpty}
 							onClick={onClick}
-							className="col-span-4 flex-grow text-left"
+							className="col-span-4 text-left"
 						>
 							<SongInfo />
 						</button>
@@ -67,42 +68,20 @@ export const Footer = observer(() => {
 const SongInfo = observer(function () {
 	const player = useContext(playerStoreContext);
 
-	const titleRef = React.useRef<HTMLDivElement>(null);
-
-	const isTitleOverflow = useIsOverflow(titleRef, [player.currentSong?.title]);
-
-	console.debug("isTitleOverflow", isTitleOverflow);
-
-	let titleCN = "";
-	if (isTitleOverflow) {
-		titleCN = "animate-marquee pr-12 w-fit";
-	}
-
 	return (
-		<div className="song-info flex h-20 w-full max-w-md items-center gap-2 pr-2">
+		<div className="song-info flex h-20 w-full items-center gap-2 pr-2">
 			{player.currentSong && (
-				<>
-					<img
-						src={player.currentSong.album.imgSrc}
-						alt={`${player.currentSong.album.artist} - ${player.currentSong.album.title}`}
-						className="aspect-square h-16 w-16 rounded border border-border"
-					/>
-				</>
+				<img
+					src={player.currentSong.album.imgSrc}
+					alt={`${player.currentSong.album.artist} - ${player.currentSong.album.title}`}
+					className="aspect-square h-16 w-16 rounded border border-border"
+				/>
 			)}
-			<div className="w-0 flex-1 items-center font-bold text-foreground">
-				<div className="w-full overflow-x-hidden">
-					<div className="relative w-full whitespace-nowrap">
-						<div ref={titleRef}>
-							<div className={titleCN}>
-								{player.currentSong?.title || "No Song playing"}
-							</div>
-						</div>
-						{isTitleOverflow && (
-							<div className="animate-marquee2 absolute top-0 w-fit pr-12">
-								{player.currentSong?.title || "No Song playing"}
-							</div>
-						)}
-					</div>
+			<div className="block w-full min-w-0">
+				<div className="font-bold text-foreground">
+					<OverflowMarquee>
+						{player.currentSong?.title || "No Song playing"}
+					</OverflowMarquee>
 				</div>
 				{player.currentSong?.artist.name && (
 					<div className="overflow-x-hidden font-light text-muted-foreground">
