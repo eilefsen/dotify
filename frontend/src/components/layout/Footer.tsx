@@ -5,8 +5,9 @@ import {
 	ProgressBar,
 	playerStoreContext,
 } from "@/components/player";
-import { SongTitle } from "@/components/player/status";
+import { useIsOverflow } from "@/lib/hooks";
 import { observer } from "mobx-react-lite";
+import React from "react";
 import { useContext } from "react";
 
 interface BaseFooterProps {
@@ -63,22 +64,47 @@ export const Footer = observer(() => {
 
 const SongInfo = observer(function () {
 	const player = useContext(playerStoreContext);
+
+	const titleRef = React.useRef<HTMLDivElement>(null);
+
+	const isTitleOverflow = useIsOverflow(titleRef, [player.currentSong?.title]);
+
+	console.debug("isTitleOverflow", isTitleOverflow);
+
+	let titleCN = "";
+	if (isTitleOverflow) {
+		titleCN = "animate-marquee pr-12 w-fit";
+	}
+
 	return (
-		<div className="song-info flex h-full w-full max-w-md items-center pr-2">
+		<div className="song-info flex h-20 w-full max-w-md items-center gap-2 pr-2">
 			{player.currentSong && (
 				<>
 					<img
 						src={player.currentSong.album.imgSrc}
 						alt={`${player.currentSong.album.artist} - ${player.currentSong.album.title}`}
-						className="aspect-square h-16 w-16"
+						className="aspect-square h-16 w-16 rounded border border-white"
 					/>
 				</>
 			)}
-			<div className="flex h-20 w-full items-center overflow-x-hidden whitespace-nowrap pl-2">
-				<SongTitle
-					title={player.currentSong?.title}
-					artist={player.currentSong?.artist.name}
-				/>
+			<div className="w-0 flex-1 items-center  font-bold text-neutral-200">
+				<div className="w-full overflow-x-hidden">
+					<div className="relative whitespace-nowrap">
+						<div ref={titleRef} className={titleCN}>
+							{player.currentSong?.title || "No Song playing"}
+						</div>
+						{isTitleOverflow && (
+							<div className="absolute top-0 w-fit animate-marquee2 pr-12">
+								{player.currentSong?.title || "No Song playing"}
+							</div>
+						)}
+					</div>
+				</div>
+				{player.currentSong?.artist.name && (
+					<div className="overflow-x-hidden font-light text-neutral-300">
+						{player.currentSong?.artist.name}
+					</div>
+				)}
 			</div>
 		</div>
 	);

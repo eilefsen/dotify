@@ -2,19 +2,24 @@ import React from "react";
 
 export const useIsOverflow = (
 	ref: React.RefObject<HTMLElement>,
-	callback: React.RefCallback<boolean>,
+	dependencies?: React.DependencyList,
+	callback?: React.RefCallback<boolean>,
 ) => {
 	const [isOverflow, setIsOverflow] = React.useState(false);
+	let deps: React.DependencyList = [];
+
+	if (dependencies) {
+		deps = dependencies;
+	}
 
 	React.useLayoutEffect(() => {
 		const { current } = ref;
-
 		if (current == null) {
 			return;
 		}
 
 		const trigger = () => {
-			const hasOverflow = current.scrollHeight > current.clientHeight;
+			const hasOverflow = current.scrollWidth > current.clientWidth;
 
 			setIsOverflow(hasOverflow);
 
@@ -24,7 +29,7 @@ export const useIsOverflow = (
 		if (current) {
 			trigger();
 		}
-	}, [callback, ref]);
+	}, [callback, ref, ...deps]);
 
 	return isOverflow;
 };
