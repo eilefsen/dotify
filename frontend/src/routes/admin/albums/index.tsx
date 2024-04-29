@@ -10,6 +10,7 @@ import { AlbumLine } from "@/routes/albums";
 import { PiTrashFill } from "react-icons/pi";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
+import { DeleteDialog } from "@/components/deleteDialog";
 
 export const Route = createFileRoute("/admin/albums/")({
 	component: AlbumAdmin,
@@ -52,12 +53,11 @@ function AlbumsList(props: AlbumsListProps) {
 		albumLines.push(
 			<div className="flex items-center gap-2" key={album.id}>
 				<AlbumLine album={album} to={`/admin/albums/${album.id}`} />
-				<Button
-					className="border-none bg-white p-1 text-red-600 hover:bg-neutral-100 active:bg-neutral-200 active:text-red-500"
+				<DeleteDialog
+					kind="album"
+					name={album.title}
 					onClick={() => mutation.mutate(album.id)}
-				>
-					<PiTrashFill size={28} />
-				</Button>
+				/>
 			</div>,
 		);
 	});
