@@ -24,7 +24,7 @@ import {
 const iconSize = 32;
 const playIconSize = 56;
 const skipIconSize = 24;
-const iconClassName = "hover:text-neutral-300 transition-colors duration-75";
+const iconClassName = "hover:text-primary transition-colors duration-75";
 export const icons = {
 	iconSize: iconSize,
 	play: <PiPlayCircleFill size={playIconSize} className={iconClassName} />,
