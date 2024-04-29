@@ -6,13 +6,37 @@ export const Route = createFileRoute("/artists/")({
 		const res = await axios.get(`/api/${params.location.pathname}`);
 		return res.data;
 	},
+	pendingComponent: PendingArtists,
+	pendingMs: 0,
 });
 
 import { ReactNode, useContext } from "react";
 import { observer } from "mobx-react-lite";
-import { playerStoreContext, CoverImg } from "@/components/player";
+import { playerStoreContext } from "@/components/player";
 import { Artist } from "@/components/player/types";
 import axios from "axios";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function PendingArtists() {
+	const albumLines: ReactNode[] = [];
+	for (let i = 0; i < 5; i++) {
+		albumLines.push(
+			<div className="skeleton-album flex h-20 w-full items-center border-b border-neutral-900 p-2 active:bg-neutral-800">
+				<Skeleton className="aspect-square h-full rounded-full border border-neutral-700" />
+				<div className="pl-2">
+					<Skeleton className="mb-2 h-3.5 w-40" />
+					<p className="text-sm font-normal text-neutral-400">Artist</p>
+				</div>
+			</div>,
+		);
+	}
+
+	return (
+		<>
+			<div className="album-list">{albumLines}</div>
+		</>
+	);
+}
 
 interface ArtistProps {
 	artists?: Artist[];
