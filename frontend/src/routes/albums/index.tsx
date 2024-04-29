@@ -62,8 +62,8 @@ export default function Albums(props: AlbumsProps) {
 	const albumLines: ReactNode[] = [];
 	albums.forEach((album) => {
 		albumLines.push(
-			<div className="border-b border-secondary">
-				<AlbumLine key={album.id} album={album} to={`/albums/${album.id}`} />
+			<div key={album.id} className="border-b border-secondary">
+				<AlbumLine album={album} to={`/albums/${album.id}`} />
 			</div>,
 		);
 	});

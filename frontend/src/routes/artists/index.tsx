@@ -57,12 +57,8 @@ export default function Artists(props: ArtistProps) {
 	const artistLines: ReactNode[] = [];
 	artists.forEach((artist) => {
 		artistLines.push(
-			<div className="border-b border-border">
-				<ArtistLine
-					key={artist.id}
-					artist={artist}
-					to={`/artists/${artist.id}`}
-				/>
+			<div className="border-b border-border" key={artist.id}>
+				<ArtistLine artist={artist} to={`/artists/${artist.id}`} />
 			</div>,
 		);
 	});
