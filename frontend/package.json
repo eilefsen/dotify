@@ -22,7 +22,7 @@
 		"@tanstack/react-router": "^1.29.2",
 		"axios": "^1.6.8",
 		"class-variance-authority": "^0.7.0",
-		"clsx": "^2.1.0",
+		"clsx": "^2.1.1",
 		"lucide-react": "^0.373.0",
 		"mobx-react-lite": "^4.0.5",
 		"react": "^18.2.0",
@@ -30,7 +30,7 @@
 		"react-hook-form": "^7.51.2",
 		"react-icons": "^5.0.1",
 		"react-use": "^17.5.0",
-		"tailwind-merge": "^2.2.1",
+		"tailwind-merge": "^2.3.0",
 		"tailwindcss-animate": "^1.0.7",
 		"zod": "^3.22.4"
 	},
