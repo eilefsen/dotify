@@ -62,7 +62,7 @@ const LibraryBtn = observer((props: LibraryBtnProps) => {
 			inactiveProps={{
 				className: cn(
 					baseCN,
-					"bg-primary-foreground text-primary border-muted-foreground",
+					"bg-muted text-foreground border-muted-foreground",
 				),
 			}}
 			to={props.to}

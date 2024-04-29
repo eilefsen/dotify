@@ -129,7 +129,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		<tr
 			ref={hoverRef}
 			className={
-				"h-14 w-full border-b border-secondary text-primary hover:text-foreground" +
+				"h-14 w-full border-b border-secondary text-muted-foreground hover:text-foreground" +
 				" " +
 				bgColor
 			}
@@ -149,7 +149,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 					{song.artist.name}
 				</div>
 			</td>
-			<td className="pr-5 text-right text-sm font-bold text-primary">
+			<td className="pr-5 text-right text-sm font-bold text-muted-foreground">
 				{secondsToMinutesSeconds(song.duration)}
 			</td>
 		</tr>
