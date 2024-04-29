@@ -7,9 +7,8 @@ import {
 import axios from "axios";
 import { ArtistLine } from "../../artists";
 import { Artist } from "@/components/player/types";
-import { Button } from "@/components/ui/button";
-import { PiTrashFill } from "react-icons/pi";
 import { useMutation } from "@tanstack/react-query";
+import { DeleteDialog } from "@/components/deleteDialog";
 
 export const Route = createFileRoute("/admin/artists/")({
 	component: ArtistAdmin,
@@ -52,12 +51,11 @@ function ArtistsList(props: ArtistsListProps) {
 		artistLines.push(
 			<div className="flex items-center gap-2" key={artist.id}>
 				<ArtistLine artist={artist} to={`/admin/artists/${artist.id}`} />
-				<Button
-					className="border-none bg-white p-1 text-red-600 hover:bg-neutral-100 active:bg-neutral-200 active:text-red-500"
+				<DeleteDialog
+					kind="artist"
+					name={artist.name}
 					onClick={() => mutation.mutate(artist.id)}
-				>
-					<PiTrashFill size={28} />
-				</Button>
+				/>
 			</div>,
 		);
 	});
