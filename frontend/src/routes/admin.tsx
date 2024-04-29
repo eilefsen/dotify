@@ -20,39 +20,32 @@ function Admin() {
 	return (
 		<div className="mx-auto max-w-md px-1 pt-4">
 			<div className="flex w-full justify-stretch gap-2">
-				<Link
-					className="w-full rounded border px-1 py-1.5 text-center"
-					inactiveProps={{
-						className: "border-neutral-300 bg-neutral-950 text-white",
-					}}
-					activeProps={{ className: "bg-white text-black border-white" }}
-					to="/admin/upload"
-				>
-					Upload Music
-				</Link>
-				<Link
-					className="w-full rounded border px-1 py-1.5 text-center"
-					inactiveProps={{
-						className: "border-neutral-300 bg-neutral-950 text-white",
-					}}
-					activeProps={{ className: "bg-white text-black border-white" }}
-					to="/admin/artists"
-				>
-					Edit Artists
-				</Link>
-				<Link
-					className="w-full rounded border px-1 py-1.5 text-center"
-					inactiveProps={{
-						className: "border-neutral-300 bg-neutral-950 text-white",
-					}}
-					activeProps={{ className: "bg-white text-black border-white" }}
-					to="/admin/albums"
-				>
-					Edit Albums
-				</Link>
+				<AdminLink to="/admin/upload">Upload Music</AdminLink>
+				<AdminLink to="/admin/artists">Edit Artists</AdminLink>
+				<AdminLink to="/admin/albums">Edit Albums</AdminLink>
 			</div>
 			<div className="pt-2">{outlet}</div>
 		</div>
+	);
+}
+
+interface AdminLinkProps extends React.PropsWithChildren {
+	to: string;
+}
+function AdminLink(props: AdminLinkProps) {
+	return (
+		<Link
+			className="w-full rounded border px-1 py-1.5 text-center"
+			inactiveProps={{
+				className: "border-border bg-background text-foreground",
+			}}
+			activeProps={{
+				className: "bg-primary text-primary-foreground border-primary",
+			}}
+			to={props.to}
+		>
+			{props.children}
+		</Link>
 	);
 }
 
