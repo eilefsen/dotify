@@ -12,14 +12,18 @@ export const Route = createFileRoute("/albums/")({
 		const res = await axios.get(`/api/${params.location.pathname}`);
 		return res.data;
 	},
-	pendingComponent: PendingAlbums,
+	pendingComponent: () => <PendingAlbums amount={5} />,
 	pendingMs: 100,
 	pendingMinMs: 200,
 });
 
-function PendingAlbums() {
+interface PendingAlbumsProps {
+	amount: number;
+}
+
+export function PendingAlbums(props: PendingAlbumsProps) {
 	const albumLines: ReactNode[] = [];
-	for (let i = 0; i < 5; i++) {
+	for (let i = 0; i < props.amount; i++) {
 		albumLines.push(
 			<div className="skeleton-album flex h-20 w-full items-center border-b border-neutral-900 p-2 active:bg-neutral-800">
 				<Skeleton className="aspect-square h-full rounded border border-neutral-700" />
