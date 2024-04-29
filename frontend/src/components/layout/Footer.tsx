@@ -5,7 +5,6 @@ import {
 	ProgressBar,
 	playerStoreContext,
 } from "@/components/player";
-import { useIsOverflow } from "@/lib/hooks";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { useContext } from "react";
