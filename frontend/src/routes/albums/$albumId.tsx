@@ -9,7 +9,7 @@ import { sleep } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/albums/$albumId")({
-	component: () => <AlbumContent />,
+	component: AlbumContent,
 	loader: async (params) => {
 		await sleep(2000);
 		const res = await axios.get(`/api/${params.location.pathname}`);
