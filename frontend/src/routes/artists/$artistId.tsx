@@ -26,7 +26,7 @@ function PendingArtistContent() {
 				<Skeleton className="mx-auto mb-2 mt-3 h-9 w-3/4 sm:h-[3.75rem]" />
 				<Skeleton className="mx-auto h-4 w-3/5" />
 			</div>
-			<div className="border-t border-neutral-700">
+			<div className="border-t border-border">
 				<PendingAlbums amount={3} />
 			</div>
 		</div>
@@ -51,13 +51,13 @@ export function ArtistContent() {
 					{data.artist.name}
 				</h2>
 				<a
-					className="text-base font-normal text-neutral-300 underline underline-offset-2"
+					className="text-base font-normal text-foreground underline underline-offset-2"
 					href={data.artist.website}
 				>
 					{data.artist.website}
 				</a>
 			</div>
-			<div className="border-t border-neutral-700">
+			<div className="border-t border-primary">
 				<Albums albums={data.albums} />
 			</div>
 		</div>

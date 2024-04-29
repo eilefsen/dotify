@@ -22,11 +22,11 @@ function PendingArtists() {
 	const albumLines: ReactNode[] = [];
 	for (let i = 0; i < 5; i++) {
 		albumLines.push(
-			<div className="skeleton-album flex h-20 w-full items-center border-b border-neutral-900 p-2 active:bg-neutral-800">
-				<Skeleton className="aspect-square h-full rounded-full border border-neutral-700" />
+			<div className="skeleton-album flex h-20 w-full items-center border-b border-primary p-2">
+				<Skeleton className="aspect-square h-full rounded-full" />
 				<div className="pl-2">
 					<Skeleton className="mb-2 h-3.5 w-40" />
-					<p className="text-sm font-normal text-neutral-400">Artist</p>
+					<p className="text-sm font-normal text-muted-foreground">Artist</p>
 				</div>
 			</div>,
 		);
@@ -75,28 +75,28 @@ interface ArtistLineProps {
 
 export const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
 	const player = useContext(playerStoreContext);
-	var bgColor = "bg-neutral-950";
+	var bgColor = "bg-background";
 	if (artist.id == player.currentSong?.artist.id) {
-		bgColor = "bg-neutral-900";
+		bgColor = "bg-secondary";
 	}
 
 	return (
 		<Link
 			to={to}
 			className={
-				"album-line flex h-20 w-full items-center border-b border-neutral-900 p-2 active:bg-neutral-800" +
+				"album-line flex h-20 w-full items-center border-b border-primary p-2 active:bg-secondary" +
 				" " +
 				bgColor
 			}
 		>
 			<img
-				className="aspect-square h-full rounded-full border border-neutral-300"
+				className="aspect-square h-full rounded-full border border-border"
 				src={artist.imgSrc}
 				alt={artist.name}
 			/>
 			<div className="pl-2">
-				<p className="text-base font-bold text-neutral-50">{artist.name}</p>
-				<p className="text-sm font-normal text-neutral-400">Artist</p>
+				<p className="text-base font-bold text-foreground">{artist.name}</p>
+				<p className="text-sm font-normal text-muted-foreground">Artist</p>
 			</div>
 		</Link>
 	);
