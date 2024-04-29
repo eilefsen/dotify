@@ -22,6 +22,7 @@ declare module "@tanstack/react-router" {
 
 import { icons } from "./icons";
 import { useScrollBlock } from "./lib/hooks";
+import { ThemeProvider } from "./components/theme-provider";
 
 function App() {
 	const player = new PlayerStore([]);
@@ -33,7 +34,9 @@ function App() {
 	return (
 		<iconsContext.Provider value={icons}>
 			<playerStoreContext.Provider value={player}>
-				<RouterProvider router={router} />
+				<ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+					<RouterProvider router={router} />
+				</ThemeProvider>
 			</playerStoreContext.Provider>
 		</iconsContext.Provider>
 	);
