@@ -84,7 +84,7 @@ export const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
 		<Link
 			to={to}
 			className={
-				"album-line flex h-20 w-full items-center border-b border-primary p-2 active:bg-secondary" +
+				"album-line flex h-20 w-full items-center border-b border-border p-2 active:bg-secondary" +
 				" " +
 				bgColor
 			}
