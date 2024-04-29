@@ -32,7 +32,7 @@ export function PendingSongTable() {
 				<col className="w-16" />
 			</colgroup>
 			<thead>
-				<tr className="h-11 border-b border-border text-left text-lg text-muted-foreground">
+				<tr className="h-11 border-b border-border text-left text-lg text-foreground">
 					<th className="pl-5">#</th>
 					<th>Title</th>
 					<th className="pr-5">
@@ -88,7 +88,7 @@ export function SongTable({ songs, albumIndexing }: songTableProps) {
 				<col className="w-16" />
 			</colgroup>
 			<thead>
-				<tr className="h-11 border-b border-secondary text-left text-lg text-muted-foreground">
+				<tr className="h-11 border-b border-secondary text-left text-lg text-foreground">
 					<th className="pl-5">#</th>
 					<th>Title</th>
 					<th className="pr-5">
@@ -129,7 +129,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		<tr
 			ref={hoverRef}
 			className={
-				"h-14 w-full border-b border-secondary text-primary hover:text-white" +
+				"h-14 w-full border-b border-secondary text-primary hover:text-foreground" +
 				" " +
 				bgColor
 			}
