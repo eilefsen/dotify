@@ -120,6 +120,22 @@ func (s Song) DeleteFile() error {
 	return nil
 }
 
+func (s Song) Update() error {
+	_, err := db.Exec(`
+		UPDATE song SET track = ?, title = ?
+		WHERE id = ?
+		`,
+		s.Track,
+		s.Title,
+		s.ID,
+	)
+	if err != nil {
+		return err
+	}
+	slog.Debug("models.Song.Update", "s", s)
+	return nil
+}
+
 func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 	var err error
 	songs, err = songs.absSelect(songs.selectQuery()+"WHERE song.album_id = ? GROUP BY song.id ORDER BY song.track IS NULL, song.track ASC ", id)
