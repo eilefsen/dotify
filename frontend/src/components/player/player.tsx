@@ -12,6 +12,7 @@ import {
 } from "./controls";
 import { SongTitle } from "./status";
 import { Link } from "@tanstack/react-router";
+import { isMobile } from "react-device-detect";
 
 export const AudioPlayer = observer(() => {
 	const player = useContext(playerStoreContext);
@@ -38,10 +39,12 @@ export const AudioPlayer = observer(() => {
 					artist={player.currentSong.artist.name}
 				/>
 				<ProgressBar />
-				<div className="flex gap-2">
-					<MuteButton />
-					<VolumeSlider />
-				</div>
+				{!isMobile && (
+					<div className="flex gap-2">
+						<MuteButton />
+						<VolumeSlider />
+					</div>
+				)}
 				<Transport />
 			</div>
 		</div>
