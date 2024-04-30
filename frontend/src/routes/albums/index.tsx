@@ -84,7 +84,7 @@ export const AlbumLine = observer(({ album, to }: AlbumLineProps) => {
 	const player = useContext(playerStoreContext);
 	var bgColor = "bg-background";
 	if (album.id == player.currentSong?.album.id) {
-		bgColor = "bg-secondary";
+		bgColor = "bg-hover";
 	}
 
 	return (

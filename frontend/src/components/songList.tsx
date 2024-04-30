@@ -118,7 +118,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 
 	var bgColor = "bg-background";
 	if (song.id == player.currentSong?.id) {
-		bgColor = "bg-secondary";
+		bgColor = "bg-hover";
 	}
 
 	const hoverRef = useRef(null);

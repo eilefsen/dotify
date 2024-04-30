@@ -75,7 +75,7 @@ export const ArtistLine = observer(({ artist, to }: ArtistLineProps) => {
 	const player = useContext(playerStoreContext);
 	var bgColor = "bg-background";
 	if (artist.id == player.currentSong?.artist.id) {
-		bgColor = "bg-secondary";
+		bgColor = "bg-hover";
 	}
 
 	return (
