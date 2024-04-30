@@ -13,7 +13,7 @@ type SongNoID struct {
 	Src      string `json:"src"`
 	Artist   Artist `json:"artist"`
 	Album    Album  `json:"album"`
-	Track    uint32 `json:"track"`
+	Track    uint32 `json:"track,string"`
 	Duration uint32 `json:"duration"`
 }
 type Song struct {

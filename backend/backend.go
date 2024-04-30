@@ -52,6 +52,7 @@ func main() {
 		rt.Post("/api/admin/upload", SuperUserAuth(uploadAudioFiles))
 		rt.Put("/api/admin/artists/{id}", SuperUserAuth(UpdateArtist))
 		rt.Put("/api/admin/albums/{id}", SuperUserAuth(UpdateAlbum))
+		rt.Put("/api/admin/songs/{id}", SuperUserAuth(UpdateSong))
 		rt.Delete("/api/admin/albums/{id}", SuperUserAuth(DeleteAlbum))
 		rt.Delete("/api/admin/artists/{id}", SuperUserAuth(DeleteArtist))
 		rt.Post("/api/auth/refresh", authRefreshHandler)

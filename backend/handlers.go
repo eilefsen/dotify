@@ -312,6 +312,50 @@ func DeleteArtist(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func UpdateSong(w http.ResponseWriter, r *http.Request) {
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	var song models.Song
+	song.ID = id
+
+	slog.Debug("UpdateSong:", "song", song)
+
+	err = json.NewDecoder(r.Body).Decode(&song)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	slog.Debug("UpdateSong:", "song", song)
+
+	err = song.Update()
+	if err != nil {
+		slog.Error("UpdateSong:", "song", song, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	slog.Debug("UpdateSong:", "song", song)
+
+	responseJSON, err := json.Marshal(song)
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
 func FetchAllSongs(w http.ResponseWriter, r *http.Request) {
 	songs, err := models.Songs{}.All()
 	if err == models.ErrResourceNotFound {
