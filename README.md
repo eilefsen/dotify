@@ -1,8 +1,9 @@
 # Dotify
 
-Mobile first website (with backend) for streaming music.
+"Mobile first" full stack web app for streaming music.
 
-<img src="https://github.com/eilefsen/dotify/assets/95104378/694e242b-6b57-42e2-acd8-878888f5601c" width="20%">
+<img width="50%" src="https://github.com/eilefsen/dotify/assets/95104378/14a8d86d-f8b6-4032-8dc4-8024cfc5791b">
+
 
 ## Setting up a local dev server
 
