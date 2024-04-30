@@ -17,9 +17,11 @@ Clone this repository and set up a MySQL Server if you do not already have one.
 5. Run `source create-tables.sql`
 6. Insert a row to the table `user` by running the following SQL statement
 
+   ```
    INSERT INTO
    user (username, password, superuser)
    VALUES("<YOUR USERNAME>", "<YOUR BCRYPT HASHED PASSWORD>", 1)
+   ```
 
 You will have to hash the password yourself using any bcrypt hashing tool.
 This row will act as your admin account, you may create multiple if you want more than one admin.
