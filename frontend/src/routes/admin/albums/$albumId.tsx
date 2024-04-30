@@ -29,6 +29,7 @@ import {
 	createFileRoute,
 	useLoaderData,
 	useParams,
+	useRouter,
 } from "@tanstack/react-router";
 import axios from "axios";
 import { useForm } from "react-hook-form";
@@ -219,13 +220,14 @@ interface SongFormData {
 }
 function SongForm(props: SongFormProps) {
 	const form = useForm();
+	const router = useRouter();
 	const mutation = useMutation({
 		mutationKey: ["editSong", props.song.id],
 		mutationFn: (data: SongFormData) => {
 			return axios.put(`/api/admin/songs/${props.song.id}`, data);
 		},
 		onSuccess: () => {
-			form.reset();
+			router.invalidate();
 		},
 	});
 	function onSubmit(values: any) {
