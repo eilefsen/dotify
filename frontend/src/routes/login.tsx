@@ -45,19 +45,13 @@ export function LoginForm() {
 		mutationFn: async (val: z.infer<typeof formSchema>) => {
 			const loginres = await axios.post("/api/auth/login", val);
 			console.log(loginres.status);
-			const adminres = await axios.post(`/api/auth/adminstatus`, {
-				validateStatus: () => true,
-			});
-			return {
-				login: loginres.status == 200,
-				admin: adminres.status == 200,
-			};
+			return loginres.status == 200;
 		},
 		onSuccess: (data) => {
 			form.reset();
 			console.info("Logged in!");
-			queryClient.setQueryData(["loginStatus"], data.login);
-			queryClient.setQueryData(["adminLoginStatus"], data.admin);
+			queryClient.setQueryData(["loginStatus"], data);
+			queryClient.invalidateQueries({ queryKey: ["adminLoginStatus"] });
 		},
 	});
 
