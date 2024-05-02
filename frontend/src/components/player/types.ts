@@ -32,3 +32,8 @@ export interface ArtistNoID {
 export interface Artist extends ArtistNoID {
 	id: string;
 }
+
+export interface Playlist {
+	id: number;
+	name: string;
+}

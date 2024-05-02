@@ -19,6 +19,7 @@ import { Route as AdminImport } from './routes/admin'
 import { Route as PlaylistsIndexImport } from './routes/playlists/index'
 import { Route as ArtistsIndexImport } from './routes/artists/index'
 import { Route as AlbumsIndexImport } from './routes/albums/index'
+import { Route as PlaylistsPlaylistIdImport } from './routes/playlists/$playlistId'
 import { Route as ArtistsArtistIdImport } from './routes/artists/$artistId'
 import { Route as AlbumsAlbumIdImport } from './routes/albums/$albumId'
 import { Route as AdminUploadImport } from './routes/admin/upload'
@@ -65,6 +66,11 @@ const ArtistsIndexRoute = ArtistsIndexImport.update({
 
 const AlbumsIndexRoute = AlbumsIndexImport.update({
   path: '/albums/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PlaylistsPlaylistIdRoute = PlaylistsPlaylistIdImport.update({
+  path: '/playlists/$playlistId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -135,6 +141,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtistsArtistIdImport
       parentRoute: typeof rootRoute
     }
+    '/playlists/$playlistId': {
+      preLoaderRoute: typeof PlaylistsPlaylistIdImport
+      parentRoute: typeof rootRoute
+    }
     '/albums/': {
       preLoaderRoute: typeof AlbumsIndexImport
       parentRoute: typeof rootRoute
@@ -181,6 +191,7 @@ export const routeTree = rootRoute.addChildren([
   SongsRoute,
   AlbumsAlbumIdRoute,
   ArtistsArtistIdRoute,
+  PlaylistsPlaylistIdRoute,
   AlbumsIndexRoute,
   ArtistsIndexRoute,
   PlaylistsIndexRoute,

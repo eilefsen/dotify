@@ -15,8 +15,8 @@ export function Header() {
 					<LibraryBtn className="w-full" to="/artists">
 						Artists
 					</LibraryBtn>
-					<LibraryBtn className="w-full" to="/songs">
-						Songs
+					<LibraryBtn className="w-full" to="/playlists">
+						Playlists
 					</LibraryBtn>
 					<GithubButton />
 				</span>
