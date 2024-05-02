@@ -406,6 +406,7 @@ func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		slog.Error(err.Error())
+		slog.Debug("fetchPlaylistByID", "user", user)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}

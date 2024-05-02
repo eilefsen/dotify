@@ -57,6 +57,8 @@ func main() {
 		rt.Delete("/api/admin/artists/{id}", SuperUserAuth(DeleteArtist))
 		rt.Post("/api/auth/refresh", authRefreshHandler)
 		rt.Get("/api/playlists", TokenAuth(FetchPlaylists))
+		rt.Get("/api/playlists/{id}", TokenAuth(FetchPlaylistByID))
+		rt.Get("/api/playlists/{id}/songs", TokenAuth(FetchPlaylistSongsByID))
 	})
 	// unprotected routes
 	rt.Group(func(rt chi.Router) {
@@ -65,8 +67,6 @@ func main() {
 		rt.Get("/api/albums", FetchAllAlbums)
 		rt.Get("/api/albums/{id}", FetchAlbumByID)
 		rt.Get("/api/artists", FetchAllArtists)
-		rt.Get("/api/playlists/{id}", FetchPlaylistByID)
-		rt.Get("/api/playlists/{id}/songs", FetchPlaylistSongsByID)
 		rt.Get("/api/albums/artist/{id}", FetchAlbumsByArtist)
 		rt.Get("/api/artists/{id}", FetchArtist)
 		rt.Get("/api/artist_only/{id}", FetchArtist)
