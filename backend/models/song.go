@@ -150,9 +150,8 @@ func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 
 func (songs Songs) ByPlaylist(id uint32) (Songs, error) {
 	var err error
-	songs, err = songs.absSelect(`
-		SELECT s.* FROM song s 
-		JOIN playlist_song ps ON s.id = ps.song_id
+	songs, err = songs.absSelect(songs.selectQuery()+`
+		JOIN playlist_song ps ON song.id = ps.song_id
 		WHERE ps.playlist_id = ?
 		`, id)
 	if err == ErrResourceNotFound {
