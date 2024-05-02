@@ -403,6 +403,12 @@ func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	id, err := ParseUint32(chi.URLParam(r, "id"))
 	if err != nil {
 		slog.Error(err.Error())
@@ -418,6 +424,13 @@ func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+
+	if playlist.UserID != user.ID {
+		slog.Info("FetchPlaylistByID: No playlist found", "id", id, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	slog.Debug("FetchPlaylistByID:", "playlist", playlist)
 
 	responseJSON, err := json.Marshal(playlist)
@@ -430,12 +443,31 @@ func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchPlaylistSongsByID(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	id, err := ParseUint32(chi.URLParam(r, "id"))
 	if err != nil {
 		slog.Error(err.Error())
 		// An error here means that the id argument is not parseable as uint32.
 		// Which is incorrect syntax, and therefore a Bad Request.
 		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	playlist, err := models.Playlist{}.ByID(uint32(id))
+	if err != nil {
+		slog.Error("FetchPlaylistByID: No playlist found", "id", id, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	if playlist.UserID != user.ID {
+		slog.Info("FetchPlaylistByID: No playlist found", "id", id, "error", err)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
