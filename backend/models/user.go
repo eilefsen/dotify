@@ -7,10 +7,10 @@ type Credentials struct {
 type User struct {
 	Credentials
 	SuperUser bool   `json:"superuser"`
-	ID        uint32 `json:"id"`
+	ID        uint64 `json:"id"`
 }
 
-func GetUser(id uint32) (User, error) {
+func GetUser(id uint64) (User, error) {
 	var u User
 	row := db.QueryRow("select * from user where user.id = ?", id)
 	err := row.Scan(

@@ -37,3 +37,11 @@ func ParseUint32(s string) (uint32, error) {
 	}
 	return uint32(n), nil
 }
+
+func ParseUint64(s string) (uint64, error) {
+	n, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("ParseUint32 %q: %v", n, err)
+	}
+	return uint64(n), nil
+}

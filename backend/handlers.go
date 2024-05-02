@@ -456,8 +456,14 @@ func FetchPlaylistSongsByID(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
-func FetchAllPlaylists(w http.ResponseWriter, r *http.Request) {
-	playlists, err := models.Playlist{}.All()
+func FetchPlaylists(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	playlists, err := models.Playlist{}.ByUser(user.ID)
 	if err == models.ErrResourceNotFound {
 		slog.Info("FetchAllPlaylists: No playlists found", "error", err)
 		playlists = []models.Playlist{}
@@ -580,8 +586,8 @@ func authRefreshHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	var userID uint32
-	userID, err = ParseUint32(subject)
+	var userID uint64
+	userID, err = ParseUint64(subject)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

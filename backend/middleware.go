@@ -120,7 +120,7 @@ func TokenAuth(next http.HandlerFunc) http.HandlerFunc {
 			slog.Error("TokenAuth: could not get user id", "err", err)
 			return
 		}
-		userID, err := ParseUint32(subject)
+		userID, err := ParseUint64(subject)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			slog.Error("TokenAuth: could not parse user id as an integer", "err", err)
