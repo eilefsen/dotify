@@ -5,6 +5,7 @@ import {
 	useLoaderData,
 } from "@tanstack/react-router";
 import axios from "axios";
+import { ListMusic } from "lucide-react";
 
 interface Playlist {
 	id: number;
@@ -49,6 +50,7 @@ export function PlaylistLine(props: PlaylistLineProps) {
 			to={props.to}
 			className="album-line flex h-20 w-full items-center p-2 active:bg-secondary"
 		>
+			<ListMusic />
 			<div className="pl-2">
 				<p className="text-base font-bold text-foreground">
 					{props.playlist.name}
