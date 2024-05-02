@@ -12,9 +12,18 @@ interface PlaylistWithSongs {
 export const Route = createFileRoute("/playlists/$playlistId")({
 	component: PlaylistContent,
 	loader: async (params): Promise<PlaylistWithSongs> => {
-		const playlistRes = await axios.get(`/api/${params.location.pathname}`);
+		const playlistRes = await axios.get(`/api/${params.location.pathname}`, {
+			validateStatus: function (status) {
+				return status == 200 || status == 401; // Resolve only if the status code is less than 500
+			},
+		});
 		const songsRes = await axios.get(
 			`/api/playlists/${params.params.playlistId}/songs`,
+			{
+				validateStatus: function (status) {
+					return status == 200 || status == 401; // Resolve only if the status code is less than 500
+				},
+			},
 		);
 		return { playlist: playlistRes.data, songs: songsRes.data };
 	},
@@ -38,7 +47,6 @@ function PendingPlaylistContent() {
 
 export function PlaylistContent() {
 	const data = useLoaderData({ strict: true, from: "/playlists/$playlistId" });
-
 	return (
 		<div className="w-full overflow-hidden py-2">
 			<div className="flex items-center px-4">
