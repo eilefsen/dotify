@@ -1,6 +1,10 @@
 package models
 
-import "log/slog"
+import (
+	"database/sql"
+	"fmt"
+	"log/slog"
+)
 
 type Playlist struct {
 	Name   string `json:"name"`
@@ -48,7 +52,7 @@ func (p Playlist) New() (Playlist, error) {
 	return p, nil
 }
 
-func (p Playlist) AddSong(s Song) (Playlist, error) {
+func (p Playlist) AddSong(s Song) error {
 	_, err := db.Exec(
 		`INSERT INTO playlist_song 
 		(song_id, playlist_id)
@@ -58,8 +62,33 @@ func (p Playlist) AddSong(s Song) (Playlist, error) {
 	)
 	if err != nil {
 		slog.Error("models.Playlist.AddSong:", "playlist", p, "song", s)
-		return p, err
+		return err
 	}
 	slog.Info("models.Playlist.New", "playlist", p)
+	return nil
+}
+
+func (p Playlist) AddSongs(songs Songs) error {
+	for i, s := range songs {
+		err := p.AddSong(s)
+		if err != nil {
+			slog.Error("models.Playlist.AddSongs", "failed_iteration", i, "song", s, "songs", songs, "playlist", p, "error", err)
+			return err
+		}
+	}
+	return nil
+}
+
+func (Playlist) ByID(id uint32) (Playlist, error) {
+	row := db.QueryRow("SELECT * FROM playlist WHERE id = ?", id)
+	var p Playlist
+	err := p.scan(row)
+	if err == sql.ErrNoRows {
+		slog.Info("models.Playlist.ByID: No playlist found", "id", id, "error", err)
+		return p, ErrResourceNotFound
+	} else if err != nil {
+		slog.Error("models.Playlist.ByID", "id", id, "error", err)
+		return p, fmt.Errorf("Song.ById %q: %v", id, err)
+	}
 	return p, nil
 }
