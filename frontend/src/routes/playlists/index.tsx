@@ -1,18 +1,26 @@
 import { Playlist } from "@/components/player/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 import {
 	Link,
 	ReactNode,
 	createFileRoute,
 	useLoaderData,
+	useRouter,
 } from "@tanstack/react-router";
 import axios from "axios";
 import { ListMusic } from "lucide-react";
+import { LoginForm } from "../login";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/playlists/")({
 	component: Playlists,
 	loader: async (params) => {
-		const res = await axios.get(`/api/${params.location.pathname}`);
+		const res = await axios.get(`/api/${params.location.pathname}`, {
+			validateStatus: function (status) {
+				return status < 500; // Resolve only if the status code is less than 500
+			},
+		});
 		return res.data;
 	},
 	pendingComponent: PendingPlaylists,
@@ -42,6 +50,18 @@ function PendingPlaylists() {
 }
 
 export default function Playlists() {
+	const loginResult = useQuery({
+		queryKey: ["loginStatus"],
+		enabled: false,
+		initialData: false,
+	});
+
+	const router = useRouter();
+
+	useEffect(() => {
+		router.invalidate();
+	}, [loginResult.data]);
+
 	const playlists = useLoaderData({ strict: true, from: "/playlists/" });
 
 	const playlistLines: ReactNode[] = [];
@@ -55,7 +75,11 @@ export default function Playlists() {
 
 	return (
 		<>
-			<div className="playlist-list">{playlistLines}</div>
+			{loginResult.data ? (
+				<div className="playlist-list">{playlistLines}</div>
+			) : (
+				<LoginForm />
+			)}
 		</>
 	);
 }
