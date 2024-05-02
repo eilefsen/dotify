@@ -148,6 +148,22 @@ func (songs Songs) ByAlbum(id uint32) (Songs, error) {
 	return songs, nil
 }
 
+func (songs Songs) ByPlaylist(id uint32) (Songs, error) {
+	var err error
+	songs, err = songs.absSelect(`
+		SELECT s.* FROM song s 
+		JOIN playlist_song ps ON s.id = ps.song_id
+		WHERE ps.playlist_id = ?
+		`, id)
+	if err == ErrResourceNotFound {
+		return nil, err
+	}
+	if err != nil {
+		return nil, fmt.Errorf("Songs.ByAlbum: %v", err)
+	}
+	return songs, nil
+}
+
 func (songs Songs) All() (Songs, error) {
 	var err error
 	songs, err = songs.absSelect(songs.selectQuery())
@@ -166,8 +182,7 @@ func (Song) ByID(id uint32) (Song, error) {
 	err := s.scan(row)
 	if err == sql.ErrNoRows {
 		return s, ErrResourceNotFound
-	}
-	if err != nil {
+	} else if err != nil {
 		return s, fmt.Errorf("Song.ById %q: %v", id, err)
 	}
 	if err := row.Err(); err != nil {
