@@ -92,3 +92,53 @@ func (Playlist) ByID(id uint32) (Playlist, error) {
 	}
 	return p, nil
 }
+
+func (Playlist) All() ([]Playlist, error) {
+	var playlists []Playlist
+	rows, err := db.Query("SELECT * FROM playlist")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var p Playlist
+		err := p.scan(rows)
+		if err != nil {
+			return nil, err
+		}
+		playlists = append(playlists, p)
+	}
+	if err := rows.Err(); err != nil {
+		slog.Error("DB Error", "err", err)
+		return nil, err
+	}
+	if len(playlists) == 0 {
+		return nil, ErrResourceNotFound
+	}
+	return playlists, nil
+}
+
+func (Playlist) ByUser(id uint64) ([]Playlist, error) {
+	var playlists []Playlist
+	rows, err := db.Query("SELECT * FROM playlist WHERE playlist.user_id = ?", id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var p Playlist
+		err := p.scan(rows)
+		if err != nil {
+			return nil, err
+		}
+		playlists = append(playlists, p)
+	}
+	if err := rows.Err(); err != nil {
+		slog.Error("DB Error", "err", err)
+		return nil, err
+	}
+	if len(playlists) == 0 {
+		return nil, ErrResourceNotFound
+	}
+	return playlists, nil
+}
