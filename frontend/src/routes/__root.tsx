@@ -20,7 +20,7 @@ export const Route = createRootRoute({
 const LibraryOutlet = observer(() => {
 	const player = useContext(playerStoreContext);
 	const queryClient = useQueryClient();
-	const loginResult = useQuery({
+	useQuery({
 		queryKey: ["loginStatus"],
 		queryFn: async () => {
 			const res = await axios.post(`/api/auth/status`, {
