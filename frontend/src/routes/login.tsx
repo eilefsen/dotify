@@ -44,6 +44,7 @@ export function LoginForm() {
 		mutationKey: ["login"],
 		mutationFn: async (val: z.infer<typeof formSchema>) => {
 			const loginres = await axios.post("/api/auth/login", val);
+			console.log(loginres.status);
 			const adminres = await axios.post(`/api/auth/adminstatus`, {
 				validateStatus: () => true,
 			});
@@ -67,6 +68,7 @@ export function LoginForm() {
 	let errorMsg;
 
 	if (mutation.isError) {
+		console.log(mutation.error);
 		errorMsg = (
 			<span className="text-xl font-bold text-red-600">
 				Wrong username or password
