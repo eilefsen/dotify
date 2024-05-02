@@ -402,6 +402,60 @@ func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	playlist, err := models.Playlist{}.ByID(uint32(id))
+	if err != nil {
+		slog.Error("FetchPlaylistByID: No playlist found", "id", id, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	slog.Debug("FetchPlaylistByID:", "playlist", playlist)
+
+	responseJSON, err := json.Marshal(playlist)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
+func FetchPlaylistSongsByID(w http.ResponseWriter, r *http.Request) {
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	songs, err := models.Songs{}.ByPlaylist(uint32(id))
+	if err != nil {
+		slog.Error("FetchPlaylistSongsByID: No playlist songs found", "id", id, "error", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	slog.Debug("FetchPlaylistSongsByID:", "songs", songs)
+
+	responseJSON, err := json.Marshal(songs)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
 func FetchAllPlaylists(w http.ResponseWriter, r *http.Request) {
 	playlists, err := models.Playlist{}.All()
 	if err == models.ErrResourceNotFound {
