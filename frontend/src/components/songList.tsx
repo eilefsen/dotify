@@ -80,6 +80,10 @@ function PendingSongEntry(props: PendingSongEntryProps) {
 }
 
 export function SongTable({ songs, albumIndexing }: songTableProps) {
+	if (!songs) {
+		return;
+	}
+
 	return (
 		<table className="w-full table-fixed">
 			<colgroup>
