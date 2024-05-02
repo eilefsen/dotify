@@ -402,6 +402,29 @@ func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func FetchAllPlaylists(w http.ResponseWriter, r *http.Request) {
+	playlists, err := models.Playlist{}.All()
+	if err == models.ErrResourceNotFound {
+		slog.Info("FetchAllPlaylists: No playlists found", "error", err)
+		playlists = []models.Playlist{}
+	} else if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	slog.Debug("FetchAllPlaylists", "playlists", playlists)
+
+	responseJSON, err := json.Marshal(playlists)
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
+}
+
 func login(w http.ResponseWriter, r *http.Request) {
 	var creds models.Credentials
 
