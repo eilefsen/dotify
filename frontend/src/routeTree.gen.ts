@@ -16,6 +16,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SongsImport } from './routes/songs'
 import { Route as LoginImport } from './routes/login'
 import { Route as AdminImport } from './routes/admin'
+import { Route as PlaylistsIndexImport } from './routes/playlists/index'
 import { Route as ArtistsIndexImport } from './routes/artists/index'
 import { Route as AlbumsIndexImport } from './routes/albums/index'
 import { Route as ArtistsArtistIdImport } from './routes/artists/$artistId'
@@ -51,6 +52,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const PlaylistsIndexRoute = PlaylistsIndexImport.update({
+  path: '/playlists/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ArtistsIndexRoute = ArtistsIndexImport.update({
   path: '/artists/',
@@ -137,6 +143,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtistsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/playlists/': {
+      preLoaderRoute: typeof PlaylistsIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/albums/$albumId': {
       preLoaderRoute: typeof AdminAlbumsAlbumIdImport
       parentRoute: typeof AdminImport
@@ -173,6 +183,7 @@ export const routeTree = rootRoute.addChildren([
   ArtistsArtistIdRoute,
   AlbumsIndexRoute,
   ArtistsIndexRoute,
+  PlaylistsIndexRoute,
 ])
 
 /* prettier-ignore-end */
