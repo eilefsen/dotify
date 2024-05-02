@@ -23,14 +23,14 @@ declare module "@tanstack/react-router" {
 import { icons } from "./icons";
 import { useScrollBlock } from "./lib/hooks";
 import { ThemeProvider } from "./components/theme-provider";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 function App() {
-	const player = new PlayerStore([]);
-
 	const [blockScroll, _] = useScrollBlock();
-
 	blockScroll();
 
+	const player = new PlayerStore([]);
 	return (
 		<iconsContext.Provider value={icons}>
 			<playerStoreContext.Provider value={player}>
