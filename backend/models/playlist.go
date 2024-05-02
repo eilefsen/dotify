@@ -3,9 +3,16 @@ package models
 import "log/slog"
 
 type Playlist struct {
-	ID     uint32 `json:"id"`
 	Name   string `json:"name"`
-	UserID uint32 `json:"artist"`
+	UserID uint64 `json:"artist"`
+	ID     uint32 `json:"id"`
+}
+
+// Junction table
+type PlaylistSongJunction struct {
+	ID         uint32 `json:"id"`
+	PlaylistID uint32 `json:"playlistId"`
+	SongID     uint32 `json:"songId"`
 }
 
 type PlaylistWithSongs struct {
@@ -37,6 +44,22 @@ func (p Playlist) New() (Playlist, error) {
 		return p, err
 	}
 	p.ID = uint32(id)
+	slog.Info("models.Playlist.New", "playlist", p)
+	return p, nil
+}
+
+func (p Playlist) AddSong(s Song) (Playlist, error) {
+	_, err := db.Exec(
+		`INSERT INTO playlist_song 
+		(song_id, playlist_id)
+		VALUES (?, ?)`,
+		s.ID,
+		p.ID,
+	)
+	if err != nil {
+		slog.Error("models.Playlist.AddSong:", "playlist", p, "song", s)
+		return p, err
+	}
 	slog.Info("models.Playlist.New", "playlist", p)
 	return p, nil
 }
