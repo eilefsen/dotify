@@ -14,7 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/login")({
 	component: LoginForm,
@@ -67,43 +67,54 @@ export function LoginForm() {
 	}
 
 	return (
-		<Form {...form}>
-			<h2 className="text-3xl leading-normal">Login</h2>
-			{errorMsg}
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="mx-auto space-y-2 border-neutral-600 text-left"
-			>
-				<FormField
-					control={form.control}
-					name="username"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel hidden>Username</FormLabel>
-							<FormControl>
-								<Input placeholder="Username" {...field} />
-							</FormControl>
-							<FormDescription hidden>Input your Username here</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="password"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel hidden>Password</FormLabel>
-							<FormControl>
-								<Input type="password" placeholder="Password" {...field} />
-							</FormControl>
-							<FormDescription hidden>Input your Password here</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button type="submit">Submit</Button>
-			</form>
-		</Form>
+		<>
+			<Form {...form}>
+				<h2 className="text-3xl leading-normal">Login</h2>
+				{errorMsg}
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="mx-auto space-y-2 border-neutral-600 text-left"
+				>
+					<FormField
+						control={form.control}
+						name="username"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel hidden>Username</FormLabel>
+								<FormControl>
+									<Input placeholder="Username" {...field} />
+								</FormControl>
+								<FormDescription hidden>
+									Input your Username here
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="password"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel hidden>Password</FormLabel>
+								<FormControl>
+									<Input type="password" placeholder="Password" {...field} />
+								</FormControl>
+								<FormDescription hidden>
+									Input your Password here
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<div className="flex">
+						<Button type="submit">Login</Button>
+						<Link to="/register">
+							<Button />
+						</Link>
+					</div>
+				</form>
+			</Form>
+		</>
 	);
 }

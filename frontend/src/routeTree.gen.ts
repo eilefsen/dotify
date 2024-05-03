@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SongsImport } from './routes/songs'
+import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as AdminImport } from './routes/admin'
 import { Route as PlaylistsIndexImport } from './routes/playlists/index'
@@ -36,6 +37,11 @@ const IndexLazyImport = createFileRoute('/')()
 
 const SongsRoute = SongsImport.update({
   path: '/songs',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RegisterRoute = RegisterImport.update({
+  path: '/register',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -125,6 +131,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/register': {
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
     '/songs': {
       preLoaderRoute: typeof SongsImport
       parentRoute: typeof rootRoute
@@ -188,6 +198,7 @@ export const routeTree = rootRoute.addChildren([
     AdminArtistsIndexRoute,
   ]),
   LoginRoute,
+  RegisterRoute,
   SongsRoute,
   AlbumsAlbumIdRoute,
   ArtistsArtistIdRoute,
