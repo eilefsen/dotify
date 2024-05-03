@@ -458,7 +458,14 @@ func NewPlaylist(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	slog.Debug("AddSongToPLaylist:", "playlist", playlist)
+	slog.Debug("NewPlaylist:", "playlist", playlist)
+	responseJSON, err := json.Marshal(playlist)
+	if err != nil {
+		slog.Error(err.Error())
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(responseJSON)
 }
 
 func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
