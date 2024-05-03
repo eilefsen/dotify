@@ -67,8 +67,8 @@ export function LoginForm() {
 	}
 
 	return (
-		<>
-			<Form {...form}>
+		<Form {...form}>
+			<div className="px-2">
 				<h2 className="text-3xl leading-normal">Login</h2>
 				{errorMsg}
 				<form
@@ -107,14 +107,14 @@ export function LoginForm() {
 							</FormItem>
 						)}
 					/>
-					<div className="flex">
+					<div className="flex gap-2">
 						<Button type="submit">Login</Button>
 						<Link to="/register">
-							<Button />
+							<Button variant="outline">Register</Button>
 						</Link>
 					</div>
 				</form>
-			</Form>
-		</>
+			</div>
+		</Form>
 	);
 }
