@@ -9,10 +9,9 @@ import {
 	useRouter,
 } from "@tanstack/react-router";
 import axios from "axios";
-import { ListMusic, TrashIcon } from "lucide-react";
+import { ListMusic } from "lucide-react";
 import { LoginForm } from "../login";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/deleteDialog";
 
 export const Route = createFileRoute("/playlists/")({
