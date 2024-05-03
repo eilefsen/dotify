@@ -1,6 +1,6 @@
 import { Playlist } from "@/components/player/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
 	Link,
 	ReactNode,
@@ -13,6 +13,7 @@ import { ListMusic, TrashIcon } from "lucide-react";
 import { LoginForm } from "../login";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { DeleteDialog } from "@/components/deleteDialog";
 
 export const Route = createFileRoute("/playlists/")({
 	component: Playlists,
@@ -91,6 +92,17 @@ interface PlaylistLineProps {
 }
 
 export function PlaylistLine(props: PlaylistLineProps) {
+	const router = useRouter();
+	const deleteMutation = useMutation({
+		mutationKey: ["deletePlaylist", props.playlist],
+		mutationFn: async () => {
+			await axios.delete(`/api/playlists/${props.playlist.id}`);
+		},
+		onSuccess: () => {
+			router.invalidate();
+		},
+	});
+
 	return (
 		<div className="flex items-center justify-between px-2">
 			<Link
@@ -106,9 +118,11 @@ export function PlaylistLine(props: PlaylistLineProps) {
 					<p className="text-sm font-normal text-muted-foreground">Playlist</p>
 				</div>
 			</Link>
-			<Button variant="destructiveHover">
-				<TrashIcon />
-			</Button>
+			<DeleteDialog
+				kind="Playlist"
+				name={props.playlist.name}
+				onClick={() => deleteMutation.mutate()}
+			/>
 		</div>
 	);
 }
