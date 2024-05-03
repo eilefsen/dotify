@@ -60,6 +60,7 @@ func main() {
 		rt.Get("/api/playlists/{id}", TokenAuth(FetchPlaylistByID))
 		rt.Get("/api/playlists/{id}/songs", TokenAuth(FetchPlaylistSongsByID))
 		rt.Post("/api/playlists/{playlistID}/songs/add/{songID}", TokenAuth(AddSongToPlaylist))
+		rt.Post("/api/playlists/{playlistID}/edit-name", TokenAuth(EditPlaylistName))
 		rt.Post("/api/playlists/new", TokenAuth(NewPlaylist))
 	})
 	// unprotected routes

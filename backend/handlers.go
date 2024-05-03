@@ -427,7 +427,14 @@ func AddSongToPlaylist(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.Playlist{ID: playlistID}.AddSong(models.Song{ID: songID})
+	p, err := models.Playlist{}.ByIDAndUserID(playlistID, user.ID)
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = p.AddSong(models.Song{ID: songID})
 	if err != nil {
 		slog.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -468,6 +475,35 @@ func NewPlaylist(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func EditPlaylistName(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		slog.Debug("fetchPlaylistByID", "user", user)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var p models.Playlist
+	err = json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	p.ID = id
+	p.UserID = user.ID
+	p.Update()
+}
+
 func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
@@ -485,15 +521,9 @@ func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playlist, err := models.Playlist{}.ByID(uint32(id))
+	playlist, err := models.Playlist{}.ByIDAndUserID(uint32(id), user.ID)
 	if err != nil {
 		slog.Error("FetchPlaylistByID: No playlist found", "id", id, "error", err)
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-
-	if playlist.UserID != user.ID {
-		slog.Info("FetchPlaylistByID: No playlist found", "id", id, "error", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -525,7 +555,7 @@ func FetchPlaylistSongsByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playlist, err := models.Playlist{}.ByID(uint32(id))
+	playlist, err := models.Playlist{}.ByIDAndUserID(uint32(id), user.ID)
 	if err != nil {
 		slog.Error("FetchPlaylistByID: No playlist found", "id", id, "error", err)
 		w.WriteHeader(http.StatusNotFound)

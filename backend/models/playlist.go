@@ -32,6 +32,21 @@ func (p *Playlist) scan(r rowScanner) error {
 	)
 }
 
+func (p Playlist) Update() error {
+	_, err := db.Exec(
+		`UPDATE playlist SET name = ?, user_id = ? WHERE id = ? AND user_id = ?`,
+		p.Name,
+		p.UserID,
+		p.ID,
+		p.UserID,
+	)
+	if err != nil {
+		return err
+	}
+	slog.Info("models.Playlist.Update", "playlist", p)
+	return nil
+}
+
 func (p Playlist) New() (Playlist, error) {
 	res, err := db.Exec(
 		`INSERT INTO playlist 
@@ -79,8 +94,8 @@ func (p Playlist) AddSongs(songs Songs) error {
 	return nil
 }
 
-func (Playlist) ByID(id uint32) (Playlist, error) {
-	row := db.QueryRow("SELECT * FROM playlist WHERE id = ?", id)
+func (Playlist) ByIDAndUserID(id uint32, userID uint64) (Playlist, error) {
+	row := db.QueryRow("SELECT * FROM playlist WHERE id = ? AND user_id = ?", id, userID)
 	var p Playlist
 	err := p.scan(row)
 	if err == sql.ErrNoRows {
