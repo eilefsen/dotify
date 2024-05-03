@@ -7,11 +7,14 @@ import {
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ListPlus } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Playlist } from "./player/types";
+import { Playlist, Song } from "./player/types";
 
-export function PlaylistMenu() {
+interface PlaylistMenuProps {
+	song: Song;
+}
+export function PlaylistMenu(props: PlaylistMenuProps) {
 	const result = useQuery({
 		queryKey: ["playlists"],
 		queryFn: async (): Promise<Playlist[]> => {
@@ -21,10 +24,30 @@ export function PlaylistMenu() {
 		initialData: [],
 	});
 
-	const menuItems: React.ReactNode[] = [];
+	interface MutationData {
+		playlist: Playlist;
+		song: Song;
+	}
 
+	const mutation = useMutation({
+		mutationKey: ["addPlaylistSong"],
+		mutationFn: async (data: MutationData) => {
+			axios.post(
+				`/api/playlists/${data.playlist.id}/songs/add/${data.song.id}`,
+			);
+		},
+	});
+
+	const menuItems: React.ReactNode[] = [];
 	for (const p of result.data) {
-		const el = <DropdownMenuItem key={p.id}>{p.name}</DropdownMenuItem>;
+		const el = (
+			<DropdownMenuItem
+				onClick={() => mutation.mutate({ playlist: p, song: props.song })}
+				key={p.id}
+			>
+				{p.name}
+			</DropdownMenuItem>
+		);
 		menuItems.push(el);
 	}
 

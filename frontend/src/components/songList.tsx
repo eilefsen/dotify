@@ -130,6 +130,15 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 	const isHovering = useHoverDirty(hoverRef);
 	const btnIcon = toggleIcon();
 
+	function toggle() {
+		if (player.currentSong?.id == song.id) {
+			player.togglePlay();
+		} else {
+			player.skipToID(song.id);
+			player.play();
+		}
+	}
+
 	return (
 		<tr
 			ref={hoverRef}
@@ -138,19 +147,13 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 				" " +
 				bgColor
 			}
-			onClick={() => {
-				if (player.currentSong?.id == song.id) {
-					player.togglePlay();
-				} else {
-					player.skipToID(song.id);
-					player.play();
-				}
-			}}
 		>
-			<td className="pl-5">{isHovering ? btnIcon : index}</td>
+			<td className="pl-5" onClick={toggle}>
+				{isHovering ? btnIcon : index}
+			</td>
 			<td className="pl-2">
 				<div className="flex justify-between gap-2">
-					<div className="min-w-0">
+					<div className="h-full w-full min-w-0" onClick={toggle}>
 						<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
 							{song.title}
 						</div>
@@ -158,7 +161,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 							{song.artist.name}
 						</div>
 					</div>
-					<PlaylistMenu />
+					<PlaylistMenu song={song} />
 				</div>
 			</td>
 			<td className="pr-5 text-right text-sm font-bold text-muted-foreground">
