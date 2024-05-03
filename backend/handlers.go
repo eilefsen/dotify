@@ -436,6 +436,31 @@ func AddSongToPlaylist(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("AddSongToPLaylist:", "playlistID", playlistID, "songID", songID)
 }
 
+func NewPlaylist(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		slog.Debug("fetchPlaylistByID", "user", user)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	var playlist models.Playlist
+	err = json.NewDecoder(r.Body).Decode(&playlist)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	playlist.UserID = user.ID
+	playlist, err = playlist.New()
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	slog.Debug("AddSongToPLaylist:", "playlist", playlist)
+}
+
 func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
