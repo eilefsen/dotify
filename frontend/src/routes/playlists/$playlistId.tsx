@@ -7,9 +7,27 @@ import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Playlist, Song } from "@/components/player/types";
 import { PendingSongTable, SongTable } from "@/components/songList";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { LoginForm } from "../login";
+import { Pencil } from "lucide-react";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+	Form,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormControl,
+	FormDescription,
+	FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 
 interface PlaylistWithSongs {
 	playlist: Playlist;
@@ -73,12 +91,83 @@ export function PlaylistContent() {
 
 	return (
 		<div className="w-full overflow-hidden py-2">
-			<div className="flex items-center px-4">
-				<div className="h-full w-full pl-4">
-					<div className="text-3xl font-bold">{data.playlist.name}</div>
-				</div>
+			<div className="flex items-center gap-2 px-4">
+				<h2 className="text-3xl font-bold">{data.playlist.name}</h2>
+				<EditNamePopover playlist={data.playlist} />
 			</div>
 			<SongTable songs={data.songs} albumIndexing={false} />
 		</div>
+	);
+}
+
+interface EditNamePopoverProps {
+	playlist: Playlist;
+}
+
+function EditNamePopover(props: EditNamePopoverProps) {
+	interface FormData {
+		name: string;
+	}
+
+	const form = useForm();
+	const router = useRouter();
+	const mutation = useMutation({
+		mutationKey: ["editPlaylistName", props.playlist],
+		mutationFn: (data: FormData) => {
+			return axios.put(
+				`/api/admin/playlists/${props.playlist.id}/edit-name`,
+				data,
+			);
+		},
+		onSuccess: () => {
+			router.invalidate();
+		},
+	});
+	function onSubmit(values: any) {
+		mutation.mutate(values);
+	}
+	return (
+		<Popover>
+			<PopoverTrigger>
+				<Pencil size={20} />
+			</PopoverTrigger>
+			<PopoverContent>
+				<Form {...form}>
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
+					>
+						<div className="flex justify-between">
+							<FormField
+								control={form.control}
+								name="name"
+								defaultValue={props.playlist.name}
+								render={({ field }) => {
+									return (
+										<FormItem>
+											<FormLabel>Title</FormLabel>
+											<FormControl>
+												<Input
+													className="bg-secondary"
+													{...field}
+													placeholder="Playlist Name"
+												/>
+											</FormControl>
+											<FormDescription hidden>
+												This is the title of the song you are editing
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									);
+								}}
+							/>
+							<Button className="self-end" type="submit">
+								Submit
+							</Button>
+						</div>
+					</form>
+				</Form>
+			</PopoverContent>
+		</Popover>
 	);
 }
