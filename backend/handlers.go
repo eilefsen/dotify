@@ -479,7 +479,7 @@ func EditPlaylistName(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {
 		slog.Error(err.Error())
-		slog.Debug("fetchPlaylistByID", "user", user)
+		slog.Debug("EditPlaylistName", "user", user)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -502,6 +502,34 @@ func EditPlaylistName(w http.ResponseWriter, r *http.Request) {
 	p.ID = id
 	p.UserID = user.ID
 	p.Update()
+}
+
+func DeletePlaylist(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		slog.Debug("DeletePlaylist", "user", user)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	id, err := ParseUint32(chi.URLParam(r, "id"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var p models.Playlist
+	p.ID = id
+	p.UserID = user.ID
+	err = p.Delete()
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
