@@ -708,6 +708,33 @@ func login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &rtCookie)
 }
 
+func register(w http.ResponseWriter, r *http.Request) {
+	var creds models.Credentials
+
+	err := json.NewDecoder(r.Body).Decode(&creds)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error
+		slog.Error("register", "error", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(creds.Password), 12)
+	if err != nil {
+		slog.Error("register", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	creds.Password = string(hash)
+
+	err = models.User{Credentials: creds, SuperUser: false}.New()
+	if err != nil {
+		slog.Error("register", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func authRefreshHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("refresh_token")
 	if err != nil {
