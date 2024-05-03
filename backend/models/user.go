@@ -12,8 +12,8 @@ type User struct {
 	ID        uint64 `json:"id"`
 }
 
-func (u User) New() error {
-	_, err := db.Exec(
+func (u User) New() (User, error) {
+	res, err := db.Exec(
 		`INSERT INTO user 
 		(user.username, user.password, user.superuser)
 		VALUES (?, ?, ?)`,
@@ -22,11 +22,16 @@ func (u User) New() error {
 		u.SuperUser,
 	)
 	if err != nil {
-		return err
+		return u, err
 	}
-	slog.Info("models.User.New: User created")
+	id, err := res.LastInsertId()
+	if err != nil {
+		return u, err
+	}
 
-	return nil
+	u.ID = uint64(id)
+	slog.Info("models.User.New: success!")
+	return u, nil
 }
 
 func GetUser(id uint64) (User, error) {

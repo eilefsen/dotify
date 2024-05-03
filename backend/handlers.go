@@ -667,6 +667,38 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	slog.Debug("login: Login is valid")
 
+	setBrowserCookie(u, w)
+}
+
+func register(w http.ResponseWriter, r *http.Request) {
+	var creds models.Credentials
+
+	err := json.NewDecoder(r.Body).Decode(&creds)
+	if err != nil {
+		// If the structure of the body is wrong, return an HTTP error
+		slog.Error("register", "error", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(creds.Password), 12)
+	if err != nil {
+		slog.Error("register", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	creds.Password = string(hash)
+
+	u, err := models.User{Credentials: creds, SuperUser: false}.New()
+	if err != nil {
+		slog.Error("register", "error", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	setBrowserCookie(u, w)
+}
+
+func setBrowserCookie(u models.User, w http.ResponseWriter) {
 	atExpire := time.Now().Add(5 * time.Minute)
 	rtExpire := time.Now().Add(24 * time.Hour)
 	atString, err := NewAccessTokenString(u, atExpire)
@@ -706,33 +738,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &rtCookie)
-}
-
-func register(w http.ResponseWriter, r *http.Request) {
-	var creds models.Credentials
-
-	err := json.NewDecoder(r.Body).Decode(&creds)
-	if err != nil {
-		// If the structure of the body is wrong, return an HTTP error
-		slog.Error("register", "error", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(creds.Password), 12)
-	if err != nil {
-		slog.Error("register", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	creds.Password = string(hash)
-
-	err = models.User{Credentials: creds, SuperUser: false}.New()
-	if err != nil {
-		slog.Error("register", "error", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
 }
 
 func authRefreshHandler(w http.ResponseWriter, r *http.Request) {
