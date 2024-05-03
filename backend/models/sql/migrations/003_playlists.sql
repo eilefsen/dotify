@@ -12,6 +12,6 @@ CREATE TABLE
     `song_id` INT UNSIGNED NOT NULL,
     `playlist_id` INT UNSIGNED NOT NULL,
     FOREIGN KEY (`song_id`) REFERENCES `song` (`id`),
-    FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`id`)
+    FOREIGN KEY (`playlist_id`) REFERENCES `playlist` (`id`) ON DELETE CASCADE
   );
 
