@@ -7,6 +7,7 @@ import { Song, iconsContext, playerStoreContext } from "./player";
 import { icons } from "@/icons";
 import { IconContext } from "react-icons";
 import { Skeleton } from "./ui/skeleton";
+import { PlaylistMenu } from "./playlistMenu";
 
 interface SongListProps {
 	songs: Array<Song>;
@@ -148,11 +149,16 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		>
 			<td className="pl-5">{isHovering ? btnIcon : index}</td>
 			<td className="pl-2">
-				<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
-					{song.title}
-				</div>
-				<div className="text-sm font-bold text-muted-foreground">
-					{song.artist.name}
+				<div className="flex justify-between">
+					<div className="min-w-0">
+						<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
+							{song.title}
+						</div>
+						<div className="text-sm font-bold text-muted-foreground">
+							{song.artist.name}
+						</div>
+					</div>
+					<PlaylistMenu />
 				</div>
 			</td>
 			<td className="pr-5 text-right text-sm font-bold text-muted-foreground">
