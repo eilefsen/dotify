@@ -402,6 +402,40 @@ func FetchAllArtists(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
+func AddSongToPlaylist(w http.ResponseWriter, r *http.Request) {
+	user, err := getUser(r.Context())
+	if err != nil {
+		slog.Error(err.Error())
+		slog.Debug("fetchPlaylistByID", "user", user)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	playlistID, err := ParseUint32(chi.URLParam(r, "playlistID"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	songID, err := ParseUint32(chi.URLParam(r, "songID"))
+	if err != nil {
+		slog.Error(err.Error())
+		// An error here means that the id argument is not parseable as uint32.
+		// Which is incorrect syntax, and therefore a Bad Request.
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err = models.Playlist{ID: playlistID}.AddSong(models.Song{ID: songID})
+	if err != nil {
+		slog.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	slog.Debug("AddSongToPLaylist:", "playlistID", playlistID, "songID", songID)
+}
+
 func FetchPlaylistByID(w http.ResponseWriter, r *http.Request) {
 	user, err := getUser(r.Context())
 	if err != nil {

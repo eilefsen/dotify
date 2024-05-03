@@ -59,6 +59,7 @@ func main() {
 		rt.Get("/api/playlists", TokenAuth(FetchPlaylists))
 		rt.Get("/api/playlists/{id}", TokenAuth(FetchPlaylistByID))
 		rt.Get("/api/playlists/{id}/songs", TokenAuth(FetchPlaylistSongsByID))
+		rt.Post("/api/playlists/{playlistID}/songs/add/{songID}", TokenAuth(AddSongToPlaylist))
 	})
 	// unprotected routes
 	rt.Group(func(rt chi.Router) {
