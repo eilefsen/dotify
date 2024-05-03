@@ -93,10 +93,11 @@ export function PlaylistLine(props: PlaylistLineProps) {
 	return (
 		<Link
 			to={props.to}
-			className="playlist-line flex h-20 w-full items-center p-2 active:bg-secondary"
+			className="playlist-line flex h-20 w-full items-center gap-5 p-2 active:bg-secondary"
 		>
-			<ListMusic />
-			<div className="pl-2">
+			<div className="w-0"></div>
+			<ListMusic size={32} />
+			<div className="">
 				<p className="text-base font-bold text-foreground">
 					{props.playlist.name}
 				</p>
