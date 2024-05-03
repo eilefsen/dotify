@@ -173,8 +173,6 @@ export const SongList = observer(({ songs, albumIndexing }: SongListProps) => {
 	const player = useContext(playerStoreContext);
 	useEffect(() => {
 		// TODO: add a less wasteful way of storing songs.
-		// Perhaps, with react query, an array of song IDs
-		// and a hashmap keyed to the database id of the songs
 		player.addSongs(songs);
 		console.debug(player.songCount);
 	}, [songs]);

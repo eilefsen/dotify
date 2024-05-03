@@ -1,10 +1,4 @@
 import {
-	ContextMenu,
-	ContextMenuTrigger,
-	ContextMenuContent,
-	ContextMenuItem,
-} from "@radix-ui/react-context-menu";
-import {
 	DropdownMenu,
 	DropdownMenuTrigger,
 	DropdownMenuContent,
@@ -13,13 +7,11 @@ import {
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ListPlus } from "lucide-react";
-import { PropsWithChildren } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Playlist } from "./player/types";
 
-interface PlaylistMenuProps extends PropsWithChildren {}
-export function PlaylistMenu(props: PlaylistMenuProps) {
+export function PlaylistMenu() {
 	const result = useQuery({
 		queryKey: ["playlists"],
 		queryFn: async (): Promise<Playlist[]> => {
