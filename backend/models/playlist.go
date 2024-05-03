@@ -94,6 +94,21 @@ func (p Playlist) AddSongs(songs Songs) error {
 	return nil
 }
 
+func (p Playlist) Delete() error {
+	_, err := db.Exec(
+		`DELETE FROM playlist WHERE id = ? AND user_id = ?`,
+		p.ID,
+		p.UserID,
+	)
+	if err != nil {
+		slog.Error("Playlist.Delete:", "err", err)
+		return err
+	}
+
+	slog.Info("Playlist.Delete: Successfully deleted playlist", "id", p.ID)
+	return nil
+}
+
 func (Playlist) ByIDAndUserID(id uint32, userID uint64) (Playlist, error) {
 	row := db.QueryRow("SELECT * FROM playlist WHERE id = ? AND user_id = ?", id, userID)
 	var p Playlist
