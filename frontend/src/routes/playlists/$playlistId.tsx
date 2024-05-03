@@ -132,9 +132,10 @@ function EditNamePopover(props: EditNamePopoverProps) {
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="mx-auto w-full max-w-[30rem] space-y-4 text-left "
+						className="mx-auto w-full space-y-4 text-left "
+						autoComplete="off"
 					>
-						<div className="flex justify-between">
+						<div className="flex justify-between gap-2">
 							<FormField
 								control={form.control}
 								name="name"
