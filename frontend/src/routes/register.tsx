@@ -60,12 +60,19 @@ export function RegisterForm() {
 	}
 
 	let errorMsg;
+	let successMsg;
 
 	if (mutation.isError) {
-		console.log(mutation.error);
 		errorMsg = (
 			<span className="text-xl font-bold text-red-600">
 				Could not register user
+			</span>
+		);
+	}
+	if (mutation.isSuccess) {
+		successMsg = (
+			<span className="text-xl font-bold text-foreground">
+				Successfully created user
 			</span>
 		);
 	}
@@ -75,6 +82,7 @@ export function RegisterForm() {
 			<div className="px-2">
 				<h2 className="text-3xl leading-normal">Register user</h2>
 				{errorMsg}
+				{successMsg}
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="mx-auto space-y-2 border-neutral-600 text-left"
