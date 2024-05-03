@@ -149,7 +149,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		>
 			<td className="pl-5">{isHovering ? btnIcon : index}</td>
 			<td className="pl-2">
-				<div className="flex justify-between">
+				<div className="flex justify-between gap-2">
 					<div className="min-w-0">
 						<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
 							{song.title}
