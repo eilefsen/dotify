@@ -114,10 +114,7 @@ function EditNamePopover(props: EditNamePopoverProps) {
 	const mutation = useMutation({
 		mutationKey: ["editPlaylistName", props.playlist],
 		mutationFn: (data: FormData) => {
-			return axios.put(
-				`/api/admin/playlists/${props.playlist.id}/edit-name`,
-				data,
-			);
+			return axios.put(`/api/playlists/${props.playlist.id}/edit-name`, data);
 		},
 		onSuccess: () => {
 			router.invalidate();
