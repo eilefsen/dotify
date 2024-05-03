@@ -9,9 +9,10 @@ import {
 	useRouter,
 } from "@tanstack/react-router";
 import axios from "axios";
-import { ListMusic } from "lucide-react";
+import { ListMusic, TrashIcon } from "lucide-react";
 import { LoginForm } from "../login";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/playlists/")({
 	component: Playlists,
@@ -91,18 +92,23 @@ interface PlaylistLineProps {
 
 export function PlaylistLine(props: PlaylistLineProps) {
 	return (
-		<Link
-			to={props.to}
-			className="playlist-line flex h-20 w-full items-center gap-5 p-2 active:bg-secondary"
-		>
-			<div className="w-0"></div>
-			<ListMusic size={32} />
-			<div className="">
-				<p className="text-base font-bold text-foreground">
-					{props.playlist.name}
-				</p>
-				<p className="text-sm font-normal text-muted-foreground">Playlist</p>
-			</div>
-		</Link>
+		<div className="flex items-center justify-between px-2">
+			<Link
+				to={props.to}
+				className="playlist-line flex h-20 w-full items-center gap-5 active:bg-secondary"
+			>
+				<div className="w-0"></div>
+				<ListMusic size={32} />
+				<div>
+					<p className="text-base font-bold text-foreground">
+						{props.playlist.name}
+					</p>
+					<p className="text-sm font-normal text-muted-foreground">Playlist</p>
+				</div>
+			</Link>
+			<Button variant="destructiveHover">
+				<TrashIcon />
+			</Button>
+		</div>
 	);
 }
