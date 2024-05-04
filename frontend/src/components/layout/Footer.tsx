@@ -37,30 +37,26 @@ export const Footer = observer(() => {
 	}
 
 	return (
-		<>
-			{!player.isVisible && (
-				<div className="fixed bottom-0 left-0 right-0 z-20 bg-background">
-					<div className="absolute left-0 right-0 top-0 h-1">
-						<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
-					</div>
-					<div className="grid w-full grid-cols-5 items-center justify-between px-4 py-2">
-						<button
-							disabled={player.isEmpty}
-							onClick={onClick}
-							className="col-span-4 text-left"
-						>
-							<SongInfo />
-						</button>
-						<div className="col-span-1 flex h-full justify-end gap-3">
-							<PrevSongButton className="hidden sm:block" />
-							<PlayButton />
-							<NextSongButton className="hidden sm:block" />
-						</div>
-					</div>
-					<div></div>
+		<div className="fixed bottom-0 left-0 right-0 z-20 bg-background">
+			<div className="absolute left-0 right-0 top-0 h-1">
+				<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
+			</div>
+			<div className="grid w-full grid-cols-5 items-center justify-between px-4 py-2">
+				<button
+					disabled={player.isEmpty}
+					onClick={onClick}
+					className="col-span-4 text-left"
+				>
+					<SongInfo />
+				</button>
+				<div className="col-span-1 flex h-full justify-end gap-3">
+					<PrevSongButton className="hidden sm:block" />
+					<PlayButton />
+					<NextSongButton className="hidden sm:block" />
 				</div>
-			)}
-		</>
+			</div>
+			<div></div>
+		</div>
 	);
 });
 

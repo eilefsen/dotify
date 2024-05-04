@@ -6,6 +6,7 @@ import { createRootRoute, Outlet } from "@tanstack/react-router";
 import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { useContext } from "react";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 
 export const Route = createRootRoute({
 	component: () => (
@@ -61,14 +62,15 @@ const LibraryOutlet = observer(() => {
 	});
 
 	return (
-		<main
-			className={
-				"fixed left-0 right-0 top-12 overflow-x-hidden pt-2" +
-				" " +
-				(player.isVisible ? "bottom-0" : "bottom-20 pb-4")
-			}
-		>
-			{player.isVisible ? <AudioPlayer /> : <Outlet />}
+		<main className="fixed bottom-20 left-0 right-0 top-12 overflow-x-hidden pb-4 pt-2">
+			<Outlet />
+			<Drawer open={player.isVisible}>
+				<DrawerContent className="">
+					<div className="py-4">
+						<AudioPlayer />
+					</div>
+				</DrawerContent>
+			</Drawer>
 		</main>
 	);
 });
