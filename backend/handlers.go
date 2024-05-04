@@ -891,7 +891,6 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 
 	var artist models.Artist
 	var album models.Album
-
 	{
 		fh := audioFH[0]
 		f, err := fh.Open()
