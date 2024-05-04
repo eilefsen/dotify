@@ -146,6 +146,7 @@ function EditNamePopover(props: EditNamePopoverProps) {
 											<FormLabel>Title</FormLabel>
 											<FormControl>
 												<Input
+													maxLength={100}
 													className="bg-secondary"
 													{...field}
 													placeholder="Playlist Name"
