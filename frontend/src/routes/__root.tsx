@@ -62,7 +62,7 @@ const LibraryOutlet = observer(() => {
 	});
 
 	return (
-		<main className="fixed bottom-20 left-0 right-0 top-12 overflow-x-hidden pb-4 pt-2">
+		<main className="fixed bottom-20 left-0 right-0 top-12 overflow-x-hidden py-2">
 			<Outlet />
 			<Drawer open={player.isVisible} onClose={() => player.setNotVisible()}>
 				<DrawerContent onInteractOutside={() => player.setNotVisible()}>
