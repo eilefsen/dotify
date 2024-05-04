@@ -43,7 +43,7 @@ export const Footer = observer(() => {
 			</div>
 			<div className="grid w-full grid-cols-5 items-center justify-between px-4 py-2">
 				<button
-					disabled={player.isEmpty}
+					disabled={!player.isReady}
 					onClick={onClick}
 					className="col-span-4 text-left"
 				>
