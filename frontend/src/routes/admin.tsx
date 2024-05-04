@@ -1,5 +1,4 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { LoginForm } from "@/components/loginForm";
 
@@ -8,12 +7,14 @@ export const Route = createFileRoute("/admin")({
 });
 
 function Admin() {
-	const result = useQuery({
+	const admin = useQuery({
 		queryKey: ["adminLoginStatus"],
-		queryFn: getAdminLoginStatus,
+		initialData: false,
+		retry: false,
+		enabled: false,
 	});
 	let outlet = <Outlet />;
-	if (!result.data) {
+	if (!admin.data) {
 		outlet = <LoginForm />;
 	}
 
@@ -47,15 +48,4 @@ function AdminLink(props: AdminLinkProps) {
 			{props.children}
 		</Link>
 	);
-}
-
-export async function getAdminLoginStatus() {
-	try {
-		await axios.post(`/api/auth/adminstatus`);
-	} catch {
-		console.log("You are not logged in as admin.");
-		return false;
-	}
-	console.info("Your access token as admin is valid!");
-	return true;
 }

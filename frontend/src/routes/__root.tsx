@@ -9,57 +9,72 @@ import { useContext } from "react";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 
 export const Route = createRootRoute({
-	component: () => (
-		<>
-			<Header />
-			<LibraryOutlet />
-			<Footer />
-		</>
-	),
+	component: () => {
+		const queryClient = useQueryClient();
+		useQuery({
+			queryKey: ["loginStatus"],
+			queryFn: async () => {
+				const res = await axios.post(`/api/auth/status`, {
+					validateStatus: () => true,
+				});
+				const ok = res.status == 200;
+				if (ok) {
+					console.info("Your access token is valid!");
+				}
+				return ok;
+			},
+			initialData: false,
+			retry: false,
+			enabled: true,
+		});
+		useQuery({
+			queryKey: ["refresh"],
+			queryFn: async () => {
+				const res = await axios.post(`/api/auth/refresh`, {
+					withCredentials: true,
+				});
+				const ok = res.status == 200;
+				if (ok) {
+					queryClient.setQueryData(["loginStatus"], true);
+					console.info("Access token refreshed!");
+				}
+				return ok;
+			},
+			refetchInterval: (query) => {
+				const status = query.state.status;
+				if (status == "error") {
+					return false;
+				}
+				return 240000;
+			},
+			retry: false,
+			enabled: true,
+		});
+		useQuery({
+			queryKey: ["adminLoginStatus"],
+			queryFn: async () => {
+				try {
+					await axios.post(`/api/auth/adminstatus`);
+				} catch {
+					console.log("You are not logged in as admin.");
+					return false;
+				}
+				console.info("Your access token as admin is valid!");
+				return true;
+			},
+		});
+		return (
+			<>
+				<Header />
+				<LibraryOutlet />
+				<Footer />
+			</>
+		);
+	},
 });
 
 const LibraryOutlet = observer(() => {
 	const player = useContext(playerStoreContext);
-	const queryClient = useQueryClient();
-	useQuery({
-		queryKey: ["loginStatus"],
-		queryFn: async () => {
-			const res = await axios.post(`/api/auth/status`, {
-				validateStatus: () => true,
-			});
-			const ok = res.status == 200;
-			if (ok) {
-				console.info("Your access token is valid!");
-			}
-			return ok;
-		},
-		initialData: false,
-		retry: false,
-		enabled: true,
-	});
-	useQuery({
-		queryKey: ["refresh"],
-		queryFn: async () => {
-			const res = await axios.post(`/api/auth/refresh`, {
-				withCredentials: true,
-			});
-			const ok = res.status == 200;
-			if (ok) {
-				queryClient.setQueryData(["loginStatus"], true);
-				console.info("Access token refreshed!");
-			}
-			return ok;
-		},
-		refetchInterval: (query) => {
-			const status = query.state.status;
-			if (status == "error") {
-				return false;
-			}
-			return 240000;
-		},
-		retry: false,
-		enabled: true,
-	});
 
 	return (
 		<main className="fixed bottom-36 left-0 right-0 top-12 overflow-x-hidden py-2">
