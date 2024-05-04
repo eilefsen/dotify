@@ -29,7 +29,6 @@ import {
 import { useForm } from "react-hook-form";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { OverflowMarquee } from "@/components/overflowMarquee";
-import { LoginRegisterForm } from "@/components/loginForm";
 import { LoginDialog } from "@/components/loginDialog";
 
 interface PlaylistWithSongs {

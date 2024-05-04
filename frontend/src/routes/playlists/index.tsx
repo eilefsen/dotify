@@ -13,7 +13,6 @@ import { ListMusic } from "lucide-react";
 import { useEffect } from "react";
 import { DeleteDialog } from "@/components/deleteDialog";
 import { OverflowMarquee } from "@/components/overflowMarquee";
-import { LoginRegisterForm } from "@/components/loginForm";
 import { LoginDialog } from "@/components/loginDialog";
 
 export const Route = createFileRoute("/playlists/")({
