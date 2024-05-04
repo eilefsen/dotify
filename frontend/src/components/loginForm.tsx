@@ -21,7 +21,19 @@ const formSchema = z.object({
 	password: z.string().min(2).max(250),
 });
 
-export function LoginForm() {
+interface LoginFormProps {
+	onSuccess?: () => void;
+	showTitle?: boolean;
+}
+
+export function LoginForm(props: LoginFormProps) {
+	let showTitle;
+	if (props.showTitle == undefined) {
+		showTitle = true;
+	} else {
+		showTitle = props.showTitle;
+	}
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -44,6 +56,9 @@ export function LoginForm() {
 			console.info("Logged in!");
 			queryClient.setQueryData(["loginStatus"], data);
 			queryClient.invalidateQueries({ queryKey: ["adminLoginStatus"] });
+			if (props.onSuccess) {
+				props.onSuccess();
+			}
 		},
 	});
 
@@ -65,7 +80,7 @@ export function LoginForm() {
 	return (
 		<Form {...form}>
 			<div className="px-2">
-				<h2 className="text-3xl leading-normal">Login</h2>
+				{showTitle && <h2 className="text-3xl leading-normal">Login</h2>}
 				{errorMsg}
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
