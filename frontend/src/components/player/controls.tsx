@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import ToggleButton from "@/components/ui/toggleButton";
 
 import { iconsContext, playerStoreContext } from "./context";
+import { SliderProps } from "@radix-ui/react-slider";
 
 interface SkipSongButtonProps {
 	className?: string;
@@ -62,9 +63,7 @@ export const PlayButton = observer(() => {
 	);
 });
 
-interface ProgressBarProps {
-	className?: string;
-}
+interface ProgressBarProps extends SliderProps {}
 
 export const ProgressBar = observer(({ className }: ProgressBarProps) => {
 	const player = useContext(playerStoreContext);
