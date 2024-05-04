@@ -55,9 +55,6 @@
 	* {
 		@apply border-border;
 	}
-	*:focus:not(.focus-visible) {
-		outline: none;
-	}
 	body {
 		@apply bg-background text-foreground;
 		font-size: 16px;
