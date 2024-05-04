@@ -907,7 +907,7 @@ func uploadAudioFiles(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		slog.Debug("uploadAudioFiles", "m", m)
-		artist, err = models.Artist{}.New(m.Artist())
+		artist, err = models.Artist{Name: m.Artist(), ImgSrc: imgsrc}.New()
 		if err != nil {
 			slog.Debug("uploadAudioFiles: Failed to insert Artist to database", "err", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)

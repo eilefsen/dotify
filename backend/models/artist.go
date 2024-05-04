@@ -41,12 +41,12 @@ func (artist *Artist) scan(r rowScanner) error {
 	)
 }
 
-func (Artist) New(name string) (Artist, error) {
-	var a Artist
+func (a Artist) New() (Artist, error) {
 	res, err := db.Exec(
-		`INSERT IGNORE INTO artist (artist.name
-		) VALUES (?)`,
-		name,
+		`INSERT IGNORE INTO artist (artist.name, artist.img_src)
+		VALUES (?, ?)`,
+		a.Name,
+		a.ImgSrc,
 	)
 	if err != nil {
 		return a, err
@@ -56,13 +56,12 @@ func (Artist) New(name string) (Artist, error) {
 		return a, err
 	}
 	if id == 0 {
-		a, err = Artist{}.ByName(name)
+		a, err = Artist{}.ByName(a.Name)
 		if err != nil {
 			return a, err
 		}
 	} else {
 		a.ID = uint32(id)
-		a.Name = name
 	}
 	slog.Info("models.NewArtist", "a", a)
 	return a, nil
