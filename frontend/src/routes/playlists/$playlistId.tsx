@@ -10,7 +10,7 @@ import { PendingSongTable, SongTable } from "@/components/songList";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { LoginForm } from "../login";
-import { Pencil } from "lucide-react";
+import { Check, Pencil } from "lucide-react";
 import {
 	Popover,
 	PopoverContent,
@@ -132,14 +132,10 @@ function EditNamePopover(props: EditNamePopoverProps) {
 			<PopoverTrigger>
 				<Pencil size={20} />
 			</PopoverTrigger>
-			<PopoverContent>
+			<PopoverContent className="w-fit">
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="mx-auto w-full space-y-4 text-left "
-						autoComplete="off"
-					>
-						<div className="flex justify-between gap-2">
+					<form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
+						<div className="flex w-fit justify-between gap-4">
 							<FormField
 								control={form.control}
 								name="name"
@@ -165,8 +161,8 @@ function EditNamePopover(props: EditNamePopoverProps) {
 								}}
 							/>
 							<PopoverClose asChild>
-								<Button className="self-end" type="submit">
-									Submit
+								<Button className="w-auto self-end p-2" type="submit">
+									<Check />
 								</Button>
 							</PopoverClose>
 						</div>
