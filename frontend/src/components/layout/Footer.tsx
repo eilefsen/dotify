@@ -33,7 +33,7 @@ export const Footer = observer(() => {
 	const player = useContext(playerStoreContext);
 
 	function onClick() {
-		player.isVisible = !player.isVisible;
+		player.toggleVisible();
 	}
 
 	return (

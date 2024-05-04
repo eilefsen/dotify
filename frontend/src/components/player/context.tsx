@@ -193,6 +193,16 @@ export class PlayerStore {
 		this.isPlaying = false;
 	}
 
+	setVisible() {
+		this.isVisible = true;
+	}
+	setNotVisible() {
+		this.isVisible = false;
+	}
+	toggleVisible() {
+		this.isVisible = !this.isVisible;
+	}
+
 	toggleMute() {
 		this.audio.muted = !this.audio.muted;
 		this.isMuted = !this.isMuted;

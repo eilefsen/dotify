@@ -46,7 +46,7 @@ interface LibraryBtnProps extends PropsWithChildren {
 const LibraryBtn = observer((props: LibraryBtnProps) => {
 	const player = useContext(playerStoreContext);
 	function onClick() {
-		player.isVisible = false;
+		player.setNotVisible();
 	}
 	const baseCN = cn(
 		"flex h-11 items-center justify-center rounded-lg border p-1 text-xl",
