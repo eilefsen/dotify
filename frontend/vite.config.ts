@@ -15,7 +15,7 @@ export default defineConfig({
 				scope: "/",
 				name: "Dotify",
 				short_name: "Dotify",
-				start_url: "/",
+				start_url: "/artists",
 				background_color: "#000000",
 				theme_color: "#000000",
 				icons: [
