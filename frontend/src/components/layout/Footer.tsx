@@ -6,24 +6,11 @@ import {
 	playerStoreContext,
 } from "@/components/player";
 import { observer } from "mobx-react-lite";
-import React from "react";
 import { useContext } from "react";
 import { OverflowMarquee } from "../overflowMarquee";
+import { NavBar } from "../navbar";
 
-interface BaseFooterProps {
-	content: React.ReactNode;
-	className?: string;
-}
-
-export function BaseFooter({ content, className }: BaseFooterProps) {
-	return (
-		<div className={"fixed bottom-0 bg-background" + " " + className}>
-			{content}
-		</div>
-	);
-}
-
-export const Footer = observer(() => {
+export const MiniPlayer = observer(() => {
 	const player = useContext(playerStoreContext);
 
 	function onClick() {
@@ -31,11 +18,11 @@ export const Footer = observer(() => {
 	}
 
 	return (
-		<div className="fixed bottom-0 left-0 right-0 z-20 bg-background">
-			<div className="absolute left-0 right-0 top-0 h-1">
-				<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:rounded-none" />
+		<div className="relative">
+			<div className="absolute bottom-0 left-0 right-0 h-1">
+				<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:h-px [&_.slider-track]:rounded-none [&_.slider-track]:bg-muted-foreground" />
 			</div>
-			<div className="grid w-full grid-cols-5 items-center justify-between px-4 py-2">
+			<div className="grid w-full grid-cols-5 items-center justify-between px-4 pb-3 pt-2">
 				<button
 					disabled={!player.isReady}
 					onClick={onClick}
@@ -49,21 +36,29 @@ export const Footer = observer(() => {
 					<NextSongButton className="hidden sm:block" />
 				</div>
 			</div>
-			<div></div>
 		</div>
 	);
 });
+
+export function Footer() {
+	return (
+		<div className="fixed bottom-0 left-0 right-0 bg-secondary pb-4">
+			<MiniPlayer />
+			<NavBar />
+		</div>
+	);
+}
 
 const SongInfo = observer(function () {
 	const player = useContext(playerStoreContext);
 
 	return (
-		<div className="song-info flex h-20 w-full items-center gap-2 pr-2">
+		<div className="song-info flex h-14 w-full items-center gap-2 pr-2">
 			{player.currentSong && (
 				<img
 					src={player.currentSong.album.imgSrc}
 					alt={`${player.currentSong.album.artist} - ${player.currentSong.album.title}`}
-					className="aspect-square h-16 w-16 rounded border border-border"
+					className="aspect-square h-14 rounded border border-border"
 				/>
 			)}
 			<div className="block w-full min-w-0">
