@@ -1,7 +1,7 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import axios from "axios";
-import { LoginForm } from "./login";
 import { useQuery } from "@tanstack/react-query";
+import { LoginForm } from "@/components/loginForm";
 
 export const Route = createFileRoute("/admin")({
 	component: Admin,

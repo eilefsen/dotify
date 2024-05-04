@@ -10,10 +10,10 @@ import {
 } from "@tanstack/react-router";
 import axios from "axios";
 import { ListMusic } from "lucide-react";
-import { LoginForm } from "../login";
 import { useEffect } from "react";
 import { DeleteDialog } from "@/components/deleteDialog";
 import { OverflowMarquee } from "@/components/overflowMarquee";
+import { LoginForm } from "@/components/loginForm";
 
 export const Route = createFileRoute("/playlists/")({
 	component: Playlists,

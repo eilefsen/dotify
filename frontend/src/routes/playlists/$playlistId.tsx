@@ -9,7 +9,6 @@ import { Playlist, Song } from "@/components/player/types";
 import { PendingSongTable, SongTable } from "@/components/songList";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { LoginForm } from "../login";
 import { Check, Pencil } from "lucide-react";
 import {
 	Popover,
@@ -30,6 +29,7 @@ import {
 import { useForm } from "react-hook-form";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { OverflowMarquee } from "@/components/overflowMarquee";
+import { LoginForm } from "@/components/loginForm";
 
 interface PlaylistWithSongs {
 	playlist: Playlist;
