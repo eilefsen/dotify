@@ -28,6 +28,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { OverflowMarquee } from "@/components/overflowMarquee";
 
 interface PlaylistWithSongs {
 	playlist: Playlist;
@@ -92,7 +94,9 @@ export function PlaylistContent() {
 	return (
 		<div className="w-full overflow-hidden py-2">
 			<div className="flex items-center gap-2 px-4">
-				<h2 className="text-3xl font-bold">{data.playlist.name}</h2>
+				<OverflowMarquee>
+					<h2 className="text-3xl font-bold">{data.playlist.name}</h2>
+				</OverflowMarquee>
 				<EditNamePopover playlist={data.playlist} />
 			</div>
 			<SongTable songs={data.songs} albumIndexing={false} />

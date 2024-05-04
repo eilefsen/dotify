@@ -13,6 +13,7 @@ import { ListMusic } from "lucide-react";
 import { LoginForm } from "../login";
 import { useEffect } from "react";
 import { DeleteDialog } from "@/components/deleteDialog";
+import { OverflowMarquee } from "@/components/overflowMarquee";
 
 export const Route = createFileRoute("/playlists/")({
 	component: Playlists,
@@ -106,14 +107,15 @@ export function PlaylistLine(props: PlaylistLineProps) {
 		<div className="flex items-center justify-between px-2">
 			<Link
 				to={props.to}
-				className="playlist-line flex h-20 w-full items-center gap-5 active:bg-secondary"
+				className="playlist-line flex h-20 w-full items-center gap-5 px-5 active:bg-secondary"
 			>
-				<div className="w-0"></div>
 				<ListMusic size={32} />
-				<div>
-					<p className="text-base font-bold text-foreground">
-						{props.playlist.name}
-					</p>
+				<div className="flex w-0 min-w-0 flex-1 flex-col">
+					<OverflowMarquee>
+						<h3 className="contents text-base font-bold text-foreground">
+							{props.playlist.name}
+						</h3>
+					</OverflowMarquee>
 					<p className="text-sm font-normal text-muted-foreground">Playlist</p>
 				</div>
 			</Link>
