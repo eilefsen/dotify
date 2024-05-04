@@ -35,10 +35,10 @@ export function Header() {
 
 	return (
 		<div className="fixed left-0 right-0 top-0 z-20 flex h-14 items-center justify-between gap-2 overflow-hidden border-b border-border bg-hover px-2 pt-1">
-			<div className="flex items-center font-bold">
+			<Link className="flex items-center font-bold" to="/artists">
 				<img src="/images/logo.png" alt="Dotify logo" className="h-12" />
 				Dotify
-			</div>
+			</Link>
 			<div className="flex gap-2">
 				{login.data ? (
 					<Button variant="outline" onClick={() => logoutMut.mutate()}>
