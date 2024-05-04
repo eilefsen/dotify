@@ -11,7 +11,7 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer";
 export const Route = createRootRoute({
 	component: () => (
 		<>
-			<Header />
+			{/* <Header /> */}
 			<LibraryOutlet />
 			<Footer />
 		</>
