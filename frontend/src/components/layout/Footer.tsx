@@ -17,14 +17,8 @@ interface BaseFooterProps {
 
 export function BaseFooter({ content, className }: BaseFooterProps) {
 	return (
-		<div
-			className={
-				"fixed bottom-0 left-0 right-0 z-20 flex bg-background" +
-				" " +
-				className
-			}
-		>
-			<div className="footer-content h-full w-full">{content}</div>
+		<div className={"fixed bottom-0 bg-background" + " " + className}>
+			{content}
 		</div>
 	);
 }
