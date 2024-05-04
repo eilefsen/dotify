@@ -1,9 +1,10 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/")({
 	component: Index,
 });
 
 function Index() {
-	return <div className="p-2"></div>;
+	const navigate = useNavigate({ from: "/" });
+	navigate({ to: "/artists" });
 }
