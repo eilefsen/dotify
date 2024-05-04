@@ -45,7 +45,7 @@ export function Header() {
 						<LogOutIcon />
 					</Button>
 				) : (
-					<LoginDialog />
+					<LoginDialog showTrigger />
 				)}
 				{admin.data && (
 					<Link to="/admin/upload">

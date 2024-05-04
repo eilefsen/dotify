@@ -13,7 +13,8 @@ import { ListMusic } from "lucide-react";
 import { useEffect } from "react";
 import { DeleteDialog } from "@/components/deleteDialog";
 import { OverflowMarquee } from "@/components/overflowMarquee";
-import { LoginForm } from "@/components/loginForm";
+import { LoginRegisterForm } from "@/components/loginForm";
+import { LoginDialog } from "@/components/loginDialog";
 
 export const Route = createFileRoute("/playlists/")({
 	component: Playlists,
@@ -77,11 +78,8 @@ export default function Playlists() {
 
 	return (
 		<>
-			{loginResult.data ? (
-				<div className="playlist-list">{playlistLines}</div>
-			) : (
-				<LoginForm />
-			)}
+			<div className="playlist-list">{playlistLines}</div>
+			<LoginDialog open={!loginResult.data} />
 		</>
 	);
 }

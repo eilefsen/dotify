@@ -1,6 +1,6 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { LoginForm } from "@/components/loginForm";
+import { LoginRegisterForm } from "@/components/loginForm";
 
 export const Route = createFileRoute("/admin")({
 	component: Admin,
@@ -15,7 +15,7 @@ function Admin() {
 	});
 	let outlet = <Outlet />;
 	if (!admin.data) {
-		outlet = <LoginForm />;
+		outlet = <LoginRegisterForm />;
 	}
 
 	return (

@@ -29,7 +29,8 @@ import {
 import { useForm } from "react-hook-form";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { OverflowMarquee } from "@/components/overflowMarquee";
-import { LoginForm } from "@/components/loginForm";
+import { LoginRegisterForm } from "@/components/loginForm";
+import { LoginDialog } from "@/components/loginDialog";
 
 interface PlaylistWithSongs {
 	playlist: Playlist;
@@ -88,7 +89,7 @@ export function PlaylistContent() {
 	const data = useLoaderData({ strict: true, from: "/playlists/$playlistId" });
 
 	if (!loginResult.data) {
-		return <LoginForm />;
+		return <LoginDialog open />;
 	}
 
 	return (

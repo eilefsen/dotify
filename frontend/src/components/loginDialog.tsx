@@ -7,28 +7,44 @@ import {
 	DrawerTrigger,
 	DrawerTitle,
 } from "./ui/drawer";
-import { LoginForm } from "./loginForm";
+import { LoginRegisterForm } from "./loginForm";
 import { useState } from "react";
 
-export function LoginDialog() {
-	const [open, setOpen] = useState(false);
+interface LoginDialogProps {
+	open?: boolean;
+	showTrigger?: boolean;
+}
+
+export function LoginDialog(props: LoginDialogProps) {
+	const [open, setOpen] = useState(!!props.open);
+
+	const registerOpenedState = useState(false);
+	const [registerOpened, _] = registerOpenedState;
+
+	function onSuccess() {
+		if (props.open != undefined) {
+			setOpen(false);
+		} else {
+		}
+	}
 
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
-			<DrawerTrigger asChild>
-				<Button variant="foreground" type="submit" className="flex">
-					<LogInIcon />
-				</Button>
-			</DrawerTrigger>
+			{props.showTrigger && (
+				<DrawerTrigger asChild>
+					<Button variant="foreground" type="submit" className="flex">
+						<LogInIcon />
+					</Button>
+				</DrawerTrigger>
+			)}
 			<DrawerContent className="bg-background">
 				<DrawerHeader>
-					<DrawerTitle>Login</DrawerTitle>
+					<DrawerTitle>{registerOpened ? "Register" : "Login"}</DrawerTitle>
 				</DrawerHeader>
-				<LoginForm
+				<LoginRegisterForm
 					showTitle={false}
-					onSuccess={() => {
-						setOpen(false);
-					}}
+					onSuccess={onSuccess}
+					registerOpenedState={registerOpenedState}
 				/>
 			</DrawerContent>
 		</Drawer>

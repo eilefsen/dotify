@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/components/registerForm";
+import { LoginRegisterForm } from "@/components/loginForm";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/register")({
@@ -6,5 +6,5 @@ export const Route = createFileRoute("/register")({
 });
 
 function Register() {
-	return <RegisterForm />;
+	return <LoginRegisterForm defaultAsRegister />;
 }
