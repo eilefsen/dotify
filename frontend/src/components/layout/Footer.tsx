@@ -42,7 +42,7 @@ export const MiniPlayer = observer(() => {
 
 export function Footer() {
 	return (
-		<div className="fixed bottom-0 left-0 right-0 bg-secondary pb-4 shadow-sm shadow-black -shadow-y-0.5 shadow-blur-3">
+		<div className="fixed bottom-0 left-0 right-0 h-36 bg-secondary pb-4 shadow-sm shadow-black -shadow-y-0.5 shadow-blur-3">
 			<MiniPlayer />
 			<NavBar />
 		</div>
