@@ -1,6 +1,6 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { LoginRegisterForm } from "@/components/loginForm";
+import { LoginDialog } from "@/components/loginDialog";
 
 export const Route = createFileRoute("/admin")({
 	component: Admin,
@@ -13,10 +13,6 @@ function Admin() {
 		retry: false,
 		enabled: false,
 	});
-	let outlet = <Outlet />;
-	if (!admin.data) {
-		outlet = <LoginRegisterForm />;
-	}
 
 	return (
 		<div className="mx-auto max-w-md px-1 pt-4">
@@ -25,7 +21,10 @@ function Admin() {
 				<AdminLink to="/admin/artists">Edit Artists</AdminLink>
 				<AdminLink to="/admin/albums">Edit Albums</AdminLink>
 			</div>
-			<div className="pt-2">{outlet}</div>
+			<div className="pt-2">
+				{admin.data && <Outlet />}
+				<LoginDialog showTrigger={false} open={!admin.data} />
+			</div>
 		</div>
 	);
 }
