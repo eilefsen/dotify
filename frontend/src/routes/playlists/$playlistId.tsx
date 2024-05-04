@@ -159,9 +159,11 @@ function EditNamePopover(props: EditNamePopoverProps) {
 									);
 								}}
 							/>
-							<Button className="self-end" type="submit">
-								Submit
-							</Button>
+							<PopoverClose asChild>
+								<Button className="self-end" type="submit">
+									Submit
+								</Button>
+							</PopoverClose>
 						</div>
 					</form>
 				</Form>
