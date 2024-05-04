@@ -147,7 +147,7 @@ function EditNamePopover(props: EditNamePopoverProps) {
 								render={({ field }) => {
 									return (
 										<FormItem>
-											<FormLabel hidden>Title</FormLabel>
+											<FormLabel hidden>Name</FormLabel>
 											<FormControl>
 												<Input
 													maxLength={100}
@@ -157,7 +157,7 @@ function EditNamePopover(props: EditNamePopoverProps) {
 												/>
 											</FormControl>
 											<FormDescription hidden>
-												This is the title of the song you are editing
+												This is the name of the playlist you are editing
 											</FormDescription>
 											<FormMessage />
 										</FormItem>
