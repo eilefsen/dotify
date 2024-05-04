@@ -64,13 +64,8 @@ const LibraryOutlet = observer(() => {
 	return (
 		<main className="fixed bottom-20 left-0 right-0 top-12 overflow-x-hidden pb-4 pt-2">
 			<Outlet />
-			<Drawer
-				open={player.isVisible}
-				onClose={() => {
-					player.setNotVisible();
-				}}
-			>
-				<DrawerContent className="">
+			<Drawer open={player.isVisible} onClose={() => player.setNotVisible()}>
+				<DrawerContent onInteractOutside={() => player.setNotVisible()}>
 					<div className="py-4">
 						<AudioPlayer />
 					</div>
