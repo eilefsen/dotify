@@ -32,7 +32,7 @@ function App() {
 	return (
 		<iconsContext.Provider value={icons}>
 			<playerStoreContext.Provider value={player}>
-				<ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+				<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 					<RouterProvider router={router} />
 				</ThemeProvider>
 			</playerStoreContext.Provider>
