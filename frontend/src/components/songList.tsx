@@ -8,6 +8,7 @@ import { icons } from "@/icons";
 import { IconContext } from "react-icons";
 import { Skeleton } from "./ui/skeleton";
 import { PlaylistMenu } from "./playlistMenu";
+import { useQuery } from "@tanstack/react-query";
 
 interface SongListProps {
 	songs: Array<Song>;
@@ -121,6 +122,12 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		}
 	}
 
+	const loginResult = useQuery({
+		queryKey: ["loginStatus"],
+		enabled: false,
+		initialData: false,
+	});
+
 	var bgColor = "bg-background";
 	if (song.id == player.currentSong?.id) {
 		bgColor = "bg-hover";
@@ -161,7 +168,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 							{song.artist.name}
 						</div>
 					</div>
-					<PlaylistMenu song={song} />
+					{loginResult.data && <PlaylistMenu song={song} />}
 				</div>
 			</td>
 			<td className="pr-5 text-right text-sm font-bold text-muted-foreground">
