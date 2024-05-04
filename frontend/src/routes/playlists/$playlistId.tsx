@@ -147,7 +147,7 @@ function EditNamePopover(props: EditNamePopoverProps) {
 								render={({ field }) => {
 									return (
 										<FormItem>
-											<FormLabel>Title</FormLabel>
+											<FormLabel hidden>Title</FormLabel>
 											<FormControl>
 												<Input
 													maxLength={100}
