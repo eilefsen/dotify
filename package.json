@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@tanstack/react-router": "^1.29.2"
+    "@tanstack/react-router": "^1.29.2",
+    "tailwindcss-safe-area": "^0.5.1"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.29.2",
