@@ -6,7 +6,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { ListPlus } from "lucide-react";
+import { ChevronRightIcon, ListPlus, SquarePlusIcon } from "lucide-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Playlist, Song } from "./player/types";
@@ -67,11 +67,13 @@ export function PlaylistMenu(props: PlaylistMenuProps) {
 	for (const p of result.data) {
 		const el = (
 			<DropdownMenuItem
+				className="flex gap-1"
 				onClick={() =>
 					addSongMutation.mutate({ playlist: p, song: props.song })
 				}
 				key={p.id}
 			>
+				<ChevronRightIcon size={16} />
 				{p.name}
 			</DropdownMenuItem>
 		);
@@ -91,6 +93,7 @@ export function PlaylistMenu(props: PlaylistMenuProps) {
 				<DropdownMenuLabel>Add to playlist</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem
+					className="flex gap-1"
 					onClick={() =>
 						newPlaylistMutation.mutate({
 							name: props.song.title,
@@ -98,6 +101,7 @@ export function PlaylistMenu(props: PlaylistMenuProps) {
 						})
 					}
 				>
+					<SquarePlusIcon size={16} />
 					New Playlist
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
