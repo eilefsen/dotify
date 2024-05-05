@@ -105,9 +105,9 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 	const player = useContext(playerStoreContext);
 	function toggleIcon() {
 		if (player.currentSong?.id == song.id && player.isPlaying) {
-			return icons.pauseSmall;
+			return <div className="text-foreground">{icons.pauseSmall}</div>;
 		} else {
-			return icons.playSmall;
+			return <div className="text-foreground">{icons.playSmall}</div>;
 		}
 	}
 
@@ -146,7 +146,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 			<TableCell className="py-2 text-center" onClick={toggle}>
 				{isHovering ? btnIcon : index}
 			</TableCell>
-			<TableCell className="py-2">
+			<TableCell className="py-2 pr-1">
 				<div className="flex justify-between gap-2">
 					<div className="h-full w-full min-w-0" onClick={toggle}>
 						<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
