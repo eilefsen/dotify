@@ -1,14 +1,21 @@
 import { observer } from "mobx-react-lite";
 import { useContext, useRef, ReactNode, useEffect } from "react";
 import { useHoverDirty } from "react-use";
-import { getRandomInt, secondsToMinutesSeconds } from "@/lib/utils";
+import { cn, getRandomInt, secondsToMinutesSeconds } from "@/lib/utils";
 
 import { Song, iconsContext, playerStoreContext } from "./player";
 import { icons } from "@/icons";
-import { IconContext } from "react-icons";
 import { Skeleton } from "./ui/skeleton";
 import { PlaylistMenu } from "./playlistMenu";
 import { useQuery } from "@tanstack/react-query";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "./ui/table";
 
 interface SongListProps {
 	songs: Array<Song>;
@@ -27,27 +34,16 @@ interface songTableProps {
 
 export function PendingSongTable() {
 	return (
-		<table className="w-full table-fixed">
-			<colgroup>
-				<col className="w-12" />
-				<col />
-				<col className="w-16" />
-			</colgroup>
-			<thead>
-				<tr className="h-11 border-b border-border text-left text-lg text-foreground">
-					<th className="pl-5">#</th>
-					<th>Title</th>
-					<th className="pr-5">
-						<IconContext.Provider value={{ className: "ml-auto" }}>
-							{icons.timer}
-						</IconContext.Provider>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
+		<Table>
+			<TableHeader>
+				<TableHead>#</TableHead>
+				<TableHead>Title</TableHead>
+				<TableHead>{icons.timer}</TableHead>
+			</TableHeader>
+			<TableBody>
 				<PendingSongList />
-			</tbody>
-		</table>
+			</TableBody>
+		</Table>
 	);
 }
 export function PendingSongList() {
@@ -87,27 +83,20 @@ export function SongTable({ songs, albumIndexing }: songTableProps) {
 	}
 
 	return (
-		<table className="w-full table-fixed">
-			<colgroup>
-				<col className="w-12" />
-				<col />
-				<col className="w-16" />
-			</colgroup>
-			<thead>
-				<tr className="h-11 border-b border-secondary text-left text-lg text-foreground">
-					<th className="pl-5">#</th>
-					<th>Title</th>
-					<th className="pr-5">
-						<IconContext.Provider value={{ className: "ml-auto" }}>
-							{icons.timer}
-						</IconContext.Provider>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
+		<Table>
+			<TableHeader>
+				<TableRow className="text-lg">
+					<TableHead className="w-12 text-foreground">#</TableHead>
+					<TableHead className="text-foreground">Title</TableHead>
+					<TableHead className="w-16 text-foreground">
+						<div className="flex justify-end pr-1">{icons.timer}</div>
+					</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
 				<SongList songs={songs} albumIndexing={albumIndexing} />
-			</tbody>
-		</table>
+			</TableBody>
+		</Table>
 	);
 }
 
@@ -147,18 +136,17 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 	}
 
 	return (
-		<tr
+		<TableRow
 			ref={hoverRef}
-			className={
-				"h-14 w-full border-b border-secondary text-muted-foreground hover:text-foreground" +
-				" " +
-				bgColor
-			}
+			className={cn(
+				"h-14 w-full border-secondary py-0 text-muted-foreground hover:text-foreground",
+				bgColor,
+			)}
 		>
-			<td className="pl-5" onClick={toggle}>
+			<TableCell className="py-2 text-center" onClick={toggle}>
 				{isHovering ? btnIcon : index}
-			</td>
-			<td className="pl-2">
+			</TableCell>
+			<TableCell className="py-2">
 				<div className="flex justify-between gap-2">
 					<div className="h-full w-full min-w-0" onClick={toggle}>
 						<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
@@ -170,11 +158,11 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 					</div>
 					{loginResult.data && <PlaylistMenu song={song} />}
 				</div>
-			</td>
-			<td className="pr-5 text-right text-sm font-bold text-muted-foreground">
+			</TableCell>
+			<TableCell className="py-2 text-right text-sm font-bold text-muted-foreground">
 				{secondsToMinutesSeconds(song.duration)}
-			</td>
-		</tr>
+			</TableCell>
+		</TableRow>
 	);
 });
 
