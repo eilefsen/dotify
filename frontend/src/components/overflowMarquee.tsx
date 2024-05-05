@@ -24,7 +24,7 @@ export function OverflowMarquee(props: OverflowMarqueeProps) {
 					<div className={marqueeCN}>{props.children}</div>
 				</div>
 				{isOverflow && (
-					<div className="absolute top-0 w-fit animate-marquee2 pr-12">
+					<div className="absolute top-0 w-fit animate-marquee2 pr-8">
 						{props.children}
 					</div>
 				)}
