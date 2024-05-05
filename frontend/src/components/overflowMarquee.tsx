@@ -1,7 +1,10 @@
 import { useIsOverflow } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
 import React, { PropsWithChildren } from "react";
 
-interface OverflowMarqueeProps extends PropsWithChildren {}
+interface OverflowMarqueeProps extends PropsWithChildren {
+	className?: string;
+}
 export function OverflowMarquee(props: OverflowMarqueeProps) {
 	const ref = React.useRef<HTMLDivElement>(null);
 
@@ -15,7 +18,7 @@ export function OverflowMarquee(props: OverflowMarqueeProps) {
 	}
 
 	return (
-		<div className="min-w-0 overflow-x-hidden">
+		<div className={cn("min-w-0 overflow-x-hidden", props.className)}>
 			<div className="relative w-full whitespace-nowrap">
 				<div ref={ref}>
 					<div className={marqueeCN}>{props.children}</div>

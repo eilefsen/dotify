@@ -71,9 +71,9 @@ const SongInfo = observer(function () {
 					</OverflowMarquee>
 				</div>
 				{player.currentSong?.artist.name && (
-					<div className="overflow-x-hidden font-light text-foreground/80">
+					<OverflowMarquee className="font-light text-foreground/80">
 						{player.currentSong?.artist.name}
-					</div>
+					</OverflowMarquee>
 				)}
 			</div>
 		</div>
