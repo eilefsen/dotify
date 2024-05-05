@@ -83,7 +83,7 @@ export function SongTable({ songs, albumIndexing }: songTableProps) {
 	}
 
 	return (
-		<Table>
+		<Table className="table-fixed">
 			<TableHeader>
 				<TableRow className="text-lg">
 					<TableHead className="w-12 text-foreground">#</TableHead>
