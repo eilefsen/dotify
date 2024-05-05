@@ -53,6 +53,7 @@ export function ArtistContent() {
 				<a
 					className="text-base font-normal text-foreground underline underline-offset-2"
 					href={data.artist.website}
+					target="_blank"
 				>
 					{data.artist.website}
 				</a>
