@@ -152,7 +152,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 						<div className="overflow-x-hidden overflow-ellipsis whitespace-nowrap text-base font-bold text-foreground">
 							{song.title}
 						</div>
-						<div className="text-sm font-bold text-muted-foreground">
+						<div className="text-sm font-bold text-foreground/70">
 							{song.artist.name}
 						</div>
 					</div>
