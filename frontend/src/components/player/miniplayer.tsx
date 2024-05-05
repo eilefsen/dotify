@@ -19,9 +19,9 @@ export const MiniPlayer = observer(() => {
 	return (
 		<div className="relative">
 			<div className="absolute bottom-0 left-0 right-0 h-1">
-				<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:h-px [&_.slider-track]:rounded-none [&_.slider-track]:bg-muted-foreground" />
+				<ProgressBar className="[&_.slider-thumb]:hidden [&_.slider-track]:h-px [&_.slider-track]:rounded-none [&_.slider-track]:bg-foreground/60" />
 			</div>
-			<div className="grid w-full grid-cols-5 items-center justify-between px-4 pb-3 pt-2">
+			<div className="grid w-full grid-cols-5 items-center justify-between px-4 pb-2 pt-0.5">
 				<button
 					disabled={!player.isReady}
 					onClick={onClick}
@@ -71,7 +71,7 @@ const SongInfo = observer(function () {
 					</OverflowMarquee>
 				</div>
 				{player.currentSong?.artist.name && (
-					<div className="overflow-x-hidden font-light text-muted-foreground">
+					<div className="overflow-x-hidden font-light text-foreground/80">
 						{player.currentSong?.artist.name}
 					</div>
 				)}
