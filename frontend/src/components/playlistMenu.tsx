@@ -81,7 +81,7 @@ export function PlaylistMenu(props: PlaylistMenuProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<ListPlus />
+				<ListPlus className="text-foreground/80 hover:text-primary active:text-primary" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				side="bottom"
