@@ -15,17 +15,21 @@ function Admin() {
 	});
 
 	return (
-		<div className="mx-auto max-w-md px-1 pt-4">
-			<div className="flex w-full justify-stretch gap-2">
-				<AdminLink to="/admin/upload">Upload Music</AdminLink>
-				<AdminLink to="/admin/artists">Edit Artists</AdminLink>
-				<AdminLink to="/admin/albums">Edit Albums</AdminLink>
-			</div>
-			<div className="pt-2">
-				{admin.data && <Outlet />}
-				<LoginDialog showTrigger={false} open={!admin.data} />
-			</div>
-		</div>
+		<>
+			{admin.data && (
+				<div className="mx-auto max-w-md px-1 pt-4">
+					<div className="flex w-full justify-stretch gap-2">
+						<AdminLink to="/admin/upload">Upload Music</AdminLink>
+						<AdminLink to="/admin/artists">Edit Artists</AdminLink>
+						<AdminLink to="/admin/albums">Edit Albums</AdminLink>
+					</div>
+					<div className="pt-2">
+						<Outlet />
+					</div>
+				</div>
+			)}
+			<LoginDialog showTrigger={false} open={!admin.data} />
+		</>
 	);
 }
 
