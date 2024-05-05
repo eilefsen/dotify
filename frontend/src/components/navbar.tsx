@@ -7,7 +7,9 @@ interface NavbarProps {
 }
 export function NavBar(props: NavbarProps) {
 	return (
-		<div className={cn("flex w-full justify-around gap-2", props.className)}>
+		<div
+			className={cn("flex w-full justify-around gap-2 pt-0.5", props.className)}
+		>
 			<TabButton to="/albums">
 				<Disc3Icon />
 				Albums

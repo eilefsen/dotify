@@ -15,7 +15,7 @@ export const TabButton = observer((props: TabButton) => {
 		player.setNotVisible();
 	}
 	const baseCN = cn(
-		"flex flex-col items-center justify-center rounded-lg border p-1 text-sm",
+		"flex flex-col items-center justify-center rounded-lg border p-1 text-xs",
 		props.className,
 	);
 	return (
