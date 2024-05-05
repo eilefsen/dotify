@@ -139,7 +139,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 		<TableRow
 			ref={hoverRef}
 			className={cn(
-				"h-14 w-full border-secondary py-0 text-muted-foreground hover:text-foreground",
+				"w-full border-secondary text-foreground/70 hover:text-foreground",
 				bgColor,
 			)}
 		>
@@ -159,7 +159,7 @@ const SongEntry = observer(({ song, index }: SongEntryProps) => {
 					{loginResult.data && <PlaylistMenu song={song} />}
 				</div>
 			</TableCell>
-			<TableCell className="py-2 text-right text-sm font-bold text-muted-foreground">
+			<TableCell className="py-2 text-right text-sm font-bold">
 				{secondsToMinutesSeconds(song.duration)}
 			</TableCell>
 		</TableRow>
