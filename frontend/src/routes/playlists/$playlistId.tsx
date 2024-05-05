@@ -161,7 +161,7 @@ function EditNamePopover(props: EditNamePopoverProps) {
 								}}
 							/>
 							<PopoverClose asChild>
-								<Button className="w-auto self-end p-2" type="submit">
+								<Button size="icon" className="self-end" type="submit">
 									<Check />
 								</Button>
 							</PopoverClose>
