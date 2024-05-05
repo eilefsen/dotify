@@ -29,15 +29,28 @@ export const MiniPlayer = observer(() => {
 				>
 					<SongInfo />
 				</button>
-				<div className="col-span-1 flex h-full justify-end gap-3">
-					<PrevSongButton className="hidden sm:block" />
-					<PlayButton />
-					<NextSongButton className="hidden sm:block" />
-				</div>
+				<Controls disabled={!player.isReady} />
 			</div>
 		</div>
 	);
 });
+
+interface ControlsProps {
+	disabled?: boolean;
+}
+
+function Controls(props: ControlsProps) {
+	if (!!props.disabled) {
+		return;
+	}
+	return (
+		<div className="col-span-1 flex h-full justify-end gap-3">
+			<PrevSongButton className="hidden sm:block" />
+			<PlayButton />
+			<NextSongButton className="hidden sm:block" />
+		</div>
+	);
+}
 
 const SongInfo = observer(function () {
 	const player = useContext(playerStoreContext);
