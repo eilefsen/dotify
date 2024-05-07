@@ -604,6 +604,7 @@ buttonpress(struct wl_listener *listener, void *data)
 	switch (event->state) {
 	case WLR_BUTTON_PRESSED:
 		cursor_mode = CurPressed;
+		selmon = xytomon(cursor->x, cursor->y);
 		if (locked)
 			break;
 
