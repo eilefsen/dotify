@@ -1906,11 +1906,6 @@ outputmgrapplyortest(struct wlr_output_configuration_v1 *config, int test)
 					config_head->state.custom_mode.height,
 					config_head->state.custom_mode.refresh);
 
-		/* Don't move monitors if position wouldn't change, this to avoid
-		 * wlroots marking the output as manually configured */
-		if (m->m.x != config_head->state.x || m->m.y != config_head->state.y)
-			wlr_output_layout_add(output_layout, wlr_output,
-					config_head->state.x, config_head->state.y);
 		wlr_output_state_set_transform(&state, config_head->state.transform);
 		wlr_output_state_set_scale(&state, config_head->state.scale);
 		wlr_output_state_set_adaptive_sync_enabled(&state,
@@ -1919,6 +1914,13 @@ outputmgrapplyortest(struct wlr_output_configuration_v1 *config, int test)
 apply_or_test:
 		ok &= test ? wlr_output_test_state(wlr_output, &state)
 				: wlr_output_commit_state(wlr_output, &state);
+
+		/* Don't move monitors if position wouldn't change, this to avoid
+		* wlroots marking the output as manually configured.
+		* wlr_output_layout_add does not like disabled outputs */
+		if (!test && wlr_output->enabled && (m->m.x != config_head->state.x || m->m.y != config_head->state.y))
+			wlr_output_layout_add(output_layout, wlr_output,
+					config_head->state.x, config_head->state.y);
 
 		wlr_output_state_finish(&state);
 	}
