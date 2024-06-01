@@ -5,8 +5,10 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import axios from "axios";
 import { observer } from "mobx-react-lite";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { isMobile } from "react-device-detect";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export const Route = createRootRoute({
 	component: () => {
@@ -79,13 +81,23 @@ const LibraryOutlet = observer(() => {
 	return (
 		<main className="fixed bottom-28 left-0 right-0 top-12 overflow-x-hidden pt-2 pb-safe-offset-2">
 			<Outlet />
-			<Drawer open={player.isVisible} onClose={() => player.setNotVisible()}>
-				<DrawerContent onInteractOutside={() => player.setNotVisible()}>
-					<div className="py-4">
-						<AudioPlayer />
-					</div>
-				</DrawerContent>
-			</Drawer>
+			{isMobile ? (
+				<Drawer open={player.isVisible} onClose={() => player.setNotVisible()}>
+					<DrawerContent onInteractOutside={() => player.setNotVisible()}>
+						<div className="py-4">
+							<AudioPlayer />
+						</div>
+					</DrawerContent>
+				</Drawer>
+			) : (
+				<Dialog open={player.isVisible} onOpenChange={player.setNotVisible}>
+					<DialogContent onInteractOutside={() => player.setNotVisible()}>
+						<div className="py-4">
+							<AudioPlayer />
+						</div>
+					</DialogContent>
+				</Dialog>
+			)}
 		</main>
 	);
 });

@@ -9,6 +9,13 @@ import {
 } from "./ui/drawer";
 import { LoginRegisterForm } from "./loginForm";
 import { useState } from "react";
+import { isMobile } from "react-device-detect";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTrigger,
+} from "./ui/dialog";
 
 interface LoginDialogProps {
 	open?: boolean;
@@ -29,24 +36,50 @@ export function LoginDialog(props: LoginDialogProps) {
 	}
 
 	return (
-		<Drawer open={open} onOpenChange={setOpen}>
-			{props.showTrigger && (
-				<DrawerTrigger asChild>
-					<Button variant="foreground" type="submit" className="flex">
-						<LogInIcon />
-					</Button>
-				</DrawerTrigger>
+		<>
+			{isMobile ? (
+				<Drawer open={open} onOpenChange={setOpen}>
+					{props.showTrigger && (
+						<DrawerTrigger asChild>
+							<Button variant="foreground" type="submit" className="flex">
+								<LogInIcon />
+							</Button>
+						</DrawerTrigger>
+					)}
+					<DrawerContent className="bg-background">
+						<DrawerHeader>
+							<DrawerTitle>{registerOpened ? "Register" : "Login"}</DrawerTitle>
+						</DrawerHeader>
+						<LoginRegisterForm
+							showTitle={false}
+							onSuccess={onSuccess}
+							registerOpenedState={registerOpenedState}
+						/>
+					</DrawerContent>
+				</Drawer>
+			) : (
+				<Dialog open={open} onOpenChange={setOpen}>
+					{props.showTrigger && (
+						<DialogTrigger asChild>
+							<Button variant="foreground" type="submit" className="flex">
+								<LogInIcon />
+							</Button>
+						</DialogTrigger>
+					)}
+					<DialogContent className="bg-background">
+						<DialogHeader>
+							<DialogHeader>
+								{registerOpened ? "Register" : "Login"}
+							</DialogHeader>
+						</DialogHeader>
+						<LoginRegisterForm
+							showTitle={false}
+							onSuccess={onSuccess}
+							registerOpenedState={registerOpenedState}
+						/>
+					</DialogContent>
+				</Dialog>
 			)}
-			<DrawerContent className="bg-background">
-				<DrawerHeader>
-					<DrawerTitle>{registerOpened ? "Register" : "Login"}</DrawerTitle>
-				</DrawerHeader>
-				<LoginRegisterForm
-					showTitle={false}
-					onSuccess={onSuccess}
-					registerOpenedState={registerOpenedState}
-				/>
-			</DrawerContent>
-		</Drawer>
+		</>
 	);
 }
