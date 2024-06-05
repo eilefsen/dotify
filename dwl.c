@@ -773,6 +773,19 @@ commitnotify(struct wl_listener *listener, void *data)
 {
 	Client *c = wl_container_of(listener, c, commit);
 
+	if (c->surface.xdg->initial_commit) {
+		/*
+		 * Get the monitor this client will be rendered on
+		 * Note that if the user set a rule in which the client is placed on
+		 * a different monitor based on its title this will likely select
+		 * a wrong monitor.
+		 */
+		applyrules(c);
+		wlr_surface_set_preferred_buffer_scale(client_surface(c), CEIL(c->mon->wlr_output->scale));
+		wlr_fractional_scale_v1_notify_scale(client_surface(c), c->mon->wlr_output->scale);
+		setmon(c, NULL, 0); /* Make sure to reapply rules in mapnotify() */
+	}
+
 	if (client_surface(c)->mapped && c->mon)
 		resize(c, c->geom, (c->isfloating && !c->isfullscreen));
 
@@ -2120,7 +2133,7 @@ resize(Client *c, struct wlr_box geo, int interact)
 	struct wlr_box *bbox;
 	struct wlr_box clip;
 
-	if (!c->mon)
+	if (!c->mon || !c->scene)
 		return;
 
 	bbox = interact ? &sgeom : &c->mon->w;
@@ -2246,7 +2259,7 @@ setfloating(Client *c, int floating)
 	Client *p = client_get_parent(c);
 	c->isfloating = floating;
 	/* If in floating layout do not change the client's layer */
-	if (!c->mon || !c->mon->lt[c->mon->sellt]->arrange)
+	if (!c->mon || !client_surface(c)->mapped || !c->mon->lt[c->mon->sellt]->arrange)
 		return;
 	wlr_scene_node_reparent(&c->scene->node, layers[c->isfullscreen ||
 			(p && p->isfullscreen) ? LyrFS
@@ -2259,7 +2272,7 @@ void
 setfullscreen(Client *c, int fullscreen)
 {
 	c->isfullscreen = fullscreen;
-	if (!c->mon)
+	if (!c->mon || !client_surface(c)->mapped)
 		return;
 	c->bw = fullscreen ? 0 : borderpx;
 	client_set_fullscreen(c, fullscreen);
