@@ -2024,14 +2024,16 @@ powermgrsetmode(struct wl_listener *listener, void *data)
 {
 	struct wlr_output_power_v1_set_mode_event *event = data;
 	struct wlr_output_state state = {0};
+	Monitor *m = event->output->data;
 
-	if (!event->output->data)
+	if (!m)
 		return;
 
+	m->gamma_lut_changed = 1; /* Reapply gamma LUT when re-enabling the ouput */
 	wlr_output_state_set_enabled(&state, event->mode);
-	wlr_output_commit_state(event->output, &state);
+	wlr_output_commit_state(m->wlr_output, &state);
 
-	((Monitor *)(event->output->data))->asleep = !event->mode;
+	m->asleep = !event->mode;
 }
 
 void
