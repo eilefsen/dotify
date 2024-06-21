@@ -312,7 +312,7 @@ static void outputmgrtest(struct wl_listener *listener, void *data);
 static void pointerfocus(Client *c, struct wlr_surface *surface,
 		double sx, double sy, uint32_t time);
 static void printstatus(void);
-static void powermgrsetmodenotify(struct wl_listener *listener, void *data);
+static void powermgrsetmode(struct wl_listener *listener, void *data);
 static void quit(const Arg *arg);
 static void rendermon(struct wl_listener *listener, void *data);
 static void requestdecorationmode(struct wl_listener *listener, void *data);
@@ -962,8 +962,6 @@ createmon(struct wl_listener *listener, void *data)
 	LISTEN(&wlr_output->events.frame, &m->frame, rendermon);
 	LISTEN(&wlr_output->events.destroy, &m->destroy, cleanupmon);
 	LISTEN(&wlr_output->events.request_state, &m->request_state, requestmonstate);
-
-	m->asleep = 0;
 
 	wlr_output_state_set_enabled(&state, 1);
 	wlr_output_commit_state(wlr_output, &state);
@@ -1899,6 +1897,10 @@ outputmgrapplyortest(struct wlr_output_configuration_v1 *config, int test)
 		Monitor *m = wlr_output->data;
 		struct wlr_output_state state;
 
+		/* Ensure displays previously disabled by wlr-output-power-management-v1
+		 * are properly handled*/
+		m->asleep = 0;
+
 		wlr_output_state_init(&state);
 		wlr_output_state_set_enabled(&state, config_head->state.enabled);
 		if (!config_head->state.enabled)
@@ -2018,12 +2020,16 @@ printstatus(void)
 }
 
 void
-powermgrsetmodenotify(struct wl_listener *listener, void *data)
+powermgrsetmode(struct wl_listener *listener, void *data)
 {
 	struct wlr_output_power_v1_set_mode_event *event = data;
+	struct wlr_output_state state = {0};
 
-	wlr_output_enable(event->output, event->mode);
-	wlr_output_commit(event->output);
+	if (!event->output->data)
+		return;
+
+	wlr_output_state_set_enabled(&state, event->mode);
+	wlr_output_commit_state(event->output, &state);
 
 	((Monitor *)(event->output->data))->asleep = !event->mode;
 }
@@ -2440,7 +2446,7 @@ setup(void)
 	LISTEN_STATIC(&gamma_control_mgr->events.set_gamma, setgamma);
 
 	power_mgr = wlr_output_power_manager_v1_create(dpy);
-	LISTEN_STATIC(&power_mgr->events.set_mode, powermgrsetmodenotify);
+	LISTEN_STATIC(&power_mgr->events.set_mode, powermgrsetmode);
 
 	/* Creates an output layout, which a wlroots utility for working with an
 	 * arrangement of screens in a physical layout. */
