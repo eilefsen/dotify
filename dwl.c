@@ -177,7 +177,6 @@ typedef struct {
 	struct wlr_layer_surface_v1 *layer_surface;
 
 	struct wl_listener destroy;
-	struct wl_listener map;
 	struct wl_listener unmap;
 	struct wl_listener surface_commit;
 } LayerSurface;
@@ -298,7 +297,6 @@ static void keypressmod(struct wl_listener *listener, void *data);
 static int keyrepeat(void *data);
 static void killclient(const Arg *arg);
 static void locksession(struct wl_listener *listener, void *data);
-static void maplayersurfacenotify(struct wl_listener *listener, void *data);
 static void mapnotify(struct wl_listener *listener, void *data);
 static void maximizenotify(struct wl_listener *listener, void *data);
 static void monocle(Monitor *m);
@@ -871,7 +869,6 @@ createlayersurface(struct wl_listener *listener, void *data)
 	l = layer_surface->data = ecalloc(1, sizeof(*l));
 	l->type = LayerShell;
 	LISTEN(&surface->events.commit, &l->surface_commit, commitlayersurfacenotify);
-	LISTEN(&surface->events.map, &l->map, maplayersurfacenotify);
 	LISTEN(&surface->events.unmap, &l->unmap, unmaplayersurfacenotify);
 	LISTEN(&layer_surface->events.destroy, &l->destroy, destroylayersurfacenotify);
 
@@ -1170,7 +1167,6 @@ destroylayersurfacenotify(struct wl_listener *listener, void *data)
 
 	wl_list_remove(&l->link);
 	wl_list_remove(&l->destroy.link);
-	wl_list_remove(&l->map.link);
 	wl_list_remove(&l->unmap.link);
 	wl_list_remove(&l->surface_commit.link);
 	wlr_scene_node_destroy(&l->scene->node);
@@ -1623,12 +1619,6 @@ locksession(struct wl_listener *listener, void *data)
 	LISTEN(&session_lock->events.unlock, &lock->unlock, unlocksession);
 
 	wlr_session_lock_v1_send_locked(session_lock);
-}
-
-void
-maplayersurfacenotify(struct wl_listener *listener, void *data)
-{
-	motionnotify(0, NULL, 0, 0, 0, 0);
 }
 
 void
