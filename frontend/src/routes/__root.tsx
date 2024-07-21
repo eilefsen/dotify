@@ -78,6 +78,12 @@ export const Route = createRootRoute({
 const LibraryOutlet = observer(() => {
 	const player = useContext(playerStoreContext);
 
+	function setNotOpen() {
+		if (player.isVisible) {
+			player.setNotVisible();
+		}
+	}
+
 	return (
 		<main className="fixed bottom-28 left-0 right-0 top-12 overflow-x-hidden pt-2 pb-safe-offset-2">
 			<Outlet />
@@ -90,7 +96,7 @@ const LibraryOutlet = observer(() => {
 					</DrawerContent>
 				</Drawer>
 			) : (
-				<Dialog open={player.isVisible} onOpenChange={player.setNotVisible}>
+				<Dialog open={player.isVisible} onOpenChange={setNotOpen}>
 					<DialogContent onInteractOutside={() => player.setNotVisible()}>
 						<div className="py-4">
 							<AudioPlayer />
